@@ -76,17 +76,19 @@ bool strcmp(char s1[], char s2[]) {
 }
 
 // Compare the first x number of characters between the two strings. Can be used for handling arguments
-bool strcmplength(char s1[], char s2[], unsigned char x) {
-	int i;
+bool strcmpl(char s1[], char s2[], unsigned char x) {
+	int i = 0;
 
-	for (i = 0; (s1[i] == s2[i]) < x; i++) {
-		if (s1[i] == '\0') {
+	do {
+		if (s1[i] == s2[i]) {
 			return true;
 		}
 		else {
 			return false;
 		}
-	} 
+
+		i++;
+	} while (i < x);
 
 	return false;
 }

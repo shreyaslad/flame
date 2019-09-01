@@ -16,8 +16,7 @@ void user_input(char* input) {
 	if (strcmp(input, "END") == true) {
 		kprint("Halting CPU\n");
 		asm volatile("hlt");
-	}
-	else if (strcmp(input, "PAGE") == true) {
+	} else if (strcmp(input, "PAGE") == true) {
 		u32 phys_addr;
 		u32 page = kmalloc(1000, 1, &phys_addr);
 		char page_str[16] = "";
@@ -29,8 +28,7 @@ void user_input(char* input) {
 		kprint(", physical address: ");
 		kprint(phys_str);
 		kprint("\n");
-	}
-	else if (strcmplength(input, "L", 1) == true) {
+	} else if (strcmpl(input, "L", 1) == true) {
 		kprint("The first character is the same");
 	}
 	kprint("You said: ");
