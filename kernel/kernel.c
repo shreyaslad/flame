@@ -4,6 +4,7 @@
 #include "../libc/string.h"
 #include "../libc/mem.h"
 #include "../libc/bool.h"
+#include "./commands/command.h"
 
 void main() {
 	isr_install();
@@ -14,9 +15,11 @@ void main() {
 
 void user_input(char* input) {
 	if (strcmp(input, "END") == true) {
-		kprint("Halting CPU\n");
-		asm volatile("hlt");
+
+		halt(); // Halt the CPU
+
 	} else if (strcmp(input, "PAGE") == true) {
+
 		u32 phys_addr;
 		u32 page = kmalloc(1000, 1, &phys_addr);
 		char page_str[16] = "";
@@ -28,8 +31,9 @@ void user_input(char* input) {
 		kprint(", physical address: ");
 		kprint(phys_str);
 		kprint("\n");
+
 	} else if (strcmpl(input, "L", 1) == true) {
-		kprint("The first character is the same");
+		kprint("The first character is the same.\n");
 	}
 	kprint("You said: ");
 	kprint(input);

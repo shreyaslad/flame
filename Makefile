@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h libc/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c kernel/commands/*.c libc/system/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h libc/*.h kernel/commands/*h libc/system/*.h)
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o} 
 
 CC = /home/meemr/opt/cross/bin/i686-elf-gcc

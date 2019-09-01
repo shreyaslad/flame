@@ -1,6 +1,7 @@
 #include "string.h"
 #include "../cpu/type.h"
 #include "bool.h"
+
 void int_to_ascii(int n, char str[]) {
 	int i, sign;
 	if ((sign = n) < 0) n = -n;
