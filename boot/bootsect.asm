@@ -28,7 +28,7 @@ load_kernel:
     call print_nl
 
     mov bx, KERNEL_OFFSET ; Read from disk and store in 0x1000
-    mov dh, 16 ; Our future kernel will be larger, make this big
+    mov dh, 31 ; Our future kernel will be larger, make this big
     mov dl, [BOOT_DRIVE]
     call disk_load
     ret
@@ -45,6 +45,7 @@ BOOT_DRIVE db 0 ; It is a good idea to store it in memory because 'dl' may get o
 MSG_REAL_MODE db "Started in 16-bit Real Mode", 0
 MSG_PROT_MODE db "Landed in 32-bit Protected Mode", 0
 MSG_LOAD_KERNEL db "Loading kernel into memory", 0
+MSG_RETURNED_KERNEL db "Returned from kernel. Error?", 0
 
 ; padding
 times 510 - ($-$$) db 0
