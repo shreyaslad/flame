@@ -18,7 +18,6 @@ void user_input(char* input) {
 		asm volatile("hlt");
 	}
 	else if (strcmp(input, "PAGE") == true) {
-		/* Lesson 22: Code to test kmalloc, the rest is unchanged */
 		u32 phys_addr;
 		u32 page = kmalloc(1000, 1, &phys_addr);
 		char page_str[16] = "";
