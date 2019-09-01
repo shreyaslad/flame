@@ -30,6 +30,9 @@ void user_input(char* input) {
 		kprint(phys_str);
 		kprint("\n");
 	}
+	else if (strcmplength(input, "L", 1) == true) {
+		kprint("The first character is the same");
+	}
 	kprint("You said: ");
 	kprint(input);
 	kprint("\n> ");

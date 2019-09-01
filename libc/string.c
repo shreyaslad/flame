@@ -68,9 +68,25 @@ bool strcmp(char s1[], char s2[]) {
 	}
 	//return s1[i] - s2[i];
 	if ((s1[i] - s2[i]) == 0) {
-		return true; // The two strings are true
+		return true; // The two strings are the same
 	}
 	else {
-		return false;
+		return false; // The two strings are not the same
 	}
+}
+
+// Compare the first x number of characters between the two strings. Can be used for handling arguments
+bool strcmplength(char s1[], char s2[], unsigned char x) {
+	int i;
+
+	for (i = 0; (s1[i] == s2[i]) < x; i++) {
+		if (s1[i] == '\0') {
+			return true;
+		}
+		else {
+			return false;
+		}
+	} 
+
+	return false;
 }
