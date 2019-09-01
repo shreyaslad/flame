@@ -1,9 +1,11 @@
 {
   "ExpandedNodes": [
     "",
+    "\\cpu",
     "\\drivers",
-    "\\kernel"
+    "\\kernel",
+    "\\libc"
   ],
-  "SelectedNode": "\\Makefile",
+  "SelectedNode": "\\cpu\\timer.h",
   "PreviewInSolutionExplorer": false
 }
