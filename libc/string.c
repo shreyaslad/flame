@@ -93,3 +93,14 @@ bool strcmpl(char s1[], char s2[], unsigned char x) {
 
 	return false;
 }
+
+int chartoint(char c) {
+	return (int)c; // typecast char to int
+}
+
+int sizeofarr(char arr[]) {
+	int total = 0;
+
+	total = *(&arr + 1) - arr;
+	return total;
+}

@@ -10,6 +10,7 @@ void main() {
 	isr_install();
 	irq_install();
 
+	clear_screen();
 	kprint("Initialized shell\nType HELP to access the help section\n>");
 }
 

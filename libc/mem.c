@@ -26,6 +26,6 @@ u32 kmalloc(u32 size, int align, u32 * phys_addr) {
 	if (phys_addr)* phys_addr = free_mem_addr;
 
 	u32 ret = free_mem_addr;
-	free_mem_addr += size; /* Remember to increment the pointer */
+	free_mem_addr += size; 
 	return ret;
 }

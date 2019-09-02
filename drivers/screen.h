@@ -3,9 +3,14 @@
 
 #include "../cpu/type.h"
 
+// VGA Output Buffer
 #define VIDEO_ADDRESS 0xb8000
+
+// Screen Dimensions
 #define MAX_ROWS 25
 #define MAX_COLS 80
+
+// Common Color Codes
 #define WHITE_ON_BLACK 0x0f
 #define RED_ON_WHITE 0xf4
 
