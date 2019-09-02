@@ -23,6 +23,7 @@ const char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6",
         "LShift", "\\", "Z", "X", "C", "V", "B", "N", "M", ",", ".", 
         "/", "RShift", "Keypad *", "LAlt", "Spacebar"};
 
+// All characters are lowercase for now
 const char sc_ascii[] = { ' ', ' ', '1', '2', '3', '4', '5', '6',
 	'7', '8', '9', '0', '-', '=', ' ', ' ', 'q', 'w', 'e', 'r', 't', 'y',
 		'u', 'i', 'o', 'p', '[', ']', ' ', ' ', 'a', 's', 'd', 'f', 'g',
@@ -39,10 +40,7 @@ static void keyboard_callback(registers_t regs) {
 
     u8 scancode = port_byte_in(0x60);
 
-	//if (scancode != BACKSPACE || scancode != LSHIFT || scancode != RSHIFT || scancode != ENTER) coutkey++;
-	//if (scancode == BACKSPACE) coutback++;
-
-	if (scancode > SC_MAX) return;
+	if (scancode > SC_MAX) return; // Typing a key that somehow doesn't exist
 
 	// Prevent user from deleting text that they didn't place
 	if (scancode == BACKSPACE) {
