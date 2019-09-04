@@ -2,14 +2,20 @@
 #include "isr.h"
 #include "ports.h"
 #include "../libc/function.h"
+#include "../libc/bool.h"
 
 u32 tick = 0;
+u32 prevTick = 0;
 
 static void timer_callback(registers_t regs) {
     tick++;
     UNUSED(regs);
 }
 
+/*****************************/
+/* asm volatile(sti);        */
+/* init_timer(50);           */
+/*****************************/
 void init_timer(u32 freq) {
     register_interrupt_handler(IRQ0, timer_callback);
 
@@ -21,5 +27,18 @@ void init_timer(u32 freq) {
     port_byte_out(0x43, 0x36); /* Command port */
     port_byte_out(0x40, low);
     port_byte_out(0x40, high);
+}
+
+void wait(u32 ticks, bool flag) {
+
+	if (flag == true) {
+		init_timer(ticks);k+9*-
+	}
+	else {
+		while (ticks < tick) {
+			tick++;
+			wait(ticks, false);
+		}
+	}
 }
 

@@ -10,16 +10,16 @@ void main() {
 	isr_install();
 	irq_install();
 
-	clear_screen();
+	
 	kprint("Initialized shell\nType HELP to access the help section\n>");
 }
 
 void user_input(char* input) {
-	if (strcmp(input, "END") == true) {
+	if (strcmp(input, "end") == true) {
 
 		halt(); // Halt the CPU
 
-	} else if (strcmp(input, "PAGE") == true) {
+	} else if (strcmp(input, "page") == true) {
 
 		u32 phys_addr;
 		u32 page = kmalloc(1000, 1, &phys_addr);
@@ -33,10 +33,7 @@ void user_input(char* input) {
 		kprint(phys_str);
 		kprint("\n");
 
-	} else if (strcmpl(input, "L", 1) == true) {
-		kprint("The first character is the same.\n");
 	}
-	kprint("You said: ");
-	kprint(input);
+
 	kprint("\n> ");
 }

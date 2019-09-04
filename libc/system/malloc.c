@@ -80,5 +80,5 @@ void *malloc(size_t bytes) {
 	}
 
 	UNUSED(free);
-	UNUSED(*prev);
+	UNUSED(*prev); // yes, this is necessary
 }
