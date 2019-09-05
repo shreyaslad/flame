@@ -32,7 +32,7 @@ void init_timer(u32 freq) {
 void wait(u32 ticks, bool flag) {
 
 	if (flag == true) {
-		init_timer(ticks);k+9*-
+		init_timer(ticks);
 	}
 	else {
 		while (ticks < tick) {
