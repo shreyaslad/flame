@@ -1,6 +1,7 @@
 #include "string.h"
 #include "../cpu/type.h"
 #include "bool.h"
+#include "../libc/system/malloc.h"
 
 void int_to_ascii(int n, char str[]) {
 	int i, sign;
@@ -55,6 +56,36 @@ void append(char s[], char n) {
 	int len = strlen(s);
 	s[len] = n;
 	s[len + 1] = '\0';
+}
+
+char* strappend(char s[], char n[]) {
+	int slen = strlen(s);
+	int nlen = strlen(n);
+
+	char buf[slen + nlen + 1]; //allocate a buffer that is the exact size of both char[], plus one byte for null termination
+	
+	for (int i = 0; i < nlen; i++) {
+		for (int i = 0; i < slen; i++) {
+			buf[i] = s[i]; //copy the first char[] to the buffer
+		}
+
+		buf[slen + i] = n[i]; //set everything after the first char[] offset to be the second char[]
+	}
+
+	buf[slen + nlen + 1] = '\0'; // null termination
+
+	char* ret = malloc(sizeof(buf));
+	return ret;
+}
+
+char* strcpy(char* dest, char* src) {
+	char* saved = dest;
+	while (*src) {
+		*dest++ = *src++;
+	}
+
+	*dest = 0;
+	return saved;
 }
 
 void backspace(char s[]) {

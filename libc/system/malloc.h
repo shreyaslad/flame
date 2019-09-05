@@ -1,5 +1,4 @@
-#ifndef MALLOC_H
-#define MALLOC_H
+#pragma once
 
 #include "../../cpu/type.h"
 
@@ -12,15 +11,8 @@ struct block {
 	struct block *next;
 };
 
-struct block* freeList = (void*)memory;
-
 void initialize();
 void split(struct block* fitting_slot, size_t size);
 void *malloc(size_t bytes);
 void merge();
 void free(void* ptr);
-
-void memory_copy(u8* source, u8* dest, int nbytes);
-void memory_set(u8* dest, u8 val, u32 len);
-
-#endif

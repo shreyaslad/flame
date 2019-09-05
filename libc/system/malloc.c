@@ -2,6 +2,7 @@
 #include "malloc.h"
 #include "../../drivers/screen.h"
 #include "../../libc/function.h"
+#include "freeList.h"
 
 void initialize() {
 	freeList->size = 20000 - sizeof(struct block);
@@ -19,7 +20,7 @@ void split(struct block* fitting_slot, size_t size) {
 	fitting_slot->next = new;
 }
 
-void *malloc(size_t bytes) {
+void* malloc(size_t bytes) {
 
 	struct block* curr, * prev;
 	void* result;
@@ -51,46 +52,34 @@ void *malloc(size_t bytes) {
 		return result;
 	}
 
-	void merge() {
-		struct block* curr, * prev;
-		curr = freeList;
-		while ((curr->next) != 0) {
-			if ((curr->free) && (curr->next->free)) {
-				curr->size += (curr->next->size) + sizeof(struct block);
-				curr->next = curr->next->next;
-			}
-			prev = curr;
-			curr = curr->next;
-		}
-		UNUSED(*prev);
-	}
-
-	void free(void* ptr) {
-		if (((void*)memory <= ptr) && (ptr <= (void*)(memory + 20000))) {
-			struct block* curr = ptr;
-			--curr;
-
-			curr->free = 1;
-
-			merge();
-		}
-		else {
-			kprint("Provide a valid pointer allocated by malloc!\n");
-		}
-	}
-
-	UNUSED(free);
-	UNUSED(*prev); // yes, this is necessary
+	UNUSED(*prev);
 }
 
-void memory_copy(u8* source, u8* dest, int nbytes) {
-	int i;
-	for (i = 0; i < nbytes; i++) {
-		*(dest + i) = *(source + i);
+void merge() {
+	struct block* curr, * prev;
+	curr = freeList;
+	while ((curr->next) != 0) {
+		if ((curr->free) && (curr->next->free)) {
+			curr->size += (curr->next->size) + sizeof(struct block);
+			curr->next = curr->next->next;
+		}
+		prev = curr;
+		curr = curr->next;
 	}
+
+	UNUSED(*prev);
 }
 
-void memory_set(u8 * dest, u8 val, u32 len) {
-	u8* temp = (u8*)dest;
-	for (; len != 0; len--) * temp++ = val;
+void free(void* ptr) {
+	if (((void*)memory <= ptr) && (ptr <= (void*)(memory + 20000))) {
+		struct block* curr = ptr;
+		--curr;
+
+		curr->free = 1;
+
+		merge();
+	}
+	else {
+		kprint("Provide a valid pointer allocated by malloc!\n");
+	}
 }
