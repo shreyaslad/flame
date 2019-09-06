@@ -10,6 +10,7 @@ void main() {
 	isr_install();
 	irq_install();
 
+	clear_screen();
 	
 	kprint("Initialized shell\n>");
 }
@@ -22,15 +23,15 @@ void user_input(char* input) {
 	}
 	else {
 
-		char string[100]; // reserve 100 bytes for the error message
+		//char string[100]; // reserve 100 bytes for the error message
 
-		strcpy(string, strappend("Could not find command: ", input));
+		//strcpy(string, strappend("Could not find command: ", input));
 
 		//char tgt[len];
 		//memory_set(tgt, '\0', sizeof(tgt));
 		//strcpy(tgt, string);
 
-		kprint(string); // Concatenate error message and user input
+		kprint("Couldn't find command"); // Concatenate error message and user input
 	}
 
 	kprint("\n> ");
