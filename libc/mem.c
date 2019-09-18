@@ -1,7 +1,7 @@
-#include "../../cpu/type.h"
+#include "../cpu/type.h"
 #include "mem.h"
-#include "../../drivers/screen.h"
-#include "../../libc/function.h"
+#include "../drivers/screen.h"
+#include "../libc/function.h"
 #include "freeList.h"
 
 void memory_copy(u8* source, u8* dest, int nbytes) {
