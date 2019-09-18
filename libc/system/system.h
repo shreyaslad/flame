@@ -1,1 +1,0 @@
-void system(char* string);
