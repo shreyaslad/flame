@@ -5,6 +5,7 @@
 #include "../libc/string.h"
 #include "../libc/function.h"
 #include "../kernel/kernel.h"
+#include "../kernel/commands/command.h"
 
 #define BACKSPACE 0x0E
 #define ENTER 0x1C
@@ -61,8 +62,8 @@ static void keyboard_callback(registers_t regs) {
 		key_buffer[0] = '\0';
 
 		coutkey = 0;
-	} else if (scancode == ENTER) {
-		
+	} else if (scancode == POWER) {
+		halt();
 	}
 	else {
 		coutkey++;
