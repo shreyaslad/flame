@@ -10,6 +10,7 @@
 #define ENTER 0x1C
 #define LSHIFT 0x2a
 #define RSHIFT 0x36
+#define POWER 0x37;
 
 static char key_buffer[256];
 
@@ -60,6 +61,8 @@ static void keyboard_callback(registers_t regs) {
 		key_buffer[0] = '\0';
 
 		coutkey = 0;
+	} else if (scancode == ENTER) {
+		
 	}
 	else {
 		coutkey++;
