@@ -13,6 +13,9 @@
 #define RSHIFT 0x36
 #define POWER 0x37;
 
+#define RIGHT_ARROW 0x4D;
+#define LEFT_ARROW 0x4B;
+
 static char key_buffer[256];
 
 int coutkey = 0;
@@ -29,8 +32,8 @@ const char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6",
 const char sc_ascii[] = { ' ', ' ', '1', '2', '3', '4', '5', '6',
 	'7', '8', '9', '0', '-', '=', ' ', ' ', 'q', 'w', 'e', 'r', 't', 'y',
 		'u', 'i', 'o', 'p', '[', ']', ' ', ' ', 'a', 's', 'd', 'f', 'g',
-		'h', 'j', 'k', 'l', ';', '\'', '`', ' ', '\\', 'z', 'x', 'c', 'v',
-		'b', 'n', 'm', ',', '.', '/', ' ', ' ', ' ', ' ' };
+		'h', 'j', 'k', 'l', ';', '\'', '`', '', '\\', 'z', 'x', 'c', 'v',
+		'b', 'n', 'm', ',', '.', '/', '', ' ', ' ', ' ' };
 
 const char sc_ascii_uppercase[] = { ' ', ' ', '!', '@', '#', '$', '%', '^',
 	'&', '*', '(', ')', '_', '+', ' ', ' ', 'Q', 'W', 'E', 'R', 'T', 'Y',
@@ -64,6 +67,10 @@ static void keyboard_callback(registers_t regs) {
 		coutkey = 0;
 	} else if (scancode == POWER) {
 		halt();
+	} else if (scancode == RIGHT_ARROW) {
+		
+	} else if (scancode == LEFT_ARROW) {
+		
 	}
 	else {
 		coutkey++;
