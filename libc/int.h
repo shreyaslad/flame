@@ -1,4 +1,6 @@
 #pragma once
 
-int octtodec(int value);
+int octalToDecimal(int octal);
+int decimalToOctal(int decimal);
+
 int power(int base, int exponent);
