@@ -1,7 +1,7 @@
 #include "string.h"
 #include "../cpu/type.h"
 #include "bool.h"
-#include "../libc/system/malloc.h"
+#include "mem.h"
 
 void int_to_ascii(int n, char str[]) {
 	int i, sign;
