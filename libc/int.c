@@ -11,3 +11,9 @@
 int octtodec(int value) {
   
 }
+
+int power(int base, int power) {
+  for (int i = 0; i < power; i++) {
+    base *= power;
+  }
+}
