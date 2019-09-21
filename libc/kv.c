@@ -7,8 +7,9 @@
 
 #include "kv.h"
 
-bool setPair(HashMap map, String key, String value) {
-
+bool setPair(struct HashMap map, String key, String value) {
+	strcpy(map.Key, key);
+	strcpy(map.Value, value);
 
 	return false;
 }
@@ -16,16 +17,18 @@ bool setPair(HashMap map, String key, String value) {
 // map not needed since solely based on pointer
 bool freePair(s16* pointer) {
 
-
+	UNUSED(pointer);
 	return false;
 }
 
-String getKey(HashMap map) {
+String getKey(struct HashMap map) {
 
+	UNUSED(map);
 	return NULL;
 }
 
-String getValue(HashMap map)
-{
+String getValue(struct HashMap map) {
+
+	UNUSED(map);
 	return NULL;
 }
