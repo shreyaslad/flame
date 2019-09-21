@@ -4,7 +4,7 @@ OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o}
 
 CC = /home/meemr/opt/cross/bin/i686-elf-gcc
 CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
-		 -Wall -Wextra -Werror
+		 -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-variable
 
 os-image.bin: boot/bootsect.bin kernel.bin
 	cat $^ > os-image.bin
