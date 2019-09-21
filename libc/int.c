@@ -17,10 +17,6 @@ int octalToDecimal(int octal) {
 		octal /= 10;
 	}
 
-	if (octal == 0) {
-		return 0;
-	}
-
 	i = 1;
 	
 	return decimal;
@@ -36,17 +32,15 @@ int decimalToOctal(int decimal) {
 		i *= 10;
 	}
 
-	if (decimal == 0) {
-		return 0;
-	}
-
 	return octal;
 }
 
 int power(int base, int power) {
-  for (int i = 0; i < power; i++) {
-    base *= power;
-  }
+	int result = 1;
 
-  return base;
+	for (int i = 0; i < power; i++) {
+		result *= base;
+	}
+
+	return result;
 }
