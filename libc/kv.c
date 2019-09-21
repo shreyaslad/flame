@@ -16,14 +16,31 @@ bool setPair(struct HashMap map, String key, String value) {
 	strcpy(map.Value, value);
 	strcpy(map.dataPointer, pointer); // store pointer to data in struct (struct is a shell for the data inside the same scope it was declared in)
 
-	return false;
+	// check if pointer is valid or not. If not, something went wrong and return false
+	if (pointer == NULL) {
+		return false;
+	}
+
+	return true;
 }
 
 // map not needed since solely based on pointer
-bool freePair(s8* pointer) {
+bool freePairPointer(s8* pointer) {
 
-	UNUSED(pointer);
+	free((void *) pointer);
+
 	return false;
+}
+
+bool freePairMap(struct HashMap map) {
+
+	if (map.dataPointer == NULL) {
+		return false; // Something went wrong and the pointer to the data wasn't set
+	}
+
+	free((void*)map.dataPointer);
+
+	return true;
 }
 
 String getKey(struct HashMap map) {
