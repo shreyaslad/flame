@@ -12,6 +12,7 @@
 #include "bool.h"
 #include "null.h"
 #include "function.h"
+#include "mem.h"
 
 // Use malloc to reserve concatenated string of key=value
 // dataPointer holds pointer to this data
@@ -21,11 +22,11 @@
 struct HashMap {
 	String Key;
 	String Value;
-	s16* dataPointer;
+	s8* dataPointer;
 } HashMap;
 
 bool setPair(struct HashMap map, String key, String value); // Makes calls to malloc and sets struct values
-bool freePair(s16* pointer); // Calls free on the pointer
+bool freePair(s8* pointer); // Calls free on the pointer
 
 String getKey(struct HashMap map); // map.dataPointer
 String getValue(struct HashMap map);
