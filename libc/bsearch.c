@@ -9,7 +9,9 @@
 		| torvalds/linux/lib/bsearch.c
 */
 
-void* bsearch(const void* key, const void* base, u16 num, u16 size, int(*compare)(const void* key, const void* elt)) {
+#include "bsearch.h"
+
+void* bsearch(const void* key, const void* base, size_t num, size_t size, int(*compare)(const void* key, const void* elt)) {
 	const char* pivot;
 	int result;
 

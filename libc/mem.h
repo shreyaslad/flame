@@ -2,7 +2,7 @@
 #define MEM_H
 
 #include "../cpu/type.h"
-
+#include  "null.h"
 void memory_copy(u8* source, u8* dest, int nbytes);
 void memory_set(u8* dest, u8 val, u32 len);
 
@@ -19,7 +19,10 @@ struct block {
 
 void initialize();
 void split(struct block* fitting_slot, size_t size);
+
 void *malloc(size_t bytes);
+void* realloc(void* pointer, size_t size);
+
 void merge();
 void free(void* ptr);
 

@@ -14,6 +14,7 @@
 #include "null.h"
 #include "function.h"
 #include "mem.h"
+#include "bsearch.h"
 
 // key and value can be of any type
 typedef struct {
@@ -27,8 +28,11 @@ typedef struct {
 } KVStore;
 
 static int kvSort(const void* a, const void* b);
+static int kvSearch(const void* key, const void* elt);
 
-KVStore kvsCreate(void);
+KVStore *kvsCreate(void);
 static void kvCreatePair(KVStore* store, const void* key, void* value);
+
+static KVPair* kvGetPair(KVStore* store, const void* key);
 
 bool kvsDestroy(KVStore* store);

@@ -26,7 +26,20 @@ static int kvSort(const void* a, const void* b) {
 	return 0;
 }
 
-KVStore kvsCreate(void) {
+static int kvSearch(const void* key, const void* elt) {
+	const KVPair* pair = elt;
+
+	if (key > pair->key) {
+		return -1;
+	}
+	if (key < pair->key) {
+		return 1;
+	}
+
+	return 0;
+}
+
+KVStore *kvsCreate(void) {
 	KVStore* store = malloc(KVStoreSize);
 	store->pairs = NULL;
 	store->length = 0;
@@ -39,6 +52,17 @@ static void kvCreatePair(KVStore* store, const void* key, void* value) {
 
 	if (!store) return;
 	++store->length;
+
+	UNUSED(key);
+	UNUSED(value);
+}
+
+static KVPair* kvGetPair(KVStore* store, const void* key) {
+	if ((!store) || (!store->pairs)) {
+		return NULL;
+	}
+
+	return bsearch(key, store->pairs, store->length, KVPairSize, kvSearch);
 }
 
 bool kvsDestroy(KVStore* store) {

@@ -16,7 +16,7 @@ void memory_set(u8 * dest, u8 val, u32 len) {
 	for (; len != 0; len--) * temp++ = val;
 }
 
-// kernel starts at x01000
+// kernel starts at 0x01000
 u32 free_mem_addr = 0x10000;
 /* Implementation is just a pointer to some free memory which
  * keeps growing */
@@ -26,7 +26,7 @@ u32 kmalloc(u32 size, int align, u32 * phys_addr) {
 		free_mem_addr &= 0xFFFFF000;
 		free_mem_addr += 0x1000;
 	}
-	/* Save also the physical address */
+	
 	if (phys_addr)* phys_addr = free_mem_addr;
 
 	u32 ret = free_mem_addr;
@@ -83,6 +83,13 @@ void* malloc(size_t bytes) {
 	}
 
 	UNUSED(*prev);
+}
+
+void* realloc(void* pointer, size_t size) {
+
+	UNUSED(pointer);
+	UNUSED(size);
+	return NULL;
 }
 
 void merge() {
