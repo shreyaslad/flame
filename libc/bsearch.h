@@ -12,5 +12,6 @@
 #pragma once
 
 #include "../cpu/type.h"
+#include "null.h"
 
-void *bsearch(const void *key, const void *base, u16 num, u16 size)
+void* bsearch(const void* key, const void* base, u16 num, u16 size, int(*compare)(const void* key, const void* elt));

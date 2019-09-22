@@ -9,3 +9,23 @@
 		| torvalds/linux/lib/bsearch.c
 */
 
+void* bsearch(const void* key, const void* base, u16 num, u16 size, int(*compare)(const void* key, const void* elt)) {
+	const char* pivot;
+	int result;
+
+	while (num > 0) {
+		pivot = base + (num >> 1) * size;
+		result = compare(key, pivot);
+
+		if (result == 0) return (void*)pivot;
+
+		if (result > 0) {
+			base = pivot + size;
+			num--;
+		}
+
+		num >>= 1;
+	}
+	
+	return NULL;
+}
