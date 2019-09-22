@@ -1,56 +1,54 @@
 /*
 	kv.c
 	Copyright Shreyas Lad (PenetratingShot) 2019
+	Licensed under the MIT License
 
 	Attempt at a Java hashmap-esque key-value data storage structure
 */
 
 #include "kv.h"
 
-bool setPair(struct HashMap map, String key, String value) {
-	s8* pointer;
+static const size_t KVStoreSize = sizeof(KVStore);
+static const size_t KVPairSize = sizeof(KVPair);
 
-	pointer = malloc(sizeof(key) + 1 + sizeof(value)); // reserve the exact amount of space for key=value
+// Have to use int instead of bool to support 3 different error values instead of two
+static int kvSort(const void* a, const void* b) {
+	const KVPair* pairA = a;
+	const KVPair* pairB = b;
 
-	strcpy(map.Key, key);
-	strcpy(map.Value, value);
-	strcpy(map.dataPointer, pointer); // store pointer to data in struct (struct is a shell for the data inside the same scope it was declared in)
+	if (pairA->key > pairB->key) {
+		return -1;
+	}
+	if (pairA->key < pairB->key) {
+		return 1;
+	}
 
-	// check if pointer is valid or not. If not, something went wrong and return false
-	if (pointer == NULL) {
+	return 0;
+}
+
+KVStore kvsCreate(void) {
+	KVStore* store = malloc(KVStoreSize);
+	store->pairs = NULL;
+	store->length = 0;
+	
+	return store;
+}
+
+static void kvCreatePair(KVStore* store, const void* key, void* value) {
+	KVPair* pair;
+
+	if (!store) return;
+	++store->length;
+}
+
+bool kvsDestroy(KVStore* store) {
+	if (!store || store == NULL)
 		return false;
+
+	if (store->pairs) {
+		free(store->pairs);
 	}
 
+	free(store);
 	return true;
-}
-
-// map not needed since solely based on pointer
-bool freePairPointer(s8* pointer) {
-
-	free((void *) pointer);
-
-	return false;
-}
-
-bool freePairMap(struct HashMap map) {
-
-	if (map.dataPointer == NULL) {
-		return false; // Something went wrong and the pointer to the data wasn't set
-	}
-
-	free((void*)map.dataPointer);
-
-	return true;
-}
-
-String getKey(struct HashMap map) {
-
-	UNUSED(map);
-	return NULL;
-}
-
-String getValue(struct HashMap map) {
-
-	UNUSED(map);
-	return NULL;
 }

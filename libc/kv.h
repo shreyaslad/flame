@@ -1,6 +1,7 @@
 /*
 	kv.h
 	Copyright Shreyas Lad (PenetratingShot) 2019
+	Licensed under the MIT License
 
 	Attempt at a Java hashmap-esque key-value data storage structure
 */
@@ -14,20 +15,20 @@
 #include "function.h"
 #include "mem.h"
 
-// Use malloc to reserve concatenated string of key=value
-// dataPointer holds pointer to this data
-// When get function is called, it grabs the data at this pointer
-// Can get the key or the value depending on the index of the array when you do split('=')
-// Can delete the pair by calling free on the stored data pointer
-struct HashMap {
-	String Key;
-	String Value;
-	s8* dataPointer;
-} HashMap;
+// key and value can be of any type
+typedef struct {
+	const void* key;
+	void* value;
+} KVPair;
 
-bool setPair(struct HashMap map, String key, String value); // Makes calls to malloc and sets struct values
-bool freePairPointer(s8* pointer); // Calls free on the pointer
-bool freePairMap(struct HashMap map); // Calls free on the pointer stored in dataPointer of the supplied map
+typedef struct {
+	KVPair* pairs;
+	u32 length;
+} KVStore;
 
-String getKey(struct HashMap map); // map.dataPointer
-String getValue(struct HashMap map);
+static int kvSort(const void* a, const void* b);
+
+KVStore kvsCreate(void);
+static void kvCreatePair(KVStore* store, const void* key, void* value);
+
+bool kvsDestroy(KVStore* store);
