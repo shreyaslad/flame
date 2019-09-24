@@ -141,43 +141,13 @@ int sizeofarr(char arr[]) {
 	return total;
 }
 
-char* strtok(String string, char* deliminator) {
-	static char* static_str = 0;
-	int index, strlength = 0;
+char* strtok(String string, String deliminator) {
 	int found = 0;
+	int length = strlen(string);
 
-	if (deliminator == NULL || (string == NULL && static_str == NULL))
-		return string;
-
-	if (string == 0) string = static_str;
-
-	while (string[strlength])
-		strlength++;
-
-	for (index = 0; index < strlength; index++) {
-		if (string[index] == deliminator[0]) {
-			found = 1;
-			break;
+	for (int i = 0; i < length; i++) {
+		if (string[i] == deliminator[0]) {
+			found++;
 		}
 	}
-
-	if (found == 1) {
-		static_str = 0;
-		return string;
-	}
-
-	if (string[0] == deliminator[0]) {
-		static_str = (string + 1);
-		return (char*)deliminator; // No point in type casting this but why not
-	}
-
-	string[index] = '\0';
-
-	if ((string + index + 1) != 0) {
-		static_str = (string + index + 1);
-	}
-	else {
-		static_str = 0;
-	}
-	return string;
 }
