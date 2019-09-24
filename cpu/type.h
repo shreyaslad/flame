@@ -1,6 +1,10 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+typedef int bool;
+#define true 0
+#define false 1
+
 typedef unsigned int u32;
 typedef int s32;
 typedef unsigned short u16;

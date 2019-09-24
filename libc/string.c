@@ -1,7 +1,12 @@
+/*
+	string.c
+	Copyright Shreyas Lad (PenetratingShot) 2019
+	Licensed under the MIT License
+
+	Handy string manipulation and conversion functions
+*/
+
 #include "string.h"
-#include "../cpu/type.h"
-#include "bool.h"
-#include "mem.h"
 
 void int_to_ascii(int n, char str[]) {
 	int i, sign;
@@ -134,4 +139,15 @@ int sizeofarr(char arr[]) {
 
 	total = *(&arr + 1) - arr;
 	return total;
+}
+
+char* strtok(String string, String deliminator) {
+	int found = 0;
+	int length = strlen(string);
+
+	for (int i = 0; i < length; i++) {
+		if (string[i] == deliminator[0]) {
+			found++;
+		}
+	}
 }

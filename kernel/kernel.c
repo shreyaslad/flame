@@ -3,8 +3,9 @@
 #include "kernel.h"
 #include "../libc/string.h"
 #include "../libc/mem.h"
-#include "../libc/bool.h"
 #include "./commands/command.h"
+#include "../cpu/type.h"
+#include "../libc/int.h"
 
 void main() {
 	isr_install();
@@ -21,7 +22,15 @@ void user_input(char* input) {
 		halt(); // Halt the CPU
 
 	}
-	else {
+	else if (strcmp(input, "test") == true) {
+		if (octalToDecimal(13) == 11) {
+			kprint("yes");
+		}
+		else {
+			kprint("no");
+		}
+	}
+	else{
 
 		//char string[100]; // reserve 100 bytes for the error message
 

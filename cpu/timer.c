@@ -1,8 +1,5 @@
 #include "timer.h"
-#include "isr.h"
-#include "ports.h"
-#include "../libc/function.h"
-#include "../libc/bool.h"
+
 
 u32 tick = 0;
 u32 prevTick = 0;
