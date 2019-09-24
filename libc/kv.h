@@ -10,11 +10,10 @@
 
 #include "../cpu/type.h"
 #include "string.h"
-#include "bool.h"
 #include "null.h"
 #include "function.h"
 #include "mem.h"
-#include "bsearch.h"
+#include "search.h"
 
 // key and value can be of any type
 typedef struct {
