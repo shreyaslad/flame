@@ -2,6 +2,12 @@
 #define ISR_H
 
 #include "type.h"
+#include "idt.h"
+#include "../drivers/screen.h"
+#include "../drivers/keyboard.h"
+#include "../include/string.h"
+#include "timer.h"
+#include "ports.h"
 
 /* ISRs reserved for CPU exceptions */
 extern void isr0();

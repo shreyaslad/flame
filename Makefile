@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c kernel/commands/*.c libc/system/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h libc/*.h kernel/commands/*h libc/system/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c include/*.c kernel/commands/*.c )
+HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h include/*.h kernel/commands/*h)
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o} 
 
 CC = /home/meemr/opt/cross/bin/i686-elf-gcc
@@ -29,4 +29,4 @@ run: os-image.bin
 
 clean:
 	rm -rf kernel.bin *.dis *.o *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o include/*.o

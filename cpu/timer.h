@@ -4,7 +4,7 @@
 #include "type.h"
 #include "isr.h"
 #include "ports.h"
-#include "../libc/function.h"
+#include "../include/function.h"
 
 void init_timer(u32 freq);
 

@@ -2,6 +2,8 @@
 #define SCREEN_H
 
 #include "../cpu/type.h"
+#include "../cpu/ports.h"
+#include "../include/mem.h"
 
 // VGA Output Buffer
 #define VIDEO_ADDRESS 0xb8000

@@ -1,6 +1,5 @@
 #include "timer.h"
 
-
 u32 tick = 0;
 u32 prevTick = 0;
 

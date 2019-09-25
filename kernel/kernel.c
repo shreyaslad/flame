@@ -1,11 +1,4 @@
-#include "../cpu/isr.h"
-#include "../drivers/screen.h"
 #include "kernel.h"
-#include "../libc/string.h"
-#include "../libc/mem.h"
-#include "./commands/command.h"
-#include "../cpu/type.h"
-#include "../libc/int.h"
 
 void main() {
 	isr_install();
