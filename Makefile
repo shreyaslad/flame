@@ -3,8 +3,10 @@ HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h include/*.h kernel/commands/
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o} 
 
 CC = /home/meemr/opt/cross/bin/i686-elf-gcc
+GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
 CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
 		 -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-variable
+
 
 os-image.bin: boot/bootsect.bin kernel.bin
 	cat $^ > os-image.bin
@@ -17,6 +19,10 @@ kernel.elf: boot/kernel_entry.o ${OBJ}
 
 run: os-image.bin
 	qemu-system-i386 -fda os-image.bin
+
+debug: os-image.bin kernel.elf
+	qemu-system-i386 -s -fda os-image.bin -d guest_errors,int &
+	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c ${HEADERS}
 	${CC} ${CFLAGS} -ffreestanding -c $< -o $@

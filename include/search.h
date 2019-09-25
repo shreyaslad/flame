@@ -15,3 +15,4 @@
 #include "null.h"
 
 void* bsearch(const void* key, const void* base, size_t num, size_t size, int(*compare)(const void* key, const void* elt));
+void* qsort(const void* base, size_t num, size_t size, int(*sort)(const void* key, const void* elt));

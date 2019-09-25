@@ -8,6 +8,7 @@
 #include "../include/string.h"
 #include "../include/mem.h"
 #include "../include/int.h"
+#include "../include/null.h"
 
 void user_input(char* input);
 
