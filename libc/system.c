@@ -1,4 +1,4 @@
-#include "system.h"
+#include <system.h>
 #include "../kernel/kernel.h"
 
 // Call kernel to input external command

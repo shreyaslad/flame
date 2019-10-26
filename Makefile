@@ -1,11 +1,11 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c include/*.c kernel/commands/*.c )
-HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h include/*.h kernel/commands/*h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c kernel/commands/*.c )
+HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h kernel/commands/*h)
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o} 
 
-CC = /home/meemr/opt/cross/bin/i686-elf-gcc
+CC = /opt/cross/bin/i686-elf-gcc
 GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
 CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
-		 -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-variable
+		 -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-variable -Wpedantic
 
 
 os-image.bin: boot/bootsect.bin kernel.bin
@@ -25,7 +25,7 @@ debug: os-image.bin kernel.elf
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c ${HEADERS}
-	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
+	${CC} -Iinclude ${CFLAGS} -ffreestanding -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@

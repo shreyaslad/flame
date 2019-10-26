@@ -5,10 +5,10 @@
 #include "../drivers/screen.h"
 #include "./commands/command.h"
 #include "../cpu/type.h"
-#include "../include/string.h"
-#include "../include/mem.h"
-#include "../include/int.h"
-#include "../include/null.h"
+#include <string.h>
+#include <mem.h>
+#include <int.h>
+#include <null.h>
 
 void user_input(char* input);
 

@@ -6,7 +6,7 @@
 	Attempt at a Java hashmap-esque key-value data storage structure
 */
 
-#include "kv.h"
+#include <kv.h>
 
 static const size_t KVStoreSize = sizeof(KVStore);
 static const size_t KVPairSize = sizeof(KVPair);

@@ -6,7 +6,7 @@
 	Contains functions for handy integer conversions
 */
 
-#include "int.h"
+#include <int.h>
 
 int octalToDecimal(int octal) {
 	int decimal, i = 0;
