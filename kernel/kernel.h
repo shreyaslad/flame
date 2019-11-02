@@ -3,12 +3,14 @@
 
 #include "../cpu/isr.h"
 #include "../drivers/screen.h"
-#include "./commands/command.h"
+#include "../drivers/sound.h"
 #include "../cpu/type.h"
+#include "../cpu/timer.h"
+#include "../cpu/ports.h"
 #include <string.h>
 #include <mem.h>
 #include <int.h>
-#include <null.h>
+#include <stddef.h>
 
 void user_input(char* input);
 

@@ -9,8 +9,8 @@
 #pragma once
 
 #include "../cpu/type.h"
-#include "mem.h"
-#include "null.h"
+#include <mem.h>
+#include <stddef.h>
 
 typedef char* String;
 
@@ -27,5 +27,5 @@ char* strcpy(char* dest, char* src);
 
 char* cut(String string, String deliminator);
 
-int strcmp(char s1[], char s2[]);
+int strcmp(char* s1, char* s);
 int strcmpl(char s1[], char s2[], unsigned char x);

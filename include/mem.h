@@ -2,10 +2,9 @@
 #define MEM_H
 
 #include "../cpu/type.h"
-#include "null.h"
-#include "mem.h"
+#include <stddef.h>
 #include "../drivers/screen.h"
-#include "function.h"
+#include <function.h>
 
 void memory_copy(u8* source, u8* dest, int nbytes);
 void memory_set(u8* dest, u8 val, u32 len);

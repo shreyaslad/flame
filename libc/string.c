@@ -98,22 +98,17 @@ void backspace(char s[]) {
 	s[len - 1] = '\0';
 }
 
-bool strcmp(char s1[], char s2[]) {
+int strcmp(char* s1, char* s2) {
 	int i;
 	for (i = 0; s1[i] == s2[i]; i++) {
 		if (s1[i] == '\0') return 0;
 	}
-	//return s1[i] - s2[i];
-	if ((s1[i] - s2[i]) == 0) {
-		return true; // The two strings are the same
-	}
-	else {
-		return false; // The two strings are not the same
-	}
+
+	return s1[i] - s2[i];
 }
 
 // Compare the first x number of characters between the two strings. Can be used for handling arguments
-bool strcmpl(char s1[], char s2[], unsigned char x) {
+int strcmpl(char s1[], char s2[], unsigned char x) {
 	int i = 0;
 
 	do {

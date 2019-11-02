@@ -4,10 +4,10 @@
 #include "type.h"
 #include "isr.h"
 #include "ports.h"
-#include "../include/function.h"
+#include <function.h>
+#include <stdint.h>
+#include <stdbool.h>
 
-void init_timer(u32 freq);
-
-void wait(u32 ticks, bool flag);
+void init_timer(uint32_t freq);
 
 #endif

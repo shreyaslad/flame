@@ -59,7 +59,7 @@ static void keyboard_callback(registers_t regs) {
 
 		coutkey = 0;
 	} else if (scancode == POWER) {
-		halt();
+		kprint("power?");
 	} else if (scancode == RIGHT_ARROW) {
 		
 	} else if (scancode == LEFT_ARROW) {

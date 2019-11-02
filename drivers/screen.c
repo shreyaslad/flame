@@ -108,7 +108,7 @@ void set_cursor_offset(int offset) {
     port_byte_out(REG_SCREEN_DATA, (u8)(offset & 0xff));
 }
 
-void clear_screen() {
+void clear() {
     int screen_size = MAX_COLS * MAX_ROWS;
     int i;
     u8 *screen = (u8*) VIDEO_ADDRESS;

@@ -11,15 +11,14 @@
 
 #include "../cpu/ports.h"
 
-static void playSound(u32 nFrequency) {
-	u32 Div;
-	u8 tmp;
+void play(uint32_t nFrequence) {
+	uint32_t Div;
+	uint8_t tmp;
 
-	// Set PIT to frequency
-	Div = 1193180 / nFrequency;
+	Div = 1193180 / nFrequence;
 	port_byte_out(0x43, 0xb6);
-	port_byte_out(0x42, (u8)(Div));
-	port_byte_out(0x42, (u8)(Div >> 8));
+	port_byte_out(0x42, (uint8_t)(Div));
+	port_byte_out(0x42, (uint8_t)(Div >> 8));
 
 	tmp = port_byte_in(0x61);
 	if (tmp != (tmp | 3)) {
@@ -28,8 +27,14 @@ static void playSound(u32 nFrequency) {
 }
 
 //shtap
-static void noSound() {
-	u8 tmp = port_byte_in(0x61) & 0xFC;
+void noSound() {
+	uint8_t tmp = port_byte_in(0x61) & 0xFC;
 
 	port_byte_out(0x61, tmp);
+}
+
+void boot() {
+	play(300);
+	//wait(10, true);
+	noSound();
 }
