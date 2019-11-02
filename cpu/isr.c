@@ -82,7 +82,7 @@ char *exception_messages[] = {
     "Double Fault",
     "Coprocessor Segment Overrun",
     "Bad TSS",
-    "Segment Not Present",
+    "Segvment Not Present",
     "Stack Fault",
     "General Protection Fault",
     "Page Fault",

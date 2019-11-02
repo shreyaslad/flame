@@ -22,7 +22,7 @@ void backspace(char s[]);
 void reverse(char s[]);
 int strlen(char s[]);
 void append(char s[], char n);
-char* strappend(char s[], char n[]);
+char* strcat(char* s, char* n);
 char* strcpy(char* dest, char* src);
 
 char* cut(String string, String deliminator);

@@ -63,24 +63,16 @@ void append(char s[], char n) {
 	s[len + 1] = '\0';
 }
 
-char* strappend(char s[], char n[]) {
-	int slen = strlen(s);
-	int nlen = strlen(n);
+char* strcat(char* dest, char* src) {
+	char* ptr = dest + strlen(dest);
 
-	char buf[slen + nlen + 1]; //allocate a buffer that is the exact size of both char[], plus one byte for null termination
-	
-	for (int i = 0; i < nlen; i++) {
-		for (int i = 0; i < slen; i++) {
-			buf[i] = s[i]; //copy the first char[] to the buffer
-		}
-
-		buf[slen + i] = n[i]; //set everything after the first char[] offset to be the second char[]
+	while (*src != '\0') {
+		*ptr++ = *src++;
 	}
 
-	buf[slen + nlen + 1] = '\0'; // null termination
+	*ptr = '\0';
 
-	char* ret = malloc(sizeof(buf));
-	return ret;
+	return dest;
 }
 
 char* strcpy(char* dest, char* src) {

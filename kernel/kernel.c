@@ -26,7 +26,13 @@ void user_input(char* input) {
 		);*/
 	}
 	else {
-		kprint("Couldn't find command");
+		char* buf = (char*)malloc(sizeof(char));
+
+		strcpy(buf, "Unrecognized command: ");
+		strcat(buf, input);
+		kprint(buf);
+
+		free(buf);
 	}
 	kprint("\n>");
 }
