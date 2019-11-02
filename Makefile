@@ -4,7 +4,7 @@ OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o}
 
 CC = /opt/cross/bin/i686-elf-gcc
 GDB = /opt/cross/bin/i386-elf-gdb
-CFLAGS = -g -m32 -nostdlib -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
+CFLAGS = -g -m32 -nostdlib -fno-stack-protector -nostartfiles -nodefaultlibs \
 		 -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-variable -Wpedantic
 
 

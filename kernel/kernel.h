@@ -4,6 +4,7 @@
 #include "../cpu/isr.h"
 #include "../drivers/screen.h"
 #include "../drivers/sound.h"
+#include "../drivers/time.h"
 #include "../cpu/type.h"
 #include "../cpu/timer.h"
 #include "../cpu/ports.h"

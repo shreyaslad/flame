@@ -11,10 +11,11 @@
 #include "../cpu/type.h"
 #include <mem.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef char* String;
 
-void int_to_ascii(int n, char str[]);
+void itoa(int n, char str[]);
 void hex_to_ascii(int n, char str[]);
 
 void backspace(char s[]);
