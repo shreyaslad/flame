@@ -1,7 +1,7 @@
 #include "kernel.h"
 
 
-void main() {
+void kmain() {
 	isr_install();
 	irq_install();
 
