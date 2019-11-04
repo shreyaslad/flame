@@ -4,6 +4,8 @@
 #include "screen.h"
 #include <string.h>
 #include <function.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include "../kernel/kernel.h"
 
 void init_keyboard();
