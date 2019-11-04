@@ -50,7 +50,7 @@ static void keyboard_callback(registers_t regs) {
 	if (scancode > SC_MAX) return; // Typing a key that somehow doesn't exist
 
 	// Prevent user from deleting text that they didn't place
-	if (strcmp(sc_name[scancode], "Backspace") == 0 && keyUp != true) {
+	if (strcmp(sc_name[scancode], "Backspace") == 0) {
 		if (coutkey > 0) {
 			backspace(key_buffer);
 			kprint_backspace();
@@ -69,25 +69,29 @@ static void keyboard_callback(registers_t regs) {
 	}
 	else if (strcmp(sc_name[scancode], "LShift") == 0 && keyUp == false) {
 		shift = 1;
+		//coutkey--;
 	}
 	else if (strcmp(sc_name[scancode], "RShift") == 0 && keyUp == false) {
 		shift = 1;
+		//coutkey--;
 	}
 	else if (strcmp(sc_name[scancode], "LShift") == 0 && keyUp == true) {
 		shift = 0;
+		//coutkey--;
 	}
 	else if (strcmp(sc_name[scancode], "RShift") == 0 && keyUp == true) {
 		shift = 0;
+		//coutkey--;
 	}
 	else if (strcmp(sc_name[scancode], "Spacebar") == 0 && keyUp == false) {
 		kprint(" ");
 	}
 	else {
-		coutkey++;
 		
 		if (shift == 0) {
 			if (!keyUp) {
 				if (scancode < SC_MAX) {
+					coutkey++;
 					char letter = sc_ascii[(int)scancode];
 
 					char str[2] = { letter, '\0' };
@@ -98,6 +102,7 @@ static void keyboard_callback(registers_t regs) {
 		}
 		else {
 			if (!keyUp) {
+				coutkey++;
 				if (scancode < SC_MAX) {
 					char letter = sc_ascii_uppercase[(int)scancode];
 
