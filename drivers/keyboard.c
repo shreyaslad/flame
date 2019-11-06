@@ -60,7 +60,7 @@ static void keyboard_callback(registers_t regs) {
 		else {
 			return;
 		}
-	} else if (strcmp(sc_name[scancode], "Enter") == 0) {
+	} else if (strcmp(sc_name[scancode], "Enter") == 0 && keyUp == false) {
 		kprint("\n");
 		user_input(key_buffer);
 		key_buffer[0] = '\0';
