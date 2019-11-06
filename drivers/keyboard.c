@@ -50,7 +50,7 @@ static void keyboard_callback(registers_t regs) {
 	if (scancode > SC_MAX) return; // Typing a key that somehow doesn't exist
 
 	// Prevent user from deleting text that they didn't place
-	if (strcmp(sc_name[scancode], "Backspace") == 0) {
+	if (strcmp(sc_name[scancode], "Backspace") == 0 && keyUp == false) {
 		if (coutkey > 0) {
 			backspace(key_buffer);
 			kprint_backspace();
@@ -85,6 +85,7 @@ static void keyboard_callback(registers_t regs) {
 	}
 	else if (strcmp(sc_name[scancode], "Spacebar") == 0 && keyUp == false) {
 		kprint(" ");
+		coutkey++;
 	}
 	else {
 		

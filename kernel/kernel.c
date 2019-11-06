@@ -29,6 +29,18 @@ void user_input(char* input) {
 
 		kprint(format);
 	}
+	else if (strcmp(input, "clear") == 0) {
+		clear();
+
+		read_rtc();
+		formatTime();
+
+		kprint("Hello There,\n");
+
+		kprint("It is ");
+		kprint(format);
+		kprint(".");
+	}
 	else {
 		//TODO: grab only the frist argument (separated by a space)
 		char* buf = (char*)malloc(sizeof(char));
