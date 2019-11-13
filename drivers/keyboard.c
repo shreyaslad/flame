@@ -114,7 +114,6 @@ static void keyboard_callback(registers_t regs) {
 				}
 			}
 		}
-
 		
 	}
 

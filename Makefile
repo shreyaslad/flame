@@ -9,7 +9,7 @@ CFLAGS = -g -m32 -nostdlib -fno-stack-protector -nostartfiles -nodefaultlibs \
 
 
 os-image.bin: boot/bootsect.bin kernel.bin
-	cat $^ > os-image.bin
+	cat $^ > os.bin
 
 kernel.bin: boot/kernel_entry.o ${OBJ}
 	/home/meemr/opt/cross/bin/i686-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary

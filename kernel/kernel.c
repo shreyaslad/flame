@@ -42,14 +42,8 @@ void user_input(char* input) {
 		kprint(".");
 	}
 	else {
-		//TODO: grab only the frist argument (separated by a space)
-		char* buf = (char*)malloc(sizeof(char));
-
-		strcpy(buf, "Unrecognized command: ");
-		strcat(buf, input);
-		kprint(buf);
-
-		free(buf);
+		kprint("Unrecognized command: ");
+		kprint(input);
 	}
 	kprint("\n>");
 }
