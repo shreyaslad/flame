@@ -84,6 +84,7 @@ static void keyboard_callback(registers_t regs) {
 		//coutkey--;
 	}
 	else if (strcmp(sc_name[scancode], "Spacebar") == 0 && keyUp == false) {
+		strcat(key_buffer, " ");
 		kprint(" ");
 		coutkey++;
 	}
