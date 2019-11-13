@@ -7,7 +7,6 @@ void kmain() {
 
 	clear();
 
-	read_rtc();
 	formatTime();
 
 	kprint("Hello There,\n");
@@ -24,7 +23,6 @@ void user_input(char* input) {
 		asm volatile("hlt");
 	}
 	else if (strcmp(input, "time") == 0) {
-		read_rtc();
 		formatTime();
 
 		kprint(format);
@@ -32,7 +30,6 @@ void user_input(char* input) {
 	else if (strcmp(input, "clear") == 0) {
 		clear();
 
-		read_rtc();
 		formatTime();
 
 		kprint("Hello There,\n");

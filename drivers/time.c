@@ -91,6 +91,7 @@ void read_rtc() {
 }
 
 void formatTime() {
+	read_rtc();
 	char months[12][10] = { "January ", "February ", "March ", "April ", "May ", "June ", "July ", "August ", "September ", "October ", "November ", "December" };
 
 	format = (char*)malloc(sizeof(char));
