@@ -83,6 +83,20 @@ static void keyboard_callback(registers_t regs) {
 		shift = 0;
 		//coutkey--;
 	}
+	else if (scancode == LEFT_ARROW && keyUp == false) {
+		// TODO: insert characters into key_buffer whenever cursor pos is changed
+
+		if (coutkey > 0) {
+			int offset = get_cursor_offset();
+			set_cursor_offset(get_offset(get_offset_col(offset - 1), get_offset_row(offset)));
+		}
+		else {
+			// don't change the cursor pos
+		}
+	}
+	else if (scancode == RIGHT_ARROW && keyUp == false) {
+		
+	}
 	else if (strcmp(sc_name[scancode], "Spacebar") == 0 && keyUp == false) {
 		strcat(key_buffer, " ");
 		kprint(" ");
