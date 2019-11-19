@@ -36,7 +36,7 @@ void printf(char* message, ...) {
 	va_list ap;
 	int len = strlen(message);
 
-	char buffer[100];
+	char* buffer = (char*)malloc(sizeof(char));
 
 	va_start(ap, message);
 
@@ -53,6 +53,7 @@ void printf(char* message, ...) {
 	va_end(ap);
 
 	kprint(buffer);
+	free(buffer);
 }
 
 void kprint_backspace() {
@@ -68,7 +69,7 @@ void kprint_backspace() {
  **********************************************************/
 
 int print_char(char c, int col, int row, char attr) {
-    u8 *vidmem = (u8*) VIDEO_ADDRESS;
+    uint8_t* vidmem = (uint8_t*) VIDEO_ADDRESS;
     if (!attr) attr = WHITE_ON_BLACK;
 
     if (col >= MAX_COLS || row >= MAX_ROWS) {
