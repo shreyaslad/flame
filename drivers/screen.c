@@ -27,8 +27,32 @@ void kprint_at(char *message, int col, int row) {
     }
 }
 
-void kprint(char *message) {
+void kprint(char* message) {
     kprint_at(message, -1, -1);
+}
+
+// TODO: not detecting percent symbols
+void printf(char* message, ...) {
+	va_list ap;
+	int len = strlen(message);
+
+	char buffer[100];
+
+	va_start(ap, message);
+
+	for (int i = 0; i < len; i++) {
+		if (message[i] == '%' && message[i+1] == 's') {
+			++i;
+			strcat(buffer, va_arg(ap, char*));
+		}
+		else {
+			append(buffer, message[i]);
+		}
+	}
+
+	va_end(ap);
+
+	kprint(buffer);
 }
 
 void kprint_backspace() {

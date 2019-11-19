@@ -38,6 +38,9 @@ void user_input(char* input) {
 		kprint(format);
 		kprint(".");
 	}
+	else if (strcmp(input, "print") == 0) {
+		printf("Hi%s", " there");
+	}
 	else {
 		kprint("Unrecognized command: ");
 		kprint(input);
