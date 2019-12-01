@@ -5,7 +5,7 @@
 ; Common ISR code
 isr_common_stub:
     ; 1. Save CPU state
-	pusha ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+	pushad ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
 	mov ax, ds ; Lower 16-bits of eax = ds.
 	push eax ; save the data segment descriptor
 	mov ax, 0x10  ; kernel data segment descriptor
@@ -13,42 +13,51 @@ isr_common_stub:
 	mov es, ax
 	mov fs, ax
 	mov gs, ax
-	
+	push esp
+
     ; 2. Call C handler
 	call isr_handler
-	
+	pop eax
+
     ; 3. Restore state
 	pop eax 
 	mov ds, ax
 	mov es, ax
 	mov fs, ax
 	mov gs, ax
-	popa
+	popad
 	add esp, 8 ; Cleans up the pushed error code and pushed ISR number
 	sti
 	iret ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+    
 
 ; Common IRQ code. Identical to ISR code except for the 'call' 
 ; and the 'pop ebx'
 irq_common_stub:
-    pusha 
+    pushad
     mov ax, ds
     push eax
-    mov ax, 0x10
+    mov ax, 0x10 ;0x10
     mov ds, ax
     mov es, ax
     mov fs, ax
     mov gs, ax
-    call irq_handler ; Different than the ISR code
-    pop ebx  ; Different than the ISR code
+    push esp                 ; At this point ESP is a pointer to where DS (and the rest
+                             ; of the interrupt handler state resides)
+                             ; Push ESP as 1st parameter as it's a 
+                             ; pointer to a registers_t  
+    call irq_handler
+    pop ebx                  ; Remove the saved ESP on the stack. Efficient to just pop it 
+                             ; into any register. You could have done: add esp, 4 as well
+    pop ebx
     mov ds, bx
     mov es, bx
     mov fs, bx
     mov gs, bx
-    popa
+    popad
     add esp, 8
     sti
-    iret 
+    iret
 	
 ; We don't get information about which interrupt was caller
 ; when the handler is run, so we will need to have a different handler

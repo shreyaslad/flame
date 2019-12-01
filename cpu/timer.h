@@ -7,6 +7,7 @@
 #include <function.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 
 void init_timer(uint32_t freq);
 

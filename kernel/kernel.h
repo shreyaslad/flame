@@ -8,6 +8,7 @@
 #include "../cpu/type.h"
 #include "../cpu/timer.h"
 #include "../cpu/ports.h"
+#include "../drivers/keyboard.h"
 #include <string.h>
 #include <mem.h>
 #include <int.h>

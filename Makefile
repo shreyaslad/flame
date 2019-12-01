@@ -10,15 +10,17 @@ CFLAGS = -g -m32 -nostdlib -fno-stack-protector -nostartfiles -nodefaultlibs \
 
 os-image.bin: boot/bootsect.bin kernel.bin
 	cat $^ > os.bin
+	rm -rf kernel.bin *.dis *.o *.elf
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
 
 kernel.bin: boot/kernel_entry.o ${OBJ}
-	/home/meemr/opt/cross/bin/i686-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
+	/opt/cross/bin/i686-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
 kernel.elf: boot/kernel_entry.o ${OBJ}
-	/home/meemr/opt/cross/bin/i686-elf-ld -o $@ -Ttext 0x1000 $^ 
+	/opt/cross/bin/i686-elf-ld -o $@ -Ttext 0x1000 $^ 
 
 run: os-image.bin
-	qemu-system-x86_64 -sound pcspk -fda os-image.bin
+	qemu-system-x86_64 -fda os.bin
 
 debug: os-image.bin kernel.elf
 	qemu-system-i386 -s -fda os-image.bin -d guest_errors,int &
@@ -32,7 +34,3 @@ debug: os-image.bin kernel.elf
 
 %.bin: %.asm
 	nasm $< -f bin -o $@
-
-clean:
-	rm -rf kernel.bin *.dis *.o *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o

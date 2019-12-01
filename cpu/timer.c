@@ -3,7 +3,7 @@
 uint32_t tick = 0;
 uint32_t prevTick = 0;
 
-static void timer_callback(registers_t regs) {
+static void timer_callback(registers_t *regs) {
     tick++;
     kprint("Tick: ");
     
