@@ -5,6 +5,12 @@ uint32_t prevTick = 0;
 
 static void timer_callback(registers_t regs) {
     tick++;
+    kprint("Tick: ");
+    
+    char tick_ascii[256];
+    itoa(tick, tick_ascii);
+    kprint(tick_ascii);
+    kprint("\n");
     UNUSED(regs);
 }
 

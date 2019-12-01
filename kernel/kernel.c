@@ -3,7 +3,7 @@
 
 void kmain() {
 	isr_install();
-	irq_install();
+	/*irq_install();
 
 	clear();
 
@@ -14,7 +14,11 @@ void kmain() {
 	kprint("It is ");
 	kprint(format);
 	kprint(".");
-	kprint("\n>");
+	kprint("\n>");*/
+
+	asm volatile("sti");
+	init_timer(50);
+	init_keyboard();
 }
 
 void user_input(char* input) {
