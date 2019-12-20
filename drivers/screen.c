@@ -1,4 +1,4 @@
-#include "screen.h"
+#include <drivers/screen.h>
 
 int print_char(char c, int col, int row, char attr);
 int get_offset(int col, int row);

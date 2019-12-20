@@ -7,7 +7,7 @@
 	FFMPEG anyone?
 */
 
-#include "sound.h"
+#include <drivers/sound.h>
 
 #include "../cpu/ports.h"
 
