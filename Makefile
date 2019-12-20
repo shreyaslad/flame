@@ -3,14 +3,14 @@ HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h kernel/commands/*h)
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o} 
 
 CC = /opt/cross/bin/i686-elf-gcc
-GDB = /opt/cross/bin/i386-elf-gdb
+GDB = /opt/cross/bin/i686-elf-gdb
 CFLAGS = -g -m32 -nostdlib -fno-stack-protector -nostartfiles -nodefaultlibs \
 		 -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-variable -Wpedantic
 
 
-os-image.bin: boot/bootsect.bin kernel.bin
-	cat $^ > os.bin
-	rm -rf kernel.bin *.dis *.o *.elf
+flame.bin: boot/bootsect.bin kernel.bin
+	cat $^ > flame.bin
+	rm -rf kernel.bin *.dis *.o
 	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
 
 kernel.bin: boot/kernel_entry.o ${OBJ}
@@ -19,12 +19,16 @@ kernel.bin: boot/kernel_entry.o ${OBJ}
 kernel.elf: boot/kernel_entry.o ${OBJ}
 	/opt/cross/bin/i686-elf-ld -o $@ -Ttext 0x1000 $^ 
 
-run: os-image.bin
-	qemu-system-x86_64 -fda os.bin
+run: flame.bin
+	qemu-system-x86_64 -fda flame.bin
 
-debug: os-image.bin kernel.elf
-	qemu-system-i386 -s -fda os-image.bin -d guest_errors,int &
+debug: flame.bin kernel.elf
+	qemu-system-i386 -s -fda flame.bin -d guest_errors,int &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+
+clean:
+	rm -rf kernel.bin *.dis *.o *.elf
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
 
 %.o: %.c ${HEADERS}
 	${CC} -Iinclude ${CFLAGS} -ffreestanding -c $< -o $@ -std=gnu11
