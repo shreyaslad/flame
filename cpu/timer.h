@@ -1,14 +1,11 @@
-#ifndef TIMER_H
-#define TIMER_H
+#pragma once
 
-#include "type.h"
-#include "isr.h"
-#include "ports.h"
-#include <function.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <function.h>
+#include "type.h"
+#include "isr.h"
+#include "ports.h"
 
 void init_timer(uint32_t freq);
-
-#endif
