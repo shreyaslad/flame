@@ -1,7 +1,10 @@
 #include "kernel.h"
 
+#include <function.h>
+#include "../multiboot.h"
 
-void kmain() {
+void kmain(multiboot_info_t* mbd) {
+
 	isr_install();
 	irq_install();
 
@@ -15,6 +18,8 @@ void kmain() {
 	kprint(format);
 	kprint(".");
 	kprint("\n>");
+
+	UNUSED(mbd);
 }
 
 void user_input(char* input) {
