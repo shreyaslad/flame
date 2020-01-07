@@ -1,13 +1,12 @@
 #include "kernel.h"
 
-#include <function.h>
-#include "../multiboot.h"
-
 void kmain(multiboot_info_t* mbd) {
-
 	isr_install();
 	irq_install();
 
+	clear();
+	drawLogo();
+	wait(3);
 	clear();
 
 	formatTime();
@@ -17,7 +16,7 @@ void kmain(multiboot_info_t* mbd) {
 	kprint("It is ");
 	kprint(format);
 	kprint(".");
-	kprint("\n>");
+	kprint("\n$ ");
 
 	UNUSED(mbd);
 }
@@ -43,12 +42,9 @@ void user_input(char* input) {
 		kprint(format);
 		kprint(".");
 	}
-	else if (strcmp(input, "print") == 0) {
-		printf("Hi%s", " there");
-	}
 	else {
 		kprint("Unrecognized command: ");
 		kprint(input);
 	}
-	kprint("\n>");
+	kprint("\n$ ");
 }

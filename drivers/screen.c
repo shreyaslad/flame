@@ -31,7 +31,28 @@ void kprint(char* message) {
     kprint_at(message, -1, -1);
 }
 
-// TODO: not detecting percent symbols
+void kprint_at_color(char *message, int col, int row, char color) {
+    /* Set cursor if col/row are negative */
+    int offset;
+    if (col >= 0 && row >= 0)
+        offset = get_offset(col, row);
+    else {
+        offset = get_cursor_offset();
+        row = get_offset_row(offset);
+        col = get_offset_col(offset);
+    }
+    int i = 0;
+    while (message[i] != 0) {
+        offset = print_char(message[i++], col, row, color);
+        row = get_offset_row(offset);
+        col = get_offset_col(offset);
+    }
+}
+
+void kprint_color(char* message, char color) {
+    kprint_at_color(message, -1, -1, color);
+}
+
 void printf(char* message, ...) {
 	va_list ap;
 	int len = strlen(message);
@@ -44,7 +65,15 @@ void printf(char* message, ...) {
 		if (message[i] == '%' && message[i+1] == 's') {
 			++i;
 			strcat(buffer, va_arg(ap, char*));
-		}
+		} else if (message[i] == '%' && message[i+1] == 'd') {
+            ++i;
+            char* buf = malloc(sizeof(char));
+            itoa((int)va_arg(ap, int), buf);
+            strcat(buffer, buf);
+
+            buf[0] = '\0';
+            free(buf);
+        }
 		else {
 			append(buffer, message[i]);
 		}
@@ -63,6 +92,11 @@ void kprint_backspace() {
     print_char(0x08, col, row, WHITE_ON_BLACK);
 }
 
+void kprint_int(int num) {
+    char buf[33];
+    itoa(num, buf);
+    kprint(buf);
+}
 
 /**********************************************************
  * Private kernel functions                               *
@@ -70,7 +104,8 @@ void kprint_backspace() {
 
 int print_char(char c, int col, int row, char attr) {
     uint8_t* vidmem = (uint8_t*) VIDEO_ADDRESS;
-    if (!attr) attr = WHITE_ON_BLACK;
+    if (!attr)
+        attr = WHITE_ON_BLACK;
 
     if (col >= MAX_COLS || row >= MAX_ROWS) {
         vidmem[2*(MAX_COLS)*(MAX_ROWS)-2] = 'E';
@@ -134,7 +169,7 @@ void set_cursor_offset(int offset) {
 void clear() {
     int screen_size = MAX_COLS * MAX_ROWS;
     int i;
-	uint8_t*screen = (uint8_t*) VIDEO_ADDRESS;
+	uint8_t* screen = (uint8_t*) VIDEO_ADDRESS;
 
     for (i = 0; i < screen_size; i++) {
         screen[i*2] = ' ';
@@ -147,3 +182,40 @@ void clear() {
 int get_offset(int col, int row) { return 2 * (row * MAX_COLS + col); }
 int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
 int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }
+
+void drawLogo() {
+    int logo[16][16] = {
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0},
+        {0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0},
+        {0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 3, 2, 3, 0, 0, 0},
+        {0, 0, 3, 3, 0, 0, 0, 0, 0, 3, 3, 1, 2, 3, 0, 0},
+        {0, 3, 1, 2, 3, 0, 0, 0, 3, 2, 2, 2, 2, 3, 0, 0},
+        {0, 3, 2, 2, 1, 3, 0, 3, 2, 1, 2, 1, 2, 2, 3, 0},
+        {0, 3, 2, 2, 2, 3, 0, 3, 2, 2, 2, 2, 1, 2, 3, 0},
+        {3, 2, 1, 1, 2, 2, 3, 2, 1, 1, 1, 2, 2, 2, 3, 0},
+        {3, 2, 2, 1, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 3, 0},
+        {3, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 0},
+        {0, 3, 2, 1, 1, 2, 1, 1, 1, 1, 2, 2, 2, 3, 3, 0},
+        {0, 0, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 3, 0, 0},
+        {0, 0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0},
+        {0, 0, 0, 0, 3, 3, 1, 1, 1, 1, 1, 3, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 3, 1, 1, 1, 1, 3, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0}};
+
+    int xOff = 30;
+    kprint("\n\n\n");
+    for (int y = 0; y < 16; y++) {
+        for (int x = 0; x < 16; x++) {
+            if (logo[y][x] == 0) {
+                kprint_at_color("  ", x + xOff, y, BLACK_ON_BLACK);
+            } else if (logo[y][x] == 1) {
+                kprint_at_color("  ", x + xOff, y, vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
+            } else if (logo[y][x] == 2) {
+                kprint_at_color("  ", x + xOff, y, vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
+            } else {
+                kprint_at_color("  ", x + xOff, y, vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
+            }
+        }
+    }
+    kprint("\n\n                                    flame");
+}

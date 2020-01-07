@@ -1,16 +1,10 @@
 #include "timer.h"
 
 uint32_t tick = 0;
-uint32_t prevTick = 0;
+uint32_t prev = 0;
 
-static void timer_callback(registers_t* regs) {
+static void timer_callback(registers_t *regs) {
     tick++;
-    kprint("Tick: ");
-    
-    char tick_ascii[256];
-    itoa(tick, tick_ascii);
-    kprint(tick_ascii);
-    kprint("\n");
     UNUSED(regs);
 }
 
@@ -29,4 +23,25 @@ void init_timer(uint32_t freq) {
     port_byte_out(0x43, 0x36); /* Command port */
     port_byte_out(0x40, low);
     port_byte_out(0x40, high);
+}
+
+// this is so dumb but im going to do it anyway
+// can't wait more than 60 seconds but fite me
+void wait(uint32_t seconds) {
+    read_rtc();
+
+    uint16_t targetSeconds = 0;
+    uint16_t initialSeconds = second;
+
+    if (initialSeconds + seconds > 60) {
+        targetSeconds = (initialSeconds + seconds) - 60;
+    } else {
+        targetSeconds = initialSeconds + seconds;
+    }
+
+    while (second != targetSeconds) {
+        read_rtc();
+
+        if (second == targetSeconds) break;
+    }
 }

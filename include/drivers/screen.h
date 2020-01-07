@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <mem.h>
+#include <drivers/colors.h>
 #include "../cpu/type.h"
 #include "../cpu/ports.h"
 
@@ -11,8 +12,8 @@
 #define VIDEO_ADDRESS 0xb8000
 
 // Screen Dimensions
-#define MAX_ROWS 25
-#define MAX_COLS 80
+#define MAX_ROWS 25 //25
+#define MAX_COLS 80 //80
 
 // Common Color Codes
 #define WHITE_ON_BLACK 0x0f
@@ -37,5 +38,11 @@ void kprint_at(char *message, int col, int row);
 void kprint(char *message);
 void printf(char* message, ...);
 void kprint_backspace();
+void kprint_int(int num);
+
+void kprint_at_color(char *message, int col, int row, char color);
+void kprint_color(char* message, char color);
+
+void drawLogo();
 
 #endif

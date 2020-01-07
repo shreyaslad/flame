@@ -114,6 +114,8 @@ void formatTime() {
 		formatMinute = 0;
 	}
 
+	if (hour == 0) hour = 12;
+
 	itoa(hour, timebuf);
 	strcat(format, timebuf);
 	strcat(format, ":");

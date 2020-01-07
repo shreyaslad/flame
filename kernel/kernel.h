@@ -8,6 +8,7 @@
 #include "../cpu/timer.h"
 #include "../cpu/ports.h"
 #include "../cpu/isr.h"
+#include "../multiboot.h"
 #include <string.h>
 #include <mem.h>
 #include <int.h>
