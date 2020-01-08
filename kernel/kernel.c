@@ -45,6 +45,10 @@ void user_input(char* input) {
 	else if (strcmp(input, "res") == 0) {
 		getResolution();
 	}
+	else if (strcmp(input, "neofetch") == 0) {
+		kprint("hi");
+		kprint_at("hello", get_offset_col() + 2, get_offset_row() + 2);
+	}
 	else {
 		if (strcmp(input, "") == 0) {
 
