@@ -14,6 +14,5 @@ Steps to get resolution
 #include <drivers/serial.h>
 
 extern uint8_t horzDisp;
-extern uint8_t vertDisp;
 
 void getResolution();
