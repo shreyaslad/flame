@@ -11,7 +11,7 @@
 #include "../multiboot.h"
 #include <string.h>
 #include <mem.h>
-#include <int.h>
+#include <math.h>
 #include <stddef.h>
 
 void user_input(char* input);

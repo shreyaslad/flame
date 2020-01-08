@@ -11,12 +11,12 @@ void kmain(multiboot_info_t* mbd) {
 
 	formatTime();
 
-	kprint("Hello There,\n");
+	kprint("flameOS\n");
 
 	kprint("It is ");
 	kprint(format);
 	kprint(".");
-	kprint("\n$ ");
+	kprint("\nuser@flameOS # ");
 
 	UNUSED(mbd);
 }
@@ -36,15 +36,19 @@ void user_input(char* input) {
 
 		formatTime();
 
-		kprint("Hello There,\n");
+		kprint("flameOS\n");
 
 		kprint("It is ");
 		kprint(format);
 		kprint(".");
 	}
 	else {
-		kprint("Unrecognized command: ");
-		kprint(input);
+		if (strcmp(input, "") == 0) {
+
+		} else {
+			kprint("Unrecognized command: ");
+			kprint(input);
+		}
 	}
-	kprint("\n$ ");
+	kprint("\nuser@flameOS # ");
 }
