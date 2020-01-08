@@ -4,6 +4,8 @@ void kmain(multiboot_info_t* mbd) {
 	isr_install();
 	irq_install();
 
+	canType = false;
+
 	clear();
 	drawLogo();
 	wait(3);
@@ -17,6 +19,8 @@ void kmain(multiboot_info_t* mbd) {
 	kprint(format);
 	kprint(".");
 	kprint("\nuser@flameOS # ");
+
+	canType = true;
 
 	UNUSED(mbd);
 }

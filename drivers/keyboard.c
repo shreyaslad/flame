@@ -11,12 +11,15 @@
 
 #define KEYUPOFFSET 0x80 //128
 
+#define SC_MAX 57
+
 static char key_buffer[256];
 
 int coutkey = 0;
 int shift = 0; // is shift key pressed
 
-#define SC_MAX 57
+bool canType = true;
+
 char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6", 
     "7", "8", "9", "0", "-", "=", "Backspace", "Tab", "Q", "W", "E", 
         "R", "T", "Y", "U", "I", "O", "P", "[", "]", "Enter", "Lctrl", 
@@ -40,6 +43,16 @@ char sc_ascii_uppercase[] = { ' ', ' ', '!', '@', '#', '$', '%', '^',
 static void keyboard_callback(registers_t* regs) {
 
     uint8_t scancode = port_byte_in(0x60);
+	if (canType) {
+		logic(scancode);
+	} else {
+
+	}	
+
+    UNUSED(regs);
+}
+
+void logic(uint8_t scancode) {
 	bool keyUp = false;
 
 	if (scancode >= KEYUPOFFSET) {
@@ -69,19 +82,15 @@ static void keyboard_callback(registers_t* regs) {
 	}
 	else if (strcmp(sc_name[scancode], "LShift") == 0 && keyUp == false) {
 		shift = 1;
-		//coutkey--;
 	}
 	else if (strcmp(sc_name[scancode], "RShift") == 0 && keyUp == false) {
 		shift = 1;
-		//coutkey--;
 	}
 	else if (strcmp(sc_name[scancode], "LShift") == 0 && keyUp == true) {
 		shift = 0;
-		//coutkey--;
 	}
 	else if (strcmp(sc_name[scancode], "RShift") == 0 && keyUp == true) {
 		shift = 0;
-		//coutkey--;
 	}
 	else if (scancode == LEFT_ARROW && keyUp == false) {
 		// TODO: insert characters into key_buffer whenever cursor pos is changed
@@ -101,6 +110,23 @@ static void keyboard_callback(registers_t* regs) {
 		strcat(key_buffer, " ");
 		kprint(" ");
 		coutkey++;
+	}
+	// the arrow keys aren't recognized but they print a scancode larger than 255 :/
+	else if (scancode == RIGHT_ARROW) {
+		int oldOffset = get_cursor_offset();
+		int currentCol = get_offset_col(oldOffset);
+		int currentRow = get_offset_row(oldOffset);
+
+		int offset = get_offset(currentCol + 1, currentRow);
+		set_cursor_offset(offset);
+	}
+	else if (scancode == LEFT_ARROW) {
+		int oldOffset = get_cursor_offset();
+		int currentCol = get_offset_col(oldOffset);
+		int currentRow = get_offset_row(oldOffset);
+
+		int offset = get_offset(currentCol - 1, currentRow);
+		set_cursor_offset(offset);
 	}
 	else {
 		
@@ -130,8 +156,6 @@ static void keyboard_callback(registers_t* regs) {
 		}
 		
 	}
-
-    UNUSED(regs);
 }
 
 void init_keyboard() {
