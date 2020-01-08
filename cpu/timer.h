@@ -9,5 +9,7 @@
 #include "isr.h"
 #include "ports.h"
 
+extern uint32_t tick;
+
 void init_timer(uint32_t freq);
 void wait(uint32_t seconds);

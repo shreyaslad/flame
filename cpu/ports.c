@@ -19,3 +19,12 @@ u16 port_word_in (uint16_t port) {
 void port_word_out (uint16_t port, uint16_t data) {
     __asm__ __volatile__("out %%ax, %%dx" : : "a" (data), "d" (port));
 }
+
+void set_bit(uint8_t* input, uint8_t bit, uint8_t state) {
+    if (state == 0) {
+        *input &= ~(1 << bit);
+    }
+    else if (state == 1) {
+        *input = (*input | (1 << bit));
+    }
+}

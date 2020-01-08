@@ -42,6 +42,9 @@ void user_input(char* input) {
 		kprint(format);
 		kprint(".");
 	}
+	else if (strcmp(input, "res") == 0) {
+		getResolution();
+	}
 	else {
 		if (strcmp(input, "") == 0) {
 

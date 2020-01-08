@@ -4,6 +4,8 @@
 #include <drivers/sound.h>
 #include <drivers/time.h>
 #include <drivers/keyboard.h>
+#include <drivers/vga.h>
+#include <drivers/serial.h>
 #include "../cpu/type.h"
 #include "../cpu/timer.h"
 #include "../cpu/ports.h"
