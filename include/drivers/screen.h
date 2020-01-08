@@ -5,6 +5,8 @@
 #include <string.h>
 #include <mem.h>
 #include <drivers/colors.h>
+#include <drivers/time.h>
+#include <drivers/serial.h>
 #include "../cpu/type.h"
 #include "../cpu/ports.h"
 
@@ -44,5 +46,6 @@ void kprint_at_color(char *message, int col, int row, char color);
 void kprint_color(char* message, char color);
 
 void drawLogo();
+void neofetchLogo();
 
 #endif

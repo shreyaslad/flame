@@ -147,3 +147,55 @@ void formatTime() {
 	itoa(year, timebuf);
 	strcat(format, timebuf);
 }
+
+void calculateUptime() {
+	uint32_t tempTick = tick;
+	uint32_t uptimeSeconds = 0;//tempTick / 100;
+	uint32_t uptimeMinutes = 0;
+	uint32_t uptimeHours = 0;
+	uint32_t uptimeDays = 0;
+	while (tempTick >= 1000) {
+		tempTick -= 1000;
+		uptimeSeconds += 1;
+	}
+
+	while (uptimeSeconds >= 60) {
+		uptimeSeconds -= 60;
+		uptimeMinutes += 1;
+	}
+
+	while (uptimeMinutes >= 60) {
+		uptimeMinutes -= 60;
+		uptimeHours += 1;
+	}
+
+	while (uptimeHours >= 24) {
+		uptimeHours -= 24;
+		uptimeDays += 1;
+	}
+	
+	kprint_int(uptimeDays);
+	if (uptimeDays == 1) {
+		kprint(" day, ");
+	} else {
+		kprint(" days, ");
+	}
+	kprint_int(uptimeHours);
+	if (uptimeHours == 1) {
+		kprint(" hr, ");
+	} else {
+		kprint(" hrs, ");
+	}
+	kprint_int(uptimeMinutes);
+	if (uptimeMinutes == 1) {
+		kprint(" min, ");
+	} else {
+		kprint(" mins, ");
+	}
+	kprint_int(uptimeSeconds);
+	if (uptimeSeconds == 1) {
+		kprint(" s");
+	} else {
+		kprint(" s");
+	}
+}

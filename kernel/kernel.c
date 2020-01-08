@@ -46,8 +46,10 @@ void user_input(char* input) {
 		getResolution();
 	}
 	else if (strcmp(input, "neofetch") == 0) {
-		kprint("hi");
-		kprint_at("hello", get_offset_col() + 2, get_offset_row() + 2);
+		neofetchLogo();
+	}
+	else if (strcmp(input, "uptime") == 0) {
+		calculateUptime();
 	}
 	else {
 		if (strcmp(input, "") == 0) {

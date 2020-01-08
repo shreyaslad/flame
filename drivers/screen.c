@@ -178,14 +178,12 @@ void clear() {
     set_cursor_offset(get_offset(0, 0));
 }
 
-
 int get_offset(int col, int row) { return 2 * (row * MAX_COLS + col); }
 int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
 int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }
 
-void drawLogo() {
-    int logo[16][16] = {
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0},
+int logo[16][16] = {
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0},
         {0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 3, 2, 3, 0, 0, 0},
         {0, 0, 3, 3, 0, 0, 0, 0, 0, 3, 3, 1, 2, 3, 0, 0},
@@ -202,20 +200,99 @@ void drawLogo() {
         {0, 0, 0, 0, 0, 3, 1, 1, 1, 1, 3, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0}};
 
+void drawLogo() {
     int xOff = 30;
-    kprint("\n\n\n");
+    int yOff = 2;
     for (int y = 0; y < 16; y++) {
         for (int x = 0; x < 16; x++) {
             if (logo[y][x] == 0) {
-                kprint_at_color("  ", x + xOff, y, BLACK_ON_BLACK);
+                kprint_at_color("  ", x + xOff, y + yOff, BLACK_ON_BLACK);
             } else if (logo[y][x] == 1) {
-                kprint_at_color("  ", x + xOff, y, vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
+                kprint_at_color("  ", x + xOff, y + yOff, vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
             } else if (logo[y][x] == 2) {
-                kprint_at_color("  ", x + xOff, y, vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
+                kprint_at_color("  ", x + xOff, y + yOff, vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
             } else {
-                kprint_at_color("  ", x + xOff, y, vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
+                kprint_at_color("  ", x + xOff, y + yOff, vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
             }
         }
     }
     kprint("\n\n                                    flame");
+}
+
+void neofetchLogo() {
+    clear();
+    formatTime();
+
+	kprint("flameOS\n");
+
+	kprint("It is ");
+	kprint(format);
+	kprint(".");
+    kprint("\nuser@flameOS # neofetch");
+
+    for (int y = 0; y < 16; y++) {
+        for (int x = 0; x < 16; x++) {
+            if (x == 15) kprint("\n");
+            if (logo[y][x] == 0) {
+                kprint_color("  ", BLACK_ON_BLACK);
+            } else if (logo[y][x] == 1) {
+                kprint_color("  ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
+            } else if (logo[y][x] == 2) {
+                kprint_color("  ", vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
+            } else {
+                kprint_color("  ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
+            }
+        }
+    }
+    
+    int oldOffset = get_cursor_offset();
+    int currentCol = get_offset_col(oldOffset);
+    int currentRow = get_offset_row(oldOffset);
+
+    int offset = get_offset(currentCol + 35, currentRow - 14);
+    set_cursor_offset(offset);
+    kprint_color("user@flameOS", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
+
+    offset = get_offset(currentCol + 35, currentRow - 13);
+    set_cursor_offset(offset);
+    kprint("------------");
+
+    offset = get_offset(currentCol + 35, currentRow - 12);
+    set_cursor_offset(offset);
+    kprint_color("OS: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
+    kprint("flameOS (x86_32)");
+
+    offset = get_offset(currentCol + 35, currentRow - 11);
+    set_cursor_offset(offset);
+    kprint_color("Uptime: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
+    calculateUptime();
+
+    offset = get_offset(currentCol + 35, currentRow - 9);
+    set_cursor_offset(offset);
+    kprint_color(" ", vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_GREEN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_GREEN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_GREEN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLUE));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLUE));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLUE));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_LIGHT_BLUE));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_LIGHT_BLUE));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_LIGHT_BLUE));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_CYAN, VGA_COLOR_CYAN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_CYAN, VGA_COLOR_CYAN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_CYAN, VGA_COLOR_CYAN));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
+    kprint_color(" ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
+
+    set_cursor_offset(oldOffset);
 }

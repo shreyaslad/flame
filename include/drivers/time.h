@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../cpu/ports.h"
+#include "../../cpu/ports.h"
+#include "../../cpu/timer.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -28,3 +29,4 @@ uint8_t get_RTC_register(int reg);
 void read_rtc();
 
 void formatTime();
+void calculateUptime();
