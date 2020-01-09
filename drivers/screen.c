@@ -226,6 +226,7 @@ void drawRect(uint8_t color) {
 }
 
 void neofetchLogo(uint32_t mem) {
+    drive_scan();
     clear();
     formatTime();
 
@@ -266,7 +267,7 @@ void neofetchLogo(uint32_t mem) {
     offset = get_offset(currentCol + 35, currentRow - 12);
     set_cursor_offset(offset);
     kprint_color("OS: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
-    kprint("flameOS (x86_32)");
+    kprint("flameOS (i386)");
 
     offset = get_offset(currentCol + 35, currentRow - 11);
     set_cursor_offset(offset);
@@ -279,7 +280,16 @@ void neofetchLogo(uint32_t mem) {
     kprint_int(mem / 1000000);
     kprint("Mb");
 
-    offset = get_offset(currentCol + 35, currentRow - 8);
+    offset = get_offset(currentCol + 35, currentRow - 9);
+    set_cursor_offset(offset);
+    kprint_color("Master Drive: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
+    if (mp == 0 || mp48 == 0) {
+		kprint("Online\n");
+	} else {
+		kprint("Offline\n");
+	}
+
+    offset = get_offset(currentCol + 35, currentRow - 7);
     set_cursor_offset(offset);
     drawRect(vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
     drawRect(vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));

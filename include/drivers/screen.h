@@ -7,6 +7,8 @@
 #include <drivers/colors.h>
 #include <drivers/time.h>
 #include <drivers/serial.h>
+#include <fs/hdd.h>
+#include <fs/hddw.h>
 #include "../cpu/type.h"
 #include "../cpu/ports.h"
 
