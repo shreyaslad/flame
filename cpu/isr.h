@@ -5,6 +5,8 @@
 #include <fs/hdd.h>
 #include <fs/hddw.h>
 
+#define SPEED 1193
+
 /* ISRs reserved for CPU exceptions */
 extern void isr0();
 extern void isr1();
