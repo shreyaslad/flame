@@ -219,6 +219,12 @@ void drawLogo() {
     kprint("\n\n                                    flame");
 }
 
+void drawRect(uint8_t color) {
+    for (int i = 0; i < 3; i++) {
+        kprint_color(" ", color);
+    }
+}
+
 void neofetchLogo(uint32_t mem) {
     clear();
     formatTime();
@@ -275,30 +281,14 @@ void neofetchLogo(uint32_t mem) {
 
     offset = get_offset(currentCol + 35, currentRow - 8);
     set_cursor_offset(offset);
-    kprint_color(" ", vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_GREEN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_GREEN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_GREEN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLUE));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLUE));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLUE));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_LIGHT_BLUE));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_LIGHT_BLUE));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_LIGHT_BLUE));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_CYAN, VGA_COLOR_CYAN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_CYAN, VGA_COLOR_CYAN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_CYAN, VGA_COLOR_CYAN));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
-    kprint_color(" ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
+    drawRect(vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
+    drawRect(vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));
+    drawRect(vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_LIGHT_GREEN));
+    drawRect(vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_LIGHT_BROWN));
+    drawRect(vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLUE));
+    drawRect(vga_entry_color(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_LIGHT_BLUE));
+    drawRect(vga_entry_color(VGA_COLOR_CYAN, VGA_COLOR_CYAN));
+    drawRect(vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_WHITE));
 
     set_cursor_offset(oldOffset);
 }
