@@ -41,7 +41,7 @@
 #define CMD_GET_SECTORS 0xF8
 int ata_pio = 0;
 uint16_t ata_drive = MASTER_DRIVE;
-uint32_t ata_controler = PRIMARY_IDE;
+uint32_t ata_controller = PRIMARY_IDE;
 int nodrives = 0;
 uint16_t ata_buffer[256];
 int mp = 1;
@@ -231,43 +231,43 @@ void new_scan() {
     // PIO28 Drives
     if (mp == 0) {
         ata_drive = MASTER_DRIVE;
-        ata_controler = PRIMARY_IDE;
+        ata_controller = PRIMARY_IDE;
         ata_pio = 0;
     }
     else if (ms == 0) {
         ata_drive = SLAVE_DRIVE;
-        ata_controler = PRIMARY_IDE;
+        ata_controller = PRIMARY_IDE;
         ata_pio = 0;
     }
     else if (sp == 0) {
         ata_drive = MASTER_DRIVE;
-        ata_controler = SECONDARY_IDE;
+        ata_controller = SECONDARY_IDE;
         ata_pio = 0;
     }
     else if (ss == 0) {
         ata_drive = SLAVE_DRIVE;
-        ata_controler = SECONDARY_IDE;
+        ata_controller = SECONDARY_IDE;
         ata_pio = 0;
     }
     // PIO48 Drives
     else if (mp48 == 0) {
         ata_drive = MASTER_DRIVE_PIO48;
-        ata_controler = PRIMARY_IDE;
+        ata_controller = PRIMARY_IDE;
         ata_pio = 1;
     }
     else if (ms48 == 0) {
         ata_drive = SLAVE_DRIVE_PIO48;
-        ata_controler = PRIMARY_IDE;
+        ata_controller = PRIMARY_IDE;
         ata_pio = 1;
     }
     else if (sp48 == 0) {
         ata_drive = MASTER_DRIVE_PIO48;
-        ata_controler = SECONDARY_IDE;
+        ata_controller = SECONDARY_IDE;
         ata_pio = 1;
     }
     else if (ss48 == 0) {
         ata_drive = SLAVE_DRIVE_PIO48;
-        ata_controler = SECONDARY_IDE;
+        ata_controller = SECONDARY_IDE;
         ata_pio = 1;
     } else {
         clear_ata_buffer();
@@ -296,18 +296,18 @@ void drive_scan() {
             mp48 = ata_pio48(0x1F0, ATA_READ, 0x40, 0x0);
             if (mp28 == 0) {
                 ata_drive = MASTER_DRIVE;
-                ata_controler = PRIMARY_IDE;
+                ata_controller = PRIMARY_IDE;
                 ata_pio = 0;
                 current_drive = 1;
             } else if (mp48 == 0) {
                 ata_drive = MASTER_DRIVE_PIO48;
-                ata_controler = PRIMARY_IDE;
+                ata_controller = PRIMARY_IDE;
                 ata_pio = 1;
                 current_drive = 1;
             } else {
                 // Default to PIO28
                 ata_drive = MASTER_DRIVE;
-                ata_controler = PRIMARY_IDE;
+                ata_controller = PRIMARY_IDE;
                 ata_pio = 0;
                 current_drive = 1;
             }
@@ -324,18 +324,18 @@ void drive_scan() {
             ms48 = ata_pio48(0x1F0, ATA_READ, 0x50, 0x0);
             if (ms28 == 0) {
                 ata_drive = SLAVE_DRIVE;
-                ata_controler = PRIMARY_IDE;
+                ata_controller = PRIMARY_IDE;
                 ata_pio = 0;
                 current_drive = 2;
             } else if (ms48 == 0) {
                 ata_drive = SLAVE_DRIVE_PIO48;
-                ata_controler = PRIMARY_IDE;
+                ata_controller = PRIMARY_IDE;
                 ata_pio = 1;
                 current_drive = 2;
             } else {
                 // Default to PIO28
                 ata_drive = SLAVE_DRIVE;
-                ata_controler = PRIMARY_IDE;
+                ata_controller = PRIMARY_IDE;
                 ata_pio = 0;
                 current_drive = 2;
             }
@@ -358,18 +358,18 @@ void drive_scan() {
             sp48 = ata_pio48(0x170, ATA_READ, 0x40, 0x0);
             if (sp28 == 0) {
                 ata_drive = MASTER_DRIVE;
-                ata_controler = SECONDARY_IDE;
+                ata_controller = SECONDARY_IDE;
                 ata_pio = 0;
                 current_drive = 3;
             } else if (sp48 == 0) {
                 ata_drive = MASTER_DRIVE_PIO48;
-                ata_controler = SECONDARY_IDE;
+                ata_controller = SECONDARY_IDE;
                 ata_pio = 1;
                 current_drive = 3;
             } else {
                 // Default to PIO28
                 ata_drive = MASTER_DRIVE;
-                ata_controler = SECONDARY_IDE;
+                ata_controller = SECONDARY_IDE;
                 ata_pio = 0;
                 current_drive = 3;
             }
@@ -385,18 +385,18 @@ void drive_scan() {
             ss48 = ata_pio48(0x170, ATA_READ, 0x50, 0x0);
             if (ss28 == 0) {
                 ata_drive = SLAVE_DRIVE;
-                ata_controler = SECONDARY_IDE;
+                ata_controller = SECONDARY_IDE;
                 ata_pio = 0;
                 current_drive = 4;
             } else if (ss48 == 0) {
                 ata_drive = SLAVE_DRIVE_PIO48;
-                ata_controler = SECONDARY_IDE;
+                ata_controller = SECONDARY_IDE;
                 ata_pio = 1;
                 current_drive = 4;
             } else {
                 // Default to PIO28
                 ata_drive = SLAVE_DRIVE;
-                ata_controler = SECONDARY_IDE;
+                ata_controller = SECONDARY_IDE;
                 ata_pio = 0;
                 current_drive = 4;
             }
@@ -406,16 +406,16 @@ void drive_scan() {
     if (mp == 0) {
         if (mp28 == 0) {
             ata_drive = MASTER_DRIVE;
-            ata_controler = PRIMARY_IDE;
+            ata_controller = PRIMARY_IDE;
             ata_pio = 0;
         } else if (mp48 == 0) {
             ata_drive = MASTER_DRIVE_PIO48;
-            ata_controler = PRIMARY_IDE;
+            ata_controller = PRIMARY_IDE;
             ata_pio = 1;
         } else {
             // Default to PIO28
             ata_drive = MASTER_DRIVE;
-            ata_controler = PRIMARY_IDE;
+            ata_controller = PRIMARY_IDE;
             ata_pio = 0;
         }
         return;

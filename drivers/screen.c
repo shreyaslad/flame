@@ -98,6 +98,12 @@ void kprint_int(int num) {
     kprint(buf);
 }
 
+void kprint_uint8(uint8_t num) {
+    char buf[33];
+    itoa_uint8(num, buf);
+    kprint(buf);
+}
+
 /**********************************************************
  * Private kernel functions                               *
  **********************************************************/
@@ -226,7 +232,7 @@ void drawRect(uint8_t color) {
 }
 
 void neofetchLogo(uint32_t mem) {
-    drive_scan();
+    //drive_scan();
     clear();
     formatTime();
 
@@ -289,7 +295,12 @@ void neofetchLogo(uint32_t mem) {
 		kprint("Offline\n");
 	}
 
-    offset = get_offset(currentCol + 35, currentRow - 7);
+    offset = get_offset(currentCol + 35, currentRow - 8);
+    set_cursor_offset(offset);
+    kprint_color("Clock Speed: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
+    kprint("1 Mhz");
+
+    offset = get_offset(currentCol + 35, currentRow - 6);
     set_cursor_offset(offset);
     drawRect(vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
     drawRect(vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_LIGHT_RED));

@@ -47,7 +47,7 @@ static void keyboard_callback(registers_t* regs) {
 		logic(scancode);
 	} else {
 
-	}	
+	}
 
     UNUSED(regs);
 }

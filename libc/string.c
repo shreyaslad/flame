@@ -8,6 +8,8 @@
 
 #include <string.h>
 
+#include <stdint.h>
+
 void itoa(int n, char str[]) {
 	int i, sign;
 	if ((sign = n) < 0) n = -n;
@@ -17,6 +19,17 @@ void itoa(int n, char str[]) {
 	} while ((n /= 10) > 0);
 
 	if (sign < 0) str[i++] = '-';
+	str[i] = '\0';
+
+	reverse(str);
+}
+
+void itoa_uint8(uint8_t n, char str[]) {
+	uint8_t i = 0;
+	do {
+		str[i++] = n % 10 + '0';
+	} while ((n /= 10) > 0);
+
 	str[i] = '\0';
 
 	reverse(str);
@@ -115,42 +128,4 @@ int strcmpl(char s1[], char s2[], unsigned char x) {
 	} while (i < x);
 
 	return false;
-}
-
-char* cut(String string, String deliminator) {
-	static char* static_str = 0;
-	int index, found = 0;
-	
-	int length = strlen(string);
-
-	if (deliminator == 0 || (string == 0 && static_str == 0))
-		return 0;
-
-	if (string == 0)
-		string = static_str;
-
-	for (index = 0; index < length; index++)
-		if (string[index] == deliminator[0]) {
-			found = 1;
-			break;
-		}
-
-	if (!found) {
-		static_str = 0;
-		return string;
-	}
-
-	if (string[0] == deliminator[0]) {
-		static_str = (string + 1);
-		return (char*)deliminator;
-	}
-
-	string[index] = '\0';
-
-	if ((string + index + 1) != 0)
-		static_str = (string + index + 1);
-	else
-		static_str = 0;
-
-	return string;
 }

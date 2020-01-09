@@ -1,6 +1,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
 #include <mem.h>
@@ -43,6 +44,7 @@ void kprint(char *message);
 void printf(char* message, ...);
 void kprint_backspace();
 void kprint_int(int num);
+void kprint_uint8(uint8_t num);
 
 void kprint_at_color(char *message, int col, int row, char color);
 void kprint_color(char* message, char color);

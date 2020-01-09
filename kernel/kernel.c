@@ -10,7 +10,7 @@ void kmain(multiboot_info_t* mbd, int endOfCode) {
 
 	clear();
 	drawLogo();
-	wait(3);
+	wait_s(2);
 	clear();
 
 	formatTime();

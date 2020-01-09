@@ -9,7 +9,7 @@
 
 uint16_t ata_buffer[256];
 uint16_t ata_drive;
-uint32_t ata_controler;
+uint32_t ata_controller;
 int ata_pio;
 
 enum DRIVE_PORTS {

@@ -22,12 +22,12 @@ void select_drive(uint8_t driveToSet) {
     if (driveToSet == 1) {
         if (mp == 0) {
             ata_drive = MASTER_DRIVE;
-            ata_controler = PRIMARY_IDE;
+            ata_controller = PRIMARY_IDE;
             nodrives = 0;
             current_drive = driveToSet;
         } else if (mp48 == 0) {
             ata_drive = MASTER_DRIVE_PIO48;
-            ata_controler = PRIMARY_IDE;
+            ata_controller = PRIMARY_IDE;
             ata_pio = 1;
             nodrives = 0;
             current_drive = driveToSet;
@@ -37,12 +37,12 @@ void select_drive(uint8_t driveToSet) {
     } else if (driveToSet == 2) {
         if (ms == 0) {
             ata_drive = SLAVE_DRIVE;
-            ata_controler = PRIMARY_IDE;
+            ata_controller = PRIMARY_IDE;
             nodrives = 0;
             current_drive = driveToSet;
         } else if (ms48 == 0) {
             ata_drive = SLAVE_DRIVE_PIO48;
-            ata_controler = PRIMARY_IDE;
+            ata_controller = PRIMARY_IDE;
             ata_pio = 1;
             nodrives = 0;
             current_drive = driveToSet;
@@ -52,12 +52,12 @@ void select_drive(uint8_t driveToSet) {
     } else if (driveToSet == 3) {
         if (sp == 0) {
             ata_drive = MASTER_DRIVE;
-            ata_controler = SECONDARY_IDE;
+            ata_controller = SECONDARY_IDE;
             nodrives = 0;
             current_drive = driveToSet;
         } else if (sp48 == 0) {
             ata_drive = MASTER_DRIVE_PIO48;
-            ata_controler = SECONDARY_IDE;
+            ata_controller = SECONDARY_IDE;
             ata_pio = 1;
             nodrives = 0;
             current_drive = driveToSet;
@@ -67,13 +67,13 @@ void select_drive(uint8_t driveToSet) {
     } else if (driveToSet == 4) {
         if (ss == 0) {
             ata_drive = SLAVE_DRIVE;
-            ata_controler = SECONDARY_IDE;
+            ata_controller = SECONDARY_IDE;
             ata_pio = 0;
             nodrives = 0;
             current_drive = driveToSet;
         } else if (ss48 == 0) {
             ata_drive = SLAVE_DRIVE_PIO48;
-            ata_controler = SECONDARY_IDE;
+            ata_controller = SECONDARY_IDE;
             ata_pio = 1;
             nodrives = 0;
             current_drive = driveToSet;
@@ -90,9 +90,9 @@ void read(uint32_t sector, uint32_t sector_high) {
 
     }
     if (ata_pio == 0) {
-        ata_pio28(ata_controler, 1, ata_drive, sector); // Read disk into ata_buffer
+        ata_pio28(ata_controller, 1, ata_drive, sector); // Read disk into ata_buffer
     } else {
-        ata_pio48(ata_controler, 1, ata_drive, sector); // Read disk into ata_buffer
+        ata_pio48(ata_controller, 1, ata_drive, sector); // Read disk into ata_buffer
     }
     bool f = false;
     for(int i = 0; i < 256; i++)
@@ -107,9 +107,9 @@ void read(uint32_t sector, uint32_t sector_high) {
         // Sometimes the drive shuts off, so we need to wait for it to turn on
         wait(2000);
         if (ata_pio == 0) {
-            ata_pio28(ata_controler, 1, ata_drive, sector); // Read disk into ata_buffer
+            ata_pio28(ata_controller, 1, ata_drive, sector); // Read disk into ata_buffer
         } else {
-            ata_pio48(ata_controler, 1, ata_drive, sector); // Read disk into ata_buffer
+            ata_pio48(ata_controller, 1, ata_drive, sector); // Read disk into ata_buffer
         }
 
         for(int i = 0; i < 256; i++)
@@ -159,8 +159,8 @@ void writeFromBuffer(uint32_t sector, uint8_t badcheck) {
 }
 
 void copy_sector(uint32_t sector1, uint32_t sector2) {
-    ata_pio28(ata_controler, 1, ata_drive, sector1);
-    ata_pio28(ata_controler, 2, ata_drive, sector2);
+    ata_pio28(ata_controller, 1, ata_drive, sector1);
+    ata_pio28(ata_controller, 2, ata_drive, sector2);
     clear_ata_buffer();
 }
 
@@ -173,16 +173,16 @@ void write(uint32_t sector, uint8_t badcheck) {
         ata_buffer[i] = writeIn[i];
     }
     if (ata_pio == 0) {
-        ata_pio28(ata_controler, 2, ata_drive, sector);
+        ata_pio28(ata_controller, 2, ata_drive, sector);
     } else {
-        ata_pio48(ata_controler, 2, ata_drive, sector);
+        ata_pio48(ata_controller, 2, ata_drive, sector);
     }
     uint32_t bad = 1;
     while (bad != 0) {
         if (ata_pio == 0) {
-            ata_pio28(ata_controler, 2, ata_drive, sector);
+            ata_pio28(ata_controller, 2, ata_drive, sector);
         } else {
-            ata_pio48(ata_controler, 2, ata_drive, sector);
+            ata_pio48(ata_controller, 2, ata_drive, sector);
         }
         read(sector, 0);
         bad = 0;
@@ -212,8 +212,8 @@ void clear_sector(uint32_t sector) {
         ata_buffer[i] = emptySector[i];
     }
     if (ata_pio == 0) {
-        ata_pio28(ata_controler, 2, ata_drive, sector);
+        ata_pio28(ata_controller, 2, ata_drive, sector);
     } else {
-        ata_pio48(ata_controler, 2, ata_drive, sector);
+        ata_pio48(ata_controller, 2, ata_drive, sector);
     }
 }

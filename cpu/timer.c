@@ -1,7 +1,6 @@
 #include "timer.h"
 
 uint32_t tick = 0;
-uint32_t prev = 0;
 
 static void timer_callback(registers_t *regs) {
     tick++;
@@ -25,9 +24,19 @@ void init_timer(uint32_t freq) {
     port_byte_out(0x40, high);
 }
 
+void wait(uint32_t ticks) {
+    uint32_t prev = tick;
+
+    while (tick < prev + ticks) {
+        ;
+        if (tick == prev + ticks)
+            break;
+    }
+}
+
 // this is so dumb but im going to do it anyway
 // can't wait more than 60 seconds but fite me
-void wait(uint32_t seconds) {
+void wait_s(uint32_t seconds) {
     read_rtc();
 
     uint16_t targetSeconds = 0;

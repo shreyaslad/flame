@@ -12,10 +12,10 @@
 #include <mem.h>
 #include <stddef.h>
 #include <stdbool.h>
-
-typedef char* String;
+#include <stdint.h>
 
 void itoa(int n, char str[]);
+void itoa_uint8(uint8_t num, char str[]);
 void hex_to_ascii(int n, char str[]);
 
 void backspace(char s[]);
@@ -25,8 +25,6 @@ int strlen(char s[]);
 void append(char s[], char n);
 char* strcat(char* s, char* n);
 char* strcpy(char* dest, char* src);
-
-char* cut(String string, String deliminator);
 
 int strcmp(char* s1, char* s);
 int strcmpl(char s1[], char s2[], unsigned char x);
