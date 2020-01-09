@@ -8,6 +8,8 @@
 
 #include <math.h>
 
+#include <stdint.h> // idk why it makes me do this
+
 int octalToDecimal(int octal) {
 	int decimal, i = 0;
 	
@@ -43,4 +45,11 @@ int power(int base, int power) {
 	}
 
 	return result;
+}
+
+uint32_t abs(int num) {
+	if (num < 0)
+		return -num;
+
+	return num;
 }

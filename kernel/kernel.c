@@ -1,6 +1,9 @@
 #include "kernel.h"
 
-void kmain(multiboot_info_t* mbd) {
+multiboot_memory_map_t *mmap;
+uint32_t largestUseableMem = 0;
+
+void kmain(multiboot_info_t* mbd, int endOfCode) {
 	isr_install();
 	irq_install();
 
@@ -22,7 +25,23 @@ void kmain(multiboot_info_t* mbd) {
 
 	canType = true;
 
-	UNUSED(mbd);
+	if (mbd->flags & MULTIBOOT_INFO_MEM_MAP) {
+		for (mmap = (struct multiboot_mmap_entry *)mbd->mmap_addr; (uint32_t)mmap < (mbd->mmap_addr + mbd->mmap_length); mmap = (struct multiboot_mmap_entry *)((uint32_t)mmap + mmap->size + sizeof(mmap->size))) {
+			uint32_t addrH = mmap->addr_high;
+			uint32_t addrL = mmap->addr_low;
+
+			uint32_t lenH = mmap->len_high;
+			uint32_t lenL = mmap->len_low;
+
+			uint8_t mType = mmap->type;
+
+			if (mType == 1) {
+				if (lenL > largestUseableMem) {
+					largestUseableMem = abs(lenL - abs(endOfCode - addrL));
+				}
+			}
+		}
+	}
 }
 
 void user_input(char* input) {
@@ -50,7 +69,7 @@ void user_input(char* input) {
 		getResolution();
 	}
 	else if (strcmp(input, "neofetch") == 0) {
-		neofetchLogo();
+		neofetchLogo(largestUseableMem);
 	}
 	else if (strcmp(input, "uptime") == 0) {
 		calculateUptime();

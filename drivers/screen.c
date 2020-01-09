@@ -219,7 +219,7 @@ void drawLogo() {
     kprint("\n\n                                    flame");
 }
 
-void neofetchLogo() {
+void neofetchLogo(uint32_t mem) {
     clear();
     formatTime();
 
@@ -267,7 +267,13 @@ void neofetchLogo() {
     kprint_color("Uptime: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
     calculateUptime();
 
-    offset = get_offset(currentCol + 35, currentRow - 9);
+    offset = get_offset(currentCol + 35, currentRow - 10);
+    set_cursor_offset(offset);
+    kprint_color("Available Memory: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
+    kprint_int(mem / 1000000);
+    kprint("Mb");
+
+    offset = get_offset(currentCol + 35, currentRow - 8);
     set_cursor_offset(offset);
     kprint_color(" ", vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));
     kprint_color(" ", vga_entry_color(VGA_COLOR_DARK_GREY, VGA_COLOR_DARK_GREY));

@@ -8,7 +8,10 @@
 
 #pragma once
 
+#include <stdint.h>
+
 int octalToDecimal(int octal);
 int decimalToOctal(int decimal);
 
 int power(int base, int exponent);
+uint32_t abs(int num);

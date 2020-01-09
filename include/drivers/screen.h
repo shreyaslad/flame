@@ -46,6 +46,6 @@ void kprint_at_color(char *message, int col, int row, char color);
 void kprint_color(char* message, char color);
 
 void drawLogo();
-void neofetchLogo();
+void neofetchLogo(uint32_t mem);
 
 #endif
