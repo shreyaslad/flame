@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c kernel/commands/*.c )
-HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h kernel/commands/*h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c kernel/commands/*.c fs/*.c )
+HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h kernel/commands/*h fs/*h )
 S_SOURCES = $(wildcard *.s)
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o boot.o	} 
 
@@ -16,7 +16,7 @@ myos.iso: kernel.elf
 	cp grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o flame.iso isodir
 	rm -rf kernel.bin *.dis *.o *.elf *.bin
-	rm -rf *.o kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
+	rm -rf *.o kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o
 
 kernel.bin: kernel.elf
 	objcopy -O binary $^ $@
@@ -33,7 +33,7 @@ debug: flame.bin kernel.elf
 
 clean:
 	rm -rf kernel.bin *.dis *.o *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o
 
 %.o: %.c ${HEADERS}
 	${CC} -Iinclude ${CFLAGS} -ffreestanding -c $< -o $@ -std=gnu11

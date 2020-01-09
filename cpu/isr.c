@@ -166,4 +166,5 @@ void irq_install() {
     init_timer(1193);
     /* IRQ1: keyboard */
     init_keyboard();
+    init_hdd();
 }

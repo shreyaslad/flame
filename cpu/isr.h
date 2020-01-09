@@ -2,6 +2,9 @@
 #define ISR_H
 
 #include <stdint.h>
+#include <fs/hdd.h>
+#include <fs/hddw.h>
+
 /* ISRs reserved for CPU exceptions */
 extern void isr0();
 extern void isr1();

@@ -4,10 +4,9 @@ multiboot_memory_map_t *mmap;
 uint32_t largestUseableMem = 0;
 
 void kmain(multiboot_info_t* mbd, int endOfCode) {
+	canType = false;
 	isr_install();
 	irq_install();
-
-	canType = false;
 
 	clear();
 	drawLogo();
@@ -73,6 +72,29 @@ void user_input(char* input) {
 	}
 	else if (strcmp(input, "uptime") == 0) {
 		calculateUptime();
+	}
+	else if (strcmp(input, "drives") == 0) {
+		drive_scan();
+		if (mp == 0 || mp48 == 0) {
+			kprint("Primary IDE, Master Drive (Drive 1): Online\n");
+		} else {
+			kprint("Primary IDE, Master Drive (Drive 1): Offline\n");
+		}
+		if (ms == 0 || ms48 == 0) {
+			kprint("Primary IDE, Slave Drive (Drive 2): Online\n");
+		} else {
+			kprint("Primary IDE, Slave Drive (Drive 2): Offline\n");
+		}
+		if (sp == 0 || sp48 == 0) {
+			kprint("Secondary IDE, Master Drive (Drive 3): Online\n");
+		} else {
+			kprint("Secondary IDE, Master Drive (Drive 3): Offline\n");
+		}
+		if (ss == 0 || ss48 == 0) {
+			kprint("Secondary IDE, Slave Drive (Drive 4): Online\n");
+		} else {
+			kprint("Secondary IDE, Slave Drive (Drive 4): Offline\n");
+		}
 	}
 	else {
 		if (strcmp(input, "") == 0) {
