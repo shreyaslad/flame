@@ -51,6 +51,6 @@ void kprint_color(char* message, char color);
 
 void drawRect(uint8_t color);
 void drawLogo();
-void neofetchLogo(uint32_t mem);
+void neofetch(uint32_t mem);
 
 #endif

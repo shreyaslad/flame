@@ -68,7 +68,7 @@ void user_input(char* input) {
 		getResolution();
 	}
 	else if (strcmp(input, "neofetch") == 0) {
-		neofetchLogo(largestUseableMem);
+		neofetch(largestUseableMem);
 	}
 	else if (strcmp(input, "uptime") == 0) {
 		calculateUptime();

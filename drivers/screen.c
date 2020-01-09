@@ -231,8 +231,7 @@ void drawRect(uint8_t color) {
     }
 }
 
-void neofetchLogo(uint32_t mem) {
-    //drive_scan();
+void neofetch(uint32_t mem) {
     clear();
     formatTime();
 
