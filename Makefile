@@ -15,7 +15,7 @@ myos.iso: kernel.elf
 	cp kernel.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o flame.iso isodir
-	rm -rf kernel.bin *.dis *.o *.elf
+	rm -rf kernel.bin *.dis *.o *.elf *.bin
 	rm -rf *.o kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
 
 kernel.bin: kernel.elf
