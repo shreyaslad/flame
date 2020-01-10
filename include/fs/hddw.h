@@ -23,3 +23,5 @@ void write(uint32_t sector, uint8_t badcheck);
 void init_hddw();
 void clear_sector(uint32_t sector);
 void select_drive(uint8_t driveToSet);
+
+void read_disk(uint32_t sector);

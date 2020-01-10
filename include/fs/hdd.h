@@ -48,6 +48,15 @@ typedef struct {
     uint8_t HIGH_USED;
 } hdd_size_t;
 
+extern int mp;
+extern int sp;
+extern int ms;
+extern int ss;
+extern int mp48;
+extern int sp48;
+extern int ss48;
+extern int ms48;
+extern int nodrives;
 
 void clear_ata_buffer();
 int ata_pio28(uint16_t base, uint8_t type, uint16_t drive, uint32_t addr);
@@ -55,13 +64,3 @@ int ata_pio48(uint16_t base, uint8_t type, uint16_t drive, uint32_t addr);
 void init_hdd();
 void drive_scan();
 hdd_size_t drive_sectors(uint8_t devP, uint8_t controllerP);
-
-int mp;
-int sp;
-int ms;
-int ss;
-int mp48;
-int sp48;
-int ss48;
-int ms48;
-int nodrives;

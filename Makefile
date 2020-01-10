@@ -24,7 +24,7 @@ kernel.bin: kernel.elf
 kernel.elf: ${OBJ}
 	/opt/cross/bin/i686-elf-ld -melf_i386 -o $@ -T linker.ld $^
 
-run: flame.bin
+run: flame.iso
 	qemu-system-x86_64 -d guest_errors -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
 
 debug: flame.bin kernel.elf

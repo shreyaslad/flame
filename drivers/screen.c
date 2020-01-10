@@ -232,6 +232,7 @@ void drawRect(uint8_t color) {
 }
 
 void neofetch(uint32_t mem) {
+    drive_scan();
     clear();
     formatTime();
 

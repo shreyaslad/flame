@@ -96,6 +96,13 @@ void user_input(char* input) {
 			kprint("Secondary IDE, Slave Drive (Drive 4): Offline\n");
 		}
 	}
+	else if (strcmp(input, "read") == 0) {
+		read_disk(0);
+	}
+	else if (strcmp(input, "driveTest") == 0) {
+		writeIn[0] = 0x1111;
+		write(0, 0);
+	}
 	else {
 		if (strcmp(input, "") == 0) {
 

@@ -10,8 +10,7 @@ uint32_t lastSector = 0;
 uint8_t current_drive = 1;
 
 void init_hddw() {
-    for(int i = 0; i < 256; i++)
-    {
+    for(int i = 0; i < 256; i++) {
         emptySector[i] = 0x0;
     }
     readBuffer = (uint8_t *)malloc(512);
@@ -142,10 +141,33 @@ void readToBuffer(uint32_t sector) {
     //sprint("\n");
 }
 
+void read_disk(uint32_t sector) {
+    char str2[32];
+	kprint ("\nSector ");
+	kprint_int(sector);
+	kprint(" contents:\n\n");
+ 
+	//! read sector from disk
+	readToBuffer(sector);
+	uint8_t *temp = readBuffer;
+	for (int l = 0; l<256; l++) {
+		uint16_t good = *temp;
+		temp++;
+		good += (uint16_t) (*temp << 8);
+		temp++;
+		hex_to_ascii(good, str2);
+		kprint(str2);
+		kprint(" ");
+		for (int i = 0; i<32; i++) {
+			str2[i] = 0;
+		}
+	}
+	clear_ata_buffer();
+}
+
 void writeFromBuffer(uint32_t sector, uint8_t badcheck) {
     uint8_t *ptr = writeBuffer;
-    for (uint32_t i = 0; i < 256; i++)
-    {
+    for (uint32_t i = 0; i < 256; i++) {
         uint8_t f = *ptr; // Default is s
         ptr++;
         uint8_t s = *ptr; // Default is f
@@ -168,8 +190,7 @@ void write(uint32_t sector, uint8_t badcheck) {
     if ((tick-driveUseTick > 5000 || abs(sector-lastSector) > 50)) {
         read(sector, 0); // Start the drive
     }
-    for(int i = 0; i < 256; i++)
-    {
+    for(int i = 0; i < 256; i++) {
         ata_buffer[i] = writeIn[i];
     }
     if (ata_pio == 0) {
