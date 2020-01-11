@@ -104,6 +104,36 @@ void kprint_uint8(uint8_t num) {
     kprint(buf);
 }
 
+// NOTE: it is your job to manipulate the key_buffer 
+void clearLine() {
+    int change = coutkey - coutleft;
+
+    int oldOffset = get_cursor_offset();
+    int currentCol = get_offset_col(oldOffset);
+    int currentRow = get_offset_row(oldOffset);
+
+    int offset = get_offset(currentCol - change, currentRow); // this should set the cursor position at the beginning of the text
+    set_cursor_offset(offset);
+
+    oldOffset = get_cursor_offset();
+    currentCol = get_offset_col(oldOffset);
+    currentRow = get_offset_row(oldOffset);
+
+    offset = get_offset(currentCol + coutkey, currentRow); // this should set the cursor position at the end of the text
+    set_cursor_offset(offset);
+
+    for (int i = 0; i < coutkey; i++) {
+        kprint_backspace();
+    }
+
+    oldOffset = get_cursor_offset();
+    currentCol = get_offset_col(oldOffset);
+    currentRow = get_offset_row(oldOffset);
+
+    offset = get_offset(currentCol - coutkey, currentRow); // this should set the cursor pos back to the beginning
+    set_cursor_offset(offset);
+}
+
 /**********************************************************
  * Private kernel functions                               *
  **********************************************************/

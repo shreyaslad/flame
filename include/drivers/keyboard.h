@@ -11,6 +11,8 @@
 #include "../kernel/kernel.h"
 
 extern bool canType;
+extern uint8_t coutkey;
+extern uint8_t coutleft;
 
 void logic(uint8_t scancode);
 

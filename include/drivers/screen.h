@@ -8,6 +8,7 @@
 #include <drivers/colors.h>
 #include <drivers/time.h>
 #include <drivers/serial.h>
+#include <drivers/keyboard.h>
 #include <fs/hdd.h>
 #include <fs/hddw.h>
 #include "../cpu/type.h"
@@ -48,6 +49,8 @@ void kprint_uint8(uint8_t num);
 
 void kprint_at_color(char *message, int col, int row, char color);
 void kprint_color(char* message, char color);
+
+void clearLine();
 
 void drawRect(uint8_t color);
 void drawLogo();
