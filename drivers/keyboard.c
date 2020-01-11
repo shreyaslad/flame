@@ -105,12 +105,6 @@ void logic(uint8_t scancode) {
 		if (coutkey > 0 && coutleft != coutkey) {
 			if (coutleft > 0) {
 				remove(key_buffer, coutkey - coutleft);
-				sprint("Coutkey: ");
-				sprint_uint(coutkey);
-				sprint("\nCoutleft: ");
-				sprint_uint(coutleft);
-				sprint("\nChange: ");
-				sprint_uint(coutkey - coutleft);
 
 				int oldOffset = get_cursor_offset();
 				int currentCol = get_offset_col(oldOffset);
@@ -122,10 +116,6 @@ void logic(uint8_t scancode) {
 				for (int i = 0; i < coutkey; i++) {
 					kprint_backspace();
 				}
-
-				sprint("\n");
-				sprint(key_buffer);
-				sprint("\n");
 
 				kprint(key_buffer);
 
