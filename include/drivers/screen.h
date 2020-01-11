@@ -50,8 +50,6 @@ void kprint_uint8(uint8_t num);
 void kprint_at_color(char *message, int col, int row, char color);
 void kprint_color(char* message, char color);
 
-void clearLine();
-
 void drawRect(uint8_t color);
 void drawLogo();
 void neofetch(uint32_t mem);

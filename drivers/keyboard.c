@@ -1,21 +1,7 @@
 #include <drivers/keyboard.h>
 
-#define BACKSPACE 0x0E
-#define ENTER 0x1C
-#define LSHIFT 0x2a
-#define RSHIFT 0x36
-#define POWER 0x37
-
-#define RIGHT_ARROW 0x4D
-#define LEFT_ARROW 0x4B
-#define UP_ARROW 0x48
-#define DOWN_ARROW 0x50
-
-#define KEYUPOFFSET 0x80 //128
-
-#define SC_MAX 57
-
-static char key_buffer[256];
+static char keyBuffer[256];
+char lastBuffer[256];
 
 uint8_t coutkey = 0;
 uint8_t coutleft = 0;
@@ -24,6 +10,7 @@ uint8_t shift = 0; // is shift key pressed
 
 bool canType = true;
 uint8_t state = 0;
+uint8_t upArrowPressed = 0;
 
 char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6", 
     "7", "8", "9", "0", "-", "=", "Backspace", "Tab", "Q", "W", "E", 
@@ -46,12 +33,9 @@ char sc_ascii_uppercase[] = { ' ', ' ', '!', '@', '#', '$', '%', '^',
 		'B', 'N', 'M', '<', '>', '?', ' ', ' ', ' ', ' ' };
 
 static void keyboard_callback(registers_t* regs) {
-
     uint8_t scancode = port_byte_in(0x60);
 
-	// TODO: pressing the arrow key still increments coutkey
-
-	if (scancode == 224) {
+	if (scancode == LOCK) {
 		state = 1;
 	} else if (scancode == RIGHT_ARROW && state == 1) {
 		state = 0;
@@ -60,6 +44,7 @@ static void keyboard_callback(registers_t* regs) {
 			if (coutleft != 0) {
 				coutleft--;
 
+				// TODO: turn this into a function
 				int oldOffset = get_cursor_offset();
 				int currentCol = get_offset_col(oldOffset);
 				int currentRow = get_offset_row(oldOffset);
@@ -83,6 +68,52 @@ static void keyboard_callback(registers_t* regs) {
 				set_cursor_offset(offset);
 			}
 		}
+	} else if (scancode == UP_ARROW && state == 1) {
+		// sometimes the up arrow prints nothing even though lastBuffer is set
+		// this makes no sense
+		upArrowPressed++;
+
+		if (upArrowPressed <= 1) {
+			int oldOffset = get_cursor_offset();
+			int currentCol = get_offset_col(oldOffset);
+			int currentRow = get_offset_row(oldOffset);
+
+			int offset = get_offset(currentCol + coutleft, currentRow); // set cursor at end of string
+			set_cursor_offset(offset);
+
+			for (int i = 0; i < coutkey; i++) {
+				backspace(keyBuffer);
+				kprint_backspace();
+			} // this should've cleared the key buffer and the line
+
+			kprint(lastBuffer); // put the last string onto the line
+			strcpy(keyBuffer, lastBuffer);
+
+			// reset the values so they can be used appropriately
+			coutkey = strlen(lastBuffer);
+			coutleft = 0;
+		}
+
+	} else if (scancode == DOWN_ARROW && state == 1) {
+		if (upArrowPressed == 1) {
+			upArrowPressed = 0;
+
+			int oldOffset = get_cursor_offset();
+			int currentCol = get_offset_col(oldOffset);
+			int currentRow = get_offset_row(oldOffset);
+
+			int offset = get_offset(currentCol + coutleft, currentRow); // set cursor at end of string
+			set_cursor_offset(offset);
+
+			for (int i = 0; i < coutkey; i++) {
+				backspace(keyBuffer);
+				kprint_backspace();
+			} // clear the line
+
+			// reset the values since there is nothing on the line
+			coutkey = 0;
+			coutleft = 0;
+		}
 	} else {
 		if (canType)
 			logic(scancode);
@@ -104,7 +135,7 @@ void logic(uint8_t scancode) {
 	if (strcmp(sc_name[scancode], "Backspace") == 0 && keyUp == false) {
 		if (coutkey > 0 && coutleft != coutkey) {
 			if (coutleft > 0) {
-				remove(key_buffer, coutkey - coutleft);
+				remove(keyBuffer, coutkey - coutleft);
 
 				int oldOffset = get_cursor_offset();
 				int currentCol = get_offset_col(oldOffset);
@@ -117,12 +148,12 @@ void logic(uint8_t scancode) {
 					kprint_backspace();
 				}
 
-				kprint(key_buffer);
+				kprint(keyBuffer);
 
 				offset = get_offset(currentCol - 1, currentRow); // this should set the cursor pos back where it was
 				set_cursor_offset(offset);
 			} else {
-				backspace(key_buffer);
+				backspace(keyBuffer);
 				kprint_backspace();
 			}
 
@@ -131,9 +162,16 @@ void logic(uint8_t scancode) {
 			return;
 		}
 	} else if (strcmp(sc_name[scancode], "Enter") == 0 && keyUp == false) {
+		strcpy(lastBuffer, keyBuffer);
+		sprint("Last Buffer: ");
+		sprint(lastBuffer);
+		sprint("\nKeyBuffer: ");
+		sprint(lastBuffer);
+		sprint("\n");
+
 		kprint("\n");
-		user_input(key_buffer);
-		key_buffer[0] = '\0';
+		user_input(keyBuffer);
+		keyBuffer[0] = '\0';
 
 		coutkey = 0;
 	} else if (strcmp(sc_name[scancode], "LShift") == 0 && keyUp == false) {
@@ -145,7 +183,7 @@ void logic(uint8_t scancode) {
 	} else if (strcmp(sc_name[scancode], "RShift") == 0 && keyUp == true) {
 		shift = 0;
 	} else if (strcmp(sc_name[scancode], "Spacebar") == 0 && keyUp == false) {
-		strcat(key_buffer, " ");
+		strcat(keyBuffer, " ");
 		kprint(" ");
 		coutkey++;
 	}
@@ -157,7 +195,7 @@ void logic(uint8_t scancode) {
 					char letter = sc_ascii[(int)scancode];
 
 					char str[2] = { letter, '\0' };
-					append(key_buffer, letter);
+					append(keyBuffer, letter);
 					kprint(str);
 				}
 			}
@@ -168,7 +206,7 @@ void logic(uint8_t scancode) {
 					char letter = sc_ascii_uppercase[(int)scancode];
 
 					char str[2] = { letter, '\0' };
-					append(key_buffer, letter);
+					append(keyBuffer, letter);
 					kprint(str);
 				}
 			}
