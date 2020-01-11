@@ -136,14 +136,13 @@ int print_char(char c, int col, int row, char attr) {
     }
 
     if (offset >= MAX_ROWS * MAX_COLS * 2) {
-        int i;
-        for (i = 1; i < MAX_ROWS; i++) 
+        for (int i = 1; i < MAX_ROWS; i++) 
             memcpy((uint8_t*)(get_offset(0, i) + VIDEO_ADDRESS),
                         (uint8_t*)(get_offset(0, i-1) + VIDEO_ADDRESS),
                         MAX_COLS * 2);
 
         char *last_line = (char*) (get_offset(0, MAX_ROWS-1) + (uint8_t*) VIDEO_ADDRESS);
-        for (i = 0; i < MAX_COLS * 2; i++) last_line[i] = 0;
+        for (int i = 0; i < MAX_COLS * 2; i++) last_line[i] = 0;
 
         offset -= 2 * MAX_COLS;
     }

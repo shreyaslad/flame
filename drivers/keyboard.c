@@ -17,8 +17,11 @@
 
 static char key_buffer[256];
 
-int coutkey = 0;
-int shift = 0; // is shift key pressed
+uint8_t coutkey = 0;
+uint8_t coutleft = 0;
+uint8_t coutright = 0;
+
+uint8_t shift = 0; // is shift key pressed
 
 bool canType = true;
 uint8_t state = 0;
@@ -54,21 +57,33 @@ static void keyboard_callback(registers_t* regs) {
 	} else if (scancode == RIGHT_ARROW && state == 1) {
 		state = 0;
 		
-		int oldOffset = get_cursor_offset();
-		int currentCol = get_offset_col(oldOffset);
-		int currentRow = get_offset_row(oldOffset);
+		if (coutleft > 0) {
+			if (coutleft != 0) {
+				coutleft--;
 
-		int offset = get_offset(currentCol + 1, currentRow);
-		set_cursor_offset(offset);
+				int oldOffset = get_cursor_offset();
+				int currentCol = get_offset_col(oldOffset);
+				int currentRow = get_offset_row(oldOffset);
+
+				int offset = get_offset(currentCol + 1, currentRow);
+				set_cursor_offset(offset);
+			}
+		}
 	} else if (scancode == LEFT_ARROW && state == 1) {
 		state = 0;
 
-		int oldOffset = get_cursor_offset();
-		int currentCol = get_offset_col(oldOffset);
-		int currentRow = get_offset_row(oldOffset);
+		if (coutkey > 0) {
+			if (coutleft != coutkey) {
+				coutleft++;
 
-		int offset = get_offset(currentCol - 1, currentRow);
-		set_cursor_offset(offset);
+				int oldOffset = get_cursor_offset();
+				int currentCol = get_offset_col(oldOffset);
+				int currentRow = get_offset_row(oldOffset);
+
+				int offset = get_offset(currentCol - 1, currentRow);
+				set_cursor_offset(offset);
+			}
+		}
 	} else {
 		if (canType)
 			logic(scancode);
