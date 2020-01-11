@@ -4,11 +4,10 @@ multiboot_memory_map_t *mmap;
 uint32_t largestUseableMem = 0;
 
 void kmain(multiboot_info_t* mbd, int endOfCode) {
-	canType = false;
+	disableCursor();
+
 	isr_install();
 	irq_install();
-
-	setBlockCursor();
 
 	clear();
 	drawLogo();
@@ -24,7 +23,7 @@ void kmain(multiboot_info_t* mbd, int endOfCode) {
 	kprint(".");
 	kprint("\nuser@flameOS # ");
 
-	canType = true;
+	enableCursor();
 
 	if (mbd->flags & MULTIBOOT_INFO_MEM_MAP) {
 		for (mmap = (struct multiboot_mmap_entry *)mbd->mmap_addr; (uint32_t)mmap < (mbd->mmap_addr + mbd->mmap_length); mmap = (struct multiboot_mmap_entry *)((uint32_t)mmap + mmap->size + sizeof(mmap->size))) {

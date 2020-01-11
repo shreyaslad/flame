@@ -24,7 +24,6 @@
 #define SC_MAX 57
 #define LOCK 0xE0
 
-extern bool canType;
 extern uint8_t coutkey;
 extern uint8_t coutleft;
 

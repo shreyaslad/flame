@@ -8,7 +8,6 @@ uint8_t coutleft = 0;
 
 uint8_t shift = 0; // is shift key pressed
 
-bool canType = true;
 uint8_t state = 0;
 uint8_t upArrowPressed = 0;
 
@@ -44,13 +43,7 @@ static void keyboard_callback(registers_t* regs) {
 			if (coutleft != 0) {
 				coutleft--;
 
-				// TODO: turn this into a function
-				int oldOffset = get_cursor_offset();
-				int currentCol = get_offset_col(oldOffset);
-				int currentRow = get_offset_row(oldOffset);
-
-				int offset = get_offset(currentCol + 1, currentRow);
-				set_cursor_offset(offset);
+				shiftCursorPos(1, 0);
 			}
 		}
 	} else if (scancode == LEFT_ARROW && state == 1) {
@@ -60,24 +53,14 @@ static void keyboard_callback(registers_t* regs) {
 			if (coutleft != coutkey) {
 				coutleft++;
 
-				int oldOffset = get_cursor_offset();
-				int currentCol = get_offset_col(oldOffset);
-				int currentRow = get_offset_row(oldOffset);
-
-				int offset = get_offset(currentCol - 1, currentRow);
-				set_cursor_offset(offset);
+				shiftCursorPos(-1, 0);
 			}
 		}
 	} else if (scancode == UP_ARROW && state == 1) {
 		// you can only use the up arrow key once for some reason
 		upArrowPressed++;
 
-		int oldOffset = get_cursor_offset();
-		int currentCol = get_offset_col(oldOffset);
-		int currentRow = get_offset_row(oldOffset);
-
-		int offset = get_offset(currentCol + coutleft, currentRow); // set cursor at end of string
-		set_cursor_offset(offset);
+		shiftCursorPos(coutleft, 0);
 
 		for (int i = 0; i < coutkey; i++) {
 			backspace(keyBuffer);
@@ -95,12 +78,7 @@ static void keyboard_callback(registers_t* regs) {
 		if (upArrowPressed == 1) {
 			upArrowPressed = 0;
 
-			int oldOffset = get_cursor_offset();
-			int currentCol = get_offset_col(oldOffset);
-			int currentRow = get_offset_row(oldOffset);
-
-			int offset = get_offset(currentCol + coutleft, currentRow); // set cursor at end of string
-			set_cursor_offset(offset);
+			shiftCursorPos(coutleft, 0);
 
 			for (int i = 0; i < coutkey; i++) {
 				backspace(keyBuffer);
@@ -112,8 +90,8 @@ static void keyboard_callback(registers_t* regs) {
 			coutleft = 0;
 		}
 	} else {
-		if (canType)
-			logic(scancode);
+		// just diable the cursor to prevent them from typing
+		logic(scancode);
 	}
 
     UNUSED(regs);
@@ -134,12 +112,7 @@ void logic(uint8_t scancode) {
 			if (coutleft > 0) {
 				remove(keyBuffer, coutkey - coutleft);
 
-				int oldOffset = get_cursor_offset();
-				int currentCol = get_offset_col(oldOffset);
-				int currentRow = get_offset_row(oldOffset);
-
-				int offset = get_offset(currentCol + coutleft, currentRow); // this should set the cursor position at the end of the text
-				set_cursor_offset(offset);
+				shiftCursorPos(coutleft, 0);
 
 				for (int i = 0; i < coutkey; i++) {
 					kprint_backspace();
@@ -147,8 +120,7 @@ void logic(uint8_t scancode) {
 
 				kprint(keyBuffer);
 
-				offset = get_offset(currentCol - 1, currentRow); // this should set the cursor pos back where it was
-				set_cursor_offset(offset);
+				shiftCursorPos(-1, 0);
 			} else {
 				backspace(keyBuffer);
 				kprint_backspace();

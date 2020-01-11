@@ -32,6 +32,7 @@
 /* Cursor */
 int get_cursor_offset();
 void set_cursor_offset(int offset);
+void shiftCursorPos(int coffset, int roffset);
 
 /* Expose private cursor pos API */
 int get_offset(int col, int row);

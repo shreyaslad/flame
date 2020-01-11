@@ -183,6 +183,15 @@ void clear() {
     set_cursor_offset(get_offset(0, 0));
 }
 
+void shiftCursorPos(int coffset, int roffset) {
+    int oldOffset = get_cursor_offset();
+    int currentCol = get_offset_col(oldOffset);
+    int currentRow = get_offset_row(oldOffset);
+
+    int offset = get_offset(currentCol + coffset, currentRow + roffset);
+    set_cursor_offset(offset);
+}
+
 int get_offset(int col, int row) { return 2 * (row * MAX_COLS + col); }
 int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
 int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }
