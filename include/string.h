@@ -28,3 +28,6 @@ char* strcpy(char* dest, char* src);
 
 int strcmp(char* s1, char* s);
 int strcmpl(char s1[], char s2[], unsigned char x);
+
+char removeNull(char *s);
+void remove(char *s, uint32_t pos);

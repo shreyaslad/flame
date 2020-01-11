@@ -129,3 +129,20 @@ int strcmpl(char s1[], char s2[], unsigned char x) {
 
 	return false;
 }
+
+char removeNull(char* s) {
+    char ret = s[0];
+    return ret;
+}
+
+void remove(char* s, uint32_t pos) {
+    int len = strlen(s);
+    char prev = removeNull("\0");
+    char tempE;
+    for (uint32_t x = len; x > pos-2; x--) {
+        tempE = s[x];
+        s[x] = prev;
+        prev = tempE;
+    }
+    s[len-1] = '\0';
+}

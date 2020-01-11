@@ -19,7 +19,6 @@ static char key_buffer[256];
 
 uint8_t coutkey = 0;
 uint8_t coutleft = 0;
-uint8_t coutright = 0;
 
 uint8_t shift = 0; // is shift key pressed
 
@@ -104,11 +103,46 @@ void logic(uint8_t scancode) {
 
 	// Prevent user from deleting text that they didn't place
 	if (strcmp(sc_name[scancode], "Backspace") == 0 && keyUp == false) {
-		if (coutkey > 0) {
-			backspace(key_buffer);
-			kprint_backspace();
+		if (coutkey > 0 && coutleft != coutkey) {
+			// TODO: remove character from key_buffer
+			if (coutleft > 0) {
+				remove(key_buffer, coutkey - coutleft - 1);
 
-			coutkey--;
+				int change = coutkey - coutleft;
+
+				int oldOffset = get_cursor_offset();
+				int currentCol = get_offset_col(oldOffset);
+				int currentRow = get_offset_row(oldOffset);
+
+				int offset = get_offset(currentCol - change, currentRow); // this should set the cursor position at the beginning of the text
+				set_cursor_offset(offset);
+
+				oldOffset = get_cursor_offset();
+				currentCol = get_offset_col(oldOffset);
+				currentRow = get_offset_row(oldOffset);
+
+				offset = get_offset(currentCol + coutkey, currentRow); // this should set the cursor position at the end of the text
+				set_cursor_offset(offset);
+
+				for (int i = 0; i < coutkey; i++) {
+					kprint_backspace();
+				}
+
+				//sprint(key_buffer);
+				kprint(key_buffer);
+
+				oldOffset = get_cursor_offset();
+				currentCol = get_offset_col(oldOffset);
+				currentRow = get_offset_row(oldOffset);
+
+				offset = get_offset(currentCol - 1, currentRow); // this should set the cursor pos back where it was
+				set_cursor_offset(offset);
+			} else {
+				backspace(key_buffer);
+				kprint_backspace();
+			}
+
+			coutkey--; // keep this last since the original coutkey is used in the above conditional
 		} else {
 			return;
 		}
@@ -130,15 +164,6 @@ void logic(uint8_t scancode) {
 		strcat(key_buffer, " ");
 		kprint(" ");
 		coutkey++;
-	} else if (scancode + 128 == 224) {
-		if (state == 0) {
-			state = 1;
-		} else {
-			state = 0;
-		}
-	} else if (scancode == 77 && state == 1 && keyUp == false) {
-		state = 0;
-		sprint("r");
 	}
 	else {
 		if (shift == 0) {
