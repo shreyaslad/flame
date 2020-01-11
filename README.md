@@ -1,5 +1,7 @@
 # flame
 
+![alt text](https://cdn.discordapp.com/attachments/404064439571316747/665670368769605632/unknown.png "flameOS")
+
 This project is based off [this](https://github.com/cfenollosa/os-tutorial) tutorial written by cfenollosa.
 
 The [osdev wiki](https://wiki.osdev.org) has also greatly helped me in expanding this codebase.
