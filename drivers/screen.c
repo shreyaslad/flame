@@ -287,12 +287,30 @@ void neofetch(uint32_t mem) {
 
     offset = get_offset(currentCol + 35, currentRow - 9);
     set_cursor_offset(offset);
-    kprint_color("Master Drive: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
+    kprint_color("Drive Status: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
     if (mp == 0 || mp48 == 0) {
-		kprint("Online\n");
-	} else {
-		kprint("Offline\n");
-	}
+        kprint_color(" 1 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_GREEN));
+    } else {
+        kprint_color(" 1 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_LIGHT_RED));
+    }
+
+    if (ms == 0 || ms48 == 0) {
+        kprint_color(" 2 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_GREEN));
+    } else {
+        kprint_color(" 2 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_LIGHT_RED));
+    }
+
+    if (sp == 0 || sp48 == 0) {
+        kprint_color(" 3 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_GREEN));
+    } else {
+        kprint_color(" 3 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_LIGHT_RED));
+    }
+
+    if (ss == 0 || ss48 == 0) {
+        kprint_color(" 4 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_GREEN));
+    } else {
+        kprint_color(" 4 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_LIGHT_RED));
+    }
 
     offset = get_offset(currentCol + 35, currentRow - 8);
     set_cursor_offset(offset);

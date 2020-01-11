@@ -16,3 +16,4 @@ Steps to get resolution
 extern uint8_t horzDisp;
 
 void getResolution();
+void setBlockCursor();

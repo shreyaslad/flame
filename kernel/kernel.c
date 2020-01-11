@@ -8,6 +8,8 @@ void kmain(multiboot_info_t* mbd, int endOfCode) {
 	isr_install();
 	irq_install();
 
+	setBlockCursor();
+
 	clear();
 	drawLogo();
 	wait_s(2);

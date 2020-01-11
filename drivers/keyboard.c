@@ -69,30 +69,27 @@ static void keyboard_callback(registers_t* regs) {
 			}
 		}
 	} else if (scancode == UP_ARROW && state == 1) {
-		// sometimes the up arrow prints nothing even though lastBuffer is set
-		// this makes no sense
+		// you can only use the up arrow key once for some reason
 		upArrowPressed++;
 
-		if (upArrowPressed <= 1) {
-			int oldOffset = get_cursor_offset();
-			int currentCol = get_offset_col(oldOffset);
-			int currentRow = get_offset_row(oldOffset);
+		int oldOffset = get_cursor_offset();
+		int currentCol = get_offset_col(oldOffset);
+		int currentRow = get_offset_row(oldOffset);
 
-			int offset = get_offset(currentCol + coutleft, currentRow); // set cursor at end of string
-			set_cursor_offset(offset);
+		int offset = get_offset(currentCol + coutleft, currentRow); // set cursor at end of string
+		set_cursor_offset(offset);
 
-			for (int i = 0; i < coutkey; i++) {
-				backspace(keyBuffer);
-				kprint_backspace();
-			} // this should've cleared the key buffer and the line
+		for (int i = 0; i < coutkey; i++) {
+			backspace(keyBuffer);
+			kprint_backspace();
+		} // this should've cleared the key buffer and the line
 
-			kprint(lastBuffer); // put the last string onto the line
-			strcpy(keyBuffer, lastBuffer);
+		kprint(lastBuffer); // put the last string onto the line
+		strcpy(keyBuffer, lastBuffer);
 
-			// reset the values so they can be used appropriately
-			coutkey = strlen(lastBuffer);
-			coutleft = 0;
-		}
+		// reset the values so they can be used appropriately
+		coutkey = strlen(lastBuffer);
+		coutleft = 0;
 
 	} else if (scancode == DOWN_ARROW && state == 1) {
 		if (upArrowPressed == 1) {
