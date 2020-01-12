@@ -57,8 +57,7 @@ static void keyboard_callback(registers_t* regs) {
 			}
 		}
 	} else if (scancode == UP_ARROW && state == 1) {
-		// you can only use the up arrow key once for some reason
-		upArrowPressed++;
+		upArrowPressed = 1;
 
 		shiftCursorPos(coutleft, 0);
 
@@ -73,7 +72,6 @@ static void keyboard_callback(registers_t* regs) {
 		// reset the values so they can be used appropriately
 		coutkey = strlen(lastBuffer);
 		coutleft = 0;
-
 	} else if (scancode == DOWN_ARROW && state == 1) {
 		if (upArrowPressed == 1) {
 			upArrowPressed = 0;
@@ -131,13 +129,6 @@ void logic(uint8_t scancode) {
 			return;
 		}
 	} else if (strcmp(sc_name[scancode], "Enter") == 0 && keyUp == false) {
-		strcpy(lastBuffer, keyBuffer);
-		sprint("Last Buffer: ");
-		sprint(lastBuffer);
-		sprint("\nKeyBuffer: ");
-		sprint(lastBuffer);
-		sprint("\n");
-
 		kprint("\n");
 		user_input(keyBuffer);
 		keyBuffer[0] = '\0';
