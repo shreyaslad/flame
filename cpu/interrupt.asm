@@ -2,56 +2,77 @@
 [extern isr_handler]
 [extern irq_handler]
 
+%macro pusha 0
+   push rax
+   push rcx
+   push rdx
+   push rbx
+   push rsp
+   push rbp
+   push rsi
+   push rdi
+   push r8
+   push r9
+   push r10
+   push r11
+   push r12
+   push r13
+   push r14
+   push r15
+%endmacro
+
+%macro popa 0
+   pop r15
+   pop r14
+   pop r13
+   pop r12
+   pop r11
+   pop r10
+   pop r8
+   pop r9
+   pop rdi
+   pop rsi
+   pop rbp
+   pop rsp
+   pop rbx
+   pop rdx
+   pop rcx
+   pop rax
+%endmacro
+
+%macro int_handle 1
+    pusha
+
+    xor rax, rax
+    mov ax, ds
+    push rax
+
+    mov ax, 0x0
+    mov ds, ax
+    mov es, ax
+
+    mov rdi, rsp
+    cld
+    call %1
+
+    pop rax
+
+    mov ds, ax
+    mov es, ax
+
+    popa
+
+    add rsp, 16
+    iretq
+%endmacro
+
 ; Common ISR code
 isr_common_stub:
-    ; 1. Save CPU state
-	pusha ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-	mov ax, ds ; Lower 16-bits of eax = ds.
-	push eax ; save the data segment descriptor
-	mov ax, 0x10  ; kernel data segment descriptor
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	push esp ; registers_t *r
-    ; 2. Call C handler
-    cld ; C code following the sysV ABI requires DF to be clear on function entry
-	call isr_handler
-	
-    ; 3. Restore state
-	pop eax 
-    pop eax
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	popa
-	add esp, 8 ; Cleans up the pushed error code and pushed ISR number
-	iret ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
-
+    int_handle isr_handler
 ; Common IRQ code. Identical to ISR code except for the 'call' 
 ; and the 'pop ebx'
 irq_common_stub:
-    pusha 
-    mov ax, ds
-    push eax
-    mov ax, 0x10
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    push esp
-    cld
-    call irq_handler ; Different than the ISR code
-    pop ebx  ; Different than the ISR code
-    pop ebx
-    mov ds, bx
-    mov es, bx
-    mov fs, bx
-    mov gs, bx
-    popa
-    add esp, 8
-    iret 
+    int_handle irq_handler
 	
 ; We don't get information about which interrupt was caller
 ; when the handler is run, so we will need to have a different handler
