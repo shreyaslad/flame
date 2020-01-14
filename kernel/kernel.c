@@ -3,7 +3,9 @@
 multiboot_memory_map_t *mmap;
 uint32_t largestUseableMem = 0;
 
-void kmain(multiboot_info_t* mbd, int endOfCode) {
+extern uint64_t KNL_CORE_END;
+
+void kmain(uint64_t magic, multiboot_info_t* mbd) {
 	disableCursor();
 
 	isr_install();
@@ -37,7 +39,7 @@ void kmain(multiboot_info_t* mbd, int endOfCode) {
 
 			if (mType == 1) {
 				if (lenL > largestUseableMem) {
-					largestUseableMem = abs(lenL - abs(endOfCode - addrL));
+					largestUseableMem = abs(lenL - abs(&KNL_CORE_END - addrL));
 				}
 			}
 		}

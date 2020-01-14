@@ -1,44 +1,48 @@
 /* The bootloader will look at this image and start execution at the symbol
    designated as the entry point. */
 ENTRY(_start)
- 
+
+OUTPUT_FORMAT(elf64-x86-64)
+
+KNL_HIGH_VMA = 0xFFFFFFFF80000000;
+KNL_BOOT_VMA = 0x100000;
+
 /* Tell where the various sections of the object files will be put in the final
    kernel image. */
 SECTIONS
 {
-	/* Begin putting sections at 1 MiB, a conventional place for kernels to be
-	   loaded at by the bootloader. */
-	. = 1M;
- 
-	/* First put the multiboot header, as it is required to be put very early
-	   early in the image or the bootloader won't recognize the file format.
-	   Next we'll put the .text section. */
-	.text BLOCK(4K) : ALIGN(4K)
+	. = KNL_BOOT_VMA;
+	.multiboot ALIGN(4K): 
 	{
 		*(.multiboot)
-		*(.text)
-	}
- 
-	/* Read-only data. */
-	.rodata BLOCK(4K) : ALIGN(4K)
-	{
-		*(.rodata)
-	}
- 
-	/* Read-write data (initialized) */
-	.data BLOCK(4K) : ALIGN(4K)
-	{
-		*(.data)
-	}
- 
-	/* Read-write data (uninitialized) and stack */
-	.bss BLOCK(4K) : ALIGN(4K)
-	{
-		*(COMMON)
-		*(.bss)
-	}
-    
-	/* The compiler may produce other sections, by default it will put them in
-	   a segment with the same name. Simply add stuff here as needed. */
-	__kernel_end = ALIGN(1K); /* Marker so that the memory allocater doesn't eat the OS alive */
+  }
+
+  .bootstrap ALIGN(4K): 
+  {
+    	boot.o *(.text)
+    	boot.o *(.bss)
+		  boot.o *(COMMON)
+		  boot.o *(.rodata)
+    	boot.o *(.data)
+  }
+
+  . += KNL_HIGH_VMA;
+
+  .text ALIGN(4K): AT(ADDR(.text) - KNL_HIGH_VMA)
+  {
+    EXCLUDE_FILE (boot.o) *(.text)
+  }
+
+  .data ALIGN(4K): AT(ADDR(.data) - KNL_HIGH_VMA)
+  {
+    EXCLUDE_FILE (boot.o) *(.data)
+	  EXCLUDE_FILE (boot.o) *(.rodata)
+  }
+
+  .bss ALIGN(4K): AT(ADDR(.bss) - KNL_HIGH_VMA)
+  {
+    EXCLUDE_FILE (boot.o) *(COMMON)
+	  EXCLUDE_FILE (boot.o) *(.bss)
+  }
+   KNL_CORE_END = .;
 }
