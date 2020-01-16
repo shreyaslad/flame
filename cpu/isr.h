@@ -1,9 +1,15 @@
-#ifndef ISR_H
-#define ISR_H
+#pragma once
 
 #include <stdint.h>
+#include <drivers/screen.h>
+#include <drivers/keyboard.h>
 #include <fs/hdd.h>
 #include <fs/hddw.h>
+#include "../kernel/kernel.h"
+#include "idt.h"
+#include "timer.h"
+#include "ports.h"
+
 
 #define SPEED 1193
 
@@ -77,17 +83,16 @@ extern void irq15();
 
 /* Struct which aggregates many registers */
 typedef struct {
-   uint32_t ds; /* Data segment selector */
-   uint32_t edi, esi, ebp, useless, ebx, edx, ecx, eax; /* Pushed by pusha. */
-   uint32_t int_no, err_code; /* Interrupt number and error code (if applicable) */
-   uint32_t eip, cs, eflags, esp, ss; /* Pushed by the processor automatically */
+   uint64_t ds; /* Data segment selector */
+   uint64_t rdi, rsi, rbp, useless, rbx, rdx, rcx, rax; /* Pushed by pusha. */
+   uint64_t int_no, err_code; /* Interrupt number and error code (if applicable) */
+   uint64_t rip, cs, eflags, rsp, ss; /* Pushed by the processor automatically */
 } registers_t;
 
 void isr_install();
-void isr_handler(registers_t *r);
+void isr_handler(registers_t* r);
+void irq_handler(registers_t* r);
 void irq_install();
 
 typedef void (*isr_t)(registers_t*);
 void register_interrupt_handler(uint8_t n, isr_t handler);
-
-#endif

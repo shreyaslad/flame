@@ -8,7 +8,7 @@ ARCH=x86_64
 CC = ${ARCH}-elf-gcc
 GDB = ${ARCH}-elf-gdb
 CFLAGS = -ggdb -nostdlib -fno-stack-protector -nostartfiles -nodefaultlibs \
-		 -Wall -Wextra -Wno-unused-function -Wno-unused-variable -Wpedantic -ffreestanding
+		 -Wall -Wextra -Wno-unused-function -Wno-unused-variable -Wpedantic -ffreestanding -ggdb -std=gnu11
 O_LEVEL = 2
 
 LDFLAGS = -ffreestanding -O2 -nostdlib -z max-page-size=0x1000
@@ -18,6 +18,8 @@ myos.iso: kernel.elf
 	cp kernel.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o flame.iso isodir
+	rm -rf kernel.bin *.dis *.o *.elf
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o
 
 kernel.bin: kernel.elf
 	objcopy -O binary $^ $@
@@ -37,7 +39,7 @@ clean:
 	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o
 
 %.o: %.c ${HEADERS}
-	${CC} -Iinclude ${CFLAGS} -ffreestanding -c $< -o $@ -std=gnu11
+	${CC} -Iinclude ${CFLAGS} -c $< -o $@
 
 %.o: %.s
 	${ARCH}-elf-${AS} -gstabs $< -o $@

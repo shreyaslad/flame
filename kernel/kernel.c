@@ -6,6 +6,12 @@ uint32_t largestUseableMem = 0;
 extern uint64_t KNL_CORE_END;
 
 void kmain(uint64_t magic, multiboot_info_t* mbd) {
+	if (magic != 0x2BAD2B00) {
+		// busy spin until kernel panic is implemented
+		while(1)
+			;
+	}
+	
 	disableCursor();
 
 	isr_install();
@@ -28,6 +34,8 @@ void kmain(uint64_t magic, multiboot_info_t* mbd) {
 	enableCursor();
 
 	if (mbd->flags & MULTIBOOT_INFO_MEM_MAP) {
+		uint64_t tmp = (uint64_t) &KNL_CORE_END;
+
 		for (mmap = (struct multiboot_mmap_entry *)mbd->mmap_addr; (uint32_t)mmap < (mbd->mmap_addr + mbd->mmap_length); mmap = (struct multiboot_mmap_entry *)((uint32_t)mmap + mmap->size + sizeof(mmap->size))) {
 			uint32_t addrH = mmap->addr_high;
 			uint32_t addrL = mmap->addr_low;
@@ -39,7 +47,7 @@ void kmain(uint64_t magic, multiboot_info_t* mbd) {
 
 			if (mType == 1) {
 				if (lenL > largestUseableMem) {
-					largestUseableMem = abs(lenL - abs(&KNL_CORE_END - addrL));
+					largestUseableMem = abs(lenL - abs(tmp - addrL));
 				}
 			}
 		}

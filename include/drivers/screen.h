@@ -1,5 +1,4 @@
-#ifndef SCREEN_H
-#define SCREEN_H
+#pragma once
 
 #include <stdint.h>
 #include <stdarg.h>
@@ -11,8 +10,8 @@
 #include <drivers/keyboard.h>
 #include <fs/hdd.h>
 #include <fs/hddw.h>
-#include "../cpu/type.h"
-#include "../cpu/ports.h"
+#include "../../cpu/type.h"
+#include "../../cpu/ports.h"
 
 // VGA Output Buffer
 #define VIDEO_ADDRESS 0xb8000
@@ -54,5 +53,3 @@ void kprint_color(char* message, char color);
 void drawRect(uint8_t color);
 void drawLogo();
 void neofetch(uint32_t mem);
-
-#endif
