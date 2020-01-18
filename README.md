@@ -4,13 +4,13 @@
 
 This project is based off [this](https://github.com/cfenollosa/os-tutorial) tutorial written by cfenollosa.
 
-The [osdev wiki](https://wiki.osdev.org) has also greatly helped me in expanding this codebase.
+The [OSDev Wiki](https://wiki.osdev.org) also has an immense amount of resources, quite a few of which were used.
 
 ## Building
 
 You need the i686-elf cross compiler as well as binutils. You can grab the list of dependencies from [here](https://wiki.osdev.org/GCC_Cross-Compiler) and the cross compiler itself from [lordmilko's repository](https://github.com/lordmilko/i686-elf-tools).
 
-Once you have installed all the dependencies, including i686-elf, binutils, and grub2, run `make` and it will build `flame.iso`.
+Once you have installed all the dependencies, including x86_64-elf, binutils, and grub2, run `make` and it will build `flame.iso`.
 
 ## Running
 
@@ -30,7 +30,7 @@ You can also flash the iso to a USB drive and boot off that instead.
 
 `cpu`: contains any code that interacts with the cpu (isr, idt, interrupts, ports, timer)
 
-`drivers`: drivers=
+`drivers`: drivers
 
 `fs`: HDD I/O and Filesystem
 

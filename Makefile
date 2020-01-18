@@ -18,20 +18,19 @@ myos.iso: kernel.elf
 	cp kernel.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o flame.iso isodir
-	rm -rf kernel.bin *.dis *.o *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o
+	make clean
 
 kernel.bin: kernel.elf
 	objcopy -O binary $^ $@
 
 kernel.elf: ${OBJ}
-	${CC} -T linker.ld -o $@ ${LDFLAGS} $^ -lgcc
+	/opt/cross/bin/${CC} -T linker.ld -o $@ ${LDFLAGS} $^ -lgcc
 
 run: flame.iso
-	qemu-system-${ARCH} -d int -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
+	qemu-system-${ARCH} -d -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
 
-debug: flame.bin kernel.elf
-	qemu-system-${ARCH} -s -fda flame.bin -d guest_errors,int &
+debug: flame.iso kernel.elf
+	qemu-system-${ARCH} -s -fda flame.iso -d guest_errors,int &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 clean:
@@ -39,10 +38,10 @@ clean:
 	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o
 
 %.o: %.c ${HEADERS}
-	${CC} -Iinclude ${CFLAGS} -c $< -o $@
+	/opt/cross/bin/${CC} -Iinclude ${CFLAGS} -c $< -o $@
 
 %.o: %.s
-	${ARCH}-elf-${AS} -gstabs $< -o $@
+	/opt/cross/bin/${ARCH}-elf-${AS} -gstabs $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf64 -o $@

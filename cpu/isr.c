@@ -111,7 +111,8 @@ char *exception_messages[] = {
 };
 
 void isr_handler(registers_t* r) {
-    // TODO: kernel panic
+    clear();
+    kprint("Exception");
 
     asm volatile("cli");
     asm volatile("hlt");

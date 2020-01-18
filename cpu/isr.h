@@ -10,7 +10,6 @@
 #include "timer.h"
 #include "ports.h"
 
-
 #define SPEED 1193
 
 /* ISRs reserved for CPU exceptions */

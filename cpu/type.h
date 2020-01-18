@@ -1,14 +1,14 @@
-#ifndef TYPES_H
-#define TYPES_H
+#pragma once
 
+#include <stdint.h>
+
+#define middle_16(address) (((uint32_t)address) >> 16)
+#define high_32(address) (((uint64_t)address) >> 32)
+
+// remove this sometime
 typedef unsigned int u32;
 typedef int s32;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned char u8;
 typedef char s8;
-
-#define low_16(address) (u16)((address) & 0xFFFF)
-#define high_16(address) (u16)(((address) >> 16) & 0xFFFF)
-
-#endif

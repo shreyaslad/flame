@@ -2,6 +2,9 @@
 
 #include "freeList.h"
 
+// kernel starts at 0x01000
+uint32_t free_mem_addr = 0x10000;
+
 void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes) {
 	for (uint32_t i = 0; i < nbytes; i++) {
 		*(dest + i) = *(source + i);
@@ -11,24 +14,6 @@ void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes) {
 void memset(uint8_t * dest, uint8_t val, uint32_t len) {
 	uint8_t* temp = (uint8_t*)dest;
 	for (; len != 0; len--) * temp++ = val;
-}
-
-// kernel starts at 0x01000
-u32 free_mem_addr = 0x10000;
-/* Implementation is just a pointer to some free memory which
- * keeps growing */
-u32 kmalloc(u32 size, int align, u32 * phys_addr) {
-	/* Pages are aligned to 4K, or 0x1000 */
-	if (align == 1 && (free_mem_addr & 0xFFFFF000)) {
-		free_mem_addr &= 0xFFFFF000;
-		free_mem_addr += 0x1000;
-	}
-	
-	if (phys_addr)* phys_addr = free_mem_addr;
-
-	u32 ret = free_mem_addr;
-	free_mem_addr += size; 
-	return ret;
 }
 
 void initialize() {
