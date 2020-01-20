@@ -4,8 +4,9 @@ S_SOURCES = $(wildcard *.s)
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o boot.o startup64.o	} 
 
 ARCH=x86_64
+CROSS=/opt/cross/bin
 
-CC = ${ARCH}-elf-gcc
+CC = ${CROSS}/${ARCH}-elf-gcc
 GDB = ${ARCH}-elf-gdb
 CFLAGS = -ggdb -nostdlib -fno-stack-protector -nostartfiles -nodefaultlibs \
 		 -Wall -Wextra -Wno-unused-function -Wno-unused-variable -Wpedantic -ffreestanding -ggdb -std=gnu11
@@ -24,7 +25,7 @@ kernel.bin: kernel.elf
 	objcopy -O binary $^ $@
 
 kernel.elf: ${OBJ}
-	/opt/cross/bin/${CC} -T linker.ld -o $@ ${LDFLAGS} $^ -lgcc
+	${CC} -T linker.ld -o $@ ${LDFLAGS} $^ -lgcc
 
 run: flame.iso
 	qemu-system-${ARCH} -d -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
@@ -34,14 +35,14 @@ debug: flame.iso kernel.elf
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 clean:
-	rm -rf kernel.bin *.dis *.o *.elf
+	rm -rf kernel.bin *.dis *.o
 	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o
 
-%.o: %.c ${HEADERS}
-	/opt/cross/bin/${CC} -Iinclude ${CFLAGS} -c $< -o $@
+cpu/interrupt.o: cpu/interrupt.asm
+	nasm -f elf64 $< -o $@
 
-%.o: %.s
-	/opt/cross/bin/${ARCH}-elf-${AS} -gstabs $< -o $@
+%.o: %.c ${HEADERS}
+	${CC} -Iinclude ${CFLAGS} -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf64 -o $@
