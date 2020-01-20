@@ -1,5 +1,5 @@
-[extern KNL_HIGH_VMA]
 [extern _startup64]
+[extern KNL_HIGH_VMA]
 [extern KNL_CORE_END]
 
 %assign ALIGN    1<<0             ; align loaded modules on page boundaries 
@@ -30,10 +30,15 @@ section .rodata
 		dq DATA_USER
 	align 16
 
-	global gdt_ptr
-	gdt_ptr:
+	global gdt_ptr64
+	gdt_ptr64:
 		dw $ - gdt64 - 1
 	    dq gdt64
+
+	global gdt_ptr32
+	gdt_ptr32:
+		dw $ - gdt64 - 1
+		dd gdt64 - 0xFFFFFFFF80000000
 
 %macro gen_pd_2mb 3
 	%assign i %1
@@ -106,7 +111,7 @@ section .text
 		cli
 		mov esp, stack_top
 
-		lgdt [gdt_ptr]
+		lgdt [gdt_ptr32 - 0xFFFFFFFF80000000]
 
 		mov edi, eax
 		mov esi, ebx
@@ -127,18 +132,16 @@ section .text
 		or eax, (1 << 31)
 		mov cr0, eax
 		
-		mov eax, mode64
+		mov eax, _mode64
 		push 0x08 ; swap these two pushes if shit doesn't work
 		push eax
 		retf
 
 	[bits 64]
-	mode64:
-		mov rax, higher_half
+	_mode64:
+		mov rax, _higher_half
 		jmp rax
 
-	higher_half:
-		mov rbx, gdt_ptr
-
-		lgdt [rbx]
+	_higher_half:
+		lgdt [gdt_ptr64]
 		jmp _startup64

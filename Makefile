@@ -27,12 +27,12 @@ kernel.bin: kernel.elf
 kernel.elf: ${OBJ}
 	${CC} -T linker.ld -o $@ ${LDFLAGS} $^ -lgcc
 
-run: flame.iso
-	qemu-system-${ARCH} -d -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
+run: flame.iso # -serial stdio
+	qemu-system-${ARCH} -monitor stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
 
 debug: flame.iso kernel.elf
-	qemu-system-${ARCH} -s -fda flame.iso -d guest_errors,int &
-	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+	qemu-system-${ARCH} -s -S -no-reboot -no-shutdown -d guest_errors -monitor stdio -machine ubuntu,accel=kvm -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img &
+    ${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 clean:
 	rm -rf kernel.bin *.dis *.o
