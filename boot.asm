@@ -6,34 +6,11 @@ DATA_USER equ 0x40C3F2000000D090
 CODE_KERNEL equ 0x00CF9A000000FFFF 
 DATA_KERNEL equ 0x00CF92000000FFFF 
 
-%assign ALIGN    1<<0             ; align loaded modules on page boundaries 
-%assign MEMINFO  1<<1             ; provide memory map
-%assign FLAGS    ALIGN | MEMINFO  ; this is the Multiboot 'flag' field
-%assign MAGIC    0x1BADB002       ; 'magic number' lets bootloader find the header
-%assign CHECKSUM -(MAGIC + FLAGS) ; checksum of above, to prove we are multiboot
-
-section .multiboot
-	align 4
-	dd MAGIC
-	dd FLAGS
-	dd CHECKSUM
-
-section .data
-	align 16
-
-	gdt:
-	    dq 0
-		dq CODE_KERNEL
-		dq DATA_KERNEL
-		dq CODE_USER
-		dq DATA_USER
-		
-	align 16
-
-	global gdt_ptr
-	gdt_ptr:
-		dw $ - gdt - 1
-		.addr: dq 0
+%define ALIGN (1<<0) ; align loaded modules on page boundaries 
+%define MEMINFO (1<<1) ; provide memory map
+%define FLAGS (ALIGN | MEMINFO)  ; this is the Multiboot 'flag' field
+%define MAGIC 0x1BADB002       ; 'magic number' lets bootloader find the header
+%define CHECKSUM -(MAGIC + FLAGS) ; checksum of above, to prove we are multiboot
 
 %macro gen_pd_2mb 3
 	%assign i %1
@@ -46,7 +23,27 @@ section .data
 	%endrep
 %endmacro
 
+section .multiboot
+	align 4
+	dd MAGIC
+	dd FLAGS
+	dd CHECKSUM
+
 section .data
+	align 16
+	gdt:
+	    dq 0
+		dq CODE_KERNEL
+		dq DATA_KERNEL
+		dq CODE_USER
+		dq DATA_USER
+		
+	align 16
+	global gdt_ptr
+	gdt_ptr:
+		dw $ - gdt - 1
+		.addr: dq 0
+
     align 4096
     boot_pml4:
 	    dq boot_pml3_1 + 3
