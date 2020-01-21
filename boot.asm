@@ -1,6 +1,10 @@
 [extern _startup64]
-[extern KNL_HIGH_VMA]
-[extern KNL_CORE_END]
+
+KNL_HIGH_VMA equ 0xFFFFFFFFC0000000
+CODE_USER equ 0x40C3FA000000D090 
+DATA_USER equ 0x40C3F2000000D090 
+CODE_KERNEL equ 0x00CF9A000000FFFF 
+DATA_KERNEL equ 0x00CF92000000FFFF 
 
 %assign ALIGN    1<<0             ; align loaded modules on page boundaries 
 %assign MEMINFO  1<<1             ; provide memory map
@@ -13,32 +17,24 @@ section .multiboot
 	dd MAGIC
 	dd FLAGS
 	dd CHECKSUM
- 
-section .rodata
-    CODE_USER equ 0x40C3FA000000D090 
-    DATA_USER equ 0x40C3F2000000D090 
-    CODE_KERNEL equ 0x00CF9A000000FFFF 
-    DATA_KERNEL equ 0x00CF92000000FFFF 
 
+section .data
 	align 16
 
+	global gdt64
 	gdt64:
 	    dq 0
 		dq CODE_KERNEL
 		dq DATA_KERNEL
 		dq CODE_USER
 		dq DATA_USER
+		
 	align 16
 
-	global gdt_ptr64
-	gdt_ptr64:
+	global gdt_ptr
+	gdt_ptr:
 		dw $ - gdt64 - 1
-	    dq gdt64
-
-	global gdt_ptr32
-	gdt_ptr32:
-		dw $ - gdt64 - 1
-		dd gdt64 - 0xFFFFFFFF80000000
+		.addr: dq gdt64
 
 %macro gen_pd_2mb 3
 	%assign i %1
@@ -111,7 +107,11 @@ section .text
 		cli
 		mov esp, stack_top
 
-		lgdt [gdt_ptr32 - 0xFFFFFFFF80000000]
+		mov eax, gdt64
+		sub eax, KNL_HIGH_VMA
+		mov dword [gdt_ptr.addr], eax
+
+		lgdt [gdt_ptr - KNL_HIGH_VMA]
 
 		mov edi, eax
 		mov esi, ebx
@@ -120,7 +120,7 @@ section .text
 		or eax, 0x000000A0
 		mov cr4, eax
 
-		mov eax, boot_pml4
+		mov eax, boot_pml4 - KNL_HIGH_VMA
 		mov cr3, eax
 
 		mov ecx, 0xC0000080
@@ -130,11 +130,12 @@ section .text
 
 		mov eax, cr0
 		or eax, (1 << 31)
-		mov cr0, eax
-		
+		mov cr0, eax		
+
+		;jmp 0x08:_mode64 - KNL_HIGH_VMA
 		mov eax, _mode64
-		push 0x08 ; swap these two pushes if shit doesn't work
 		push eax
+		push 0x08
 		retf
 
 	[bits 64]
@@ -143,5 +144,6 @@ section .text
 		jmp rax
 
 	_higher_half:
-		lgdt [gdt_ptr64]
+		mov qword [gdt_ptr.addr], rax
+		lgdt [gdt_ptr]
 		jmp _startup64
