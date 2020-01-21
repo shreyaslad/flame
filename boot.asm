@@ -1,6 +1,6 @@
 [extern _startup64]
-[extern KNL_HIGH_VMA]
 
+%define KNL_HIGH_VMA 0xffffffff80000000
 CODE_USER equ 0x40C3FA000000D090 
 DATA_USER equ 0x40C3F2000000D090 
 CODE_KERNEL equ 0x00CF9A000000FFFF 
@@ -21,8 +21,7 @@ section .multiboot
 section .data
 	align 16
 
-	global gdt64
-	gdt64:
+	gdt:
 	    dq 0
 		dq CODE_KERNEL
 		dq DATA_KERNEL
@@ -33,8 +32,8 @@ section .data
 
 	global gdt_ptr
 	gdt_ptr:
-		dw $ - gdt64 - 1
-		.addr: dq gdt64
+		dw $ - gdt - 1
+		.addr: dq 0
 
 %macro gen_pd_2mb 3
 	%assign i %1
@@ -47,7 +46,7 @@ section .data
 	%endrep
 %endmacro
 
-section data
+section .data
     align 4096
     boot_pml4:
 	    dq boot_pml3_1 + 3
@@ -69,7 +68,7 @@ section data
 		gen_pd_2mb 0, 64, 0
 		times 448 dq 0
 	boot_pml2_phys:
-		gen_pd_2mb 0, 512, 0  
+		gen_pd_2mb 0, 512, 0
 
 section .bss
 	align 16
@@ -78,40 +77,17 @@ section .bss
 	stack_top:
 
 section .text
-	align 4
-	global reset_seg
-	reset_seg:
-		mov ax, 0x10
-		mov ds, ax
-		mov es, ax
-		mov fs, ax
-		mov gs, ax
-		mov ss, ax
-
-section .text
-	align 4
-	global data_seg
-	data_seg:
-		mov ax, 0x0
-		mov ds, ax
-		mov es, ax
-		mov fs, ax
-		mov gs, ax
-		mov ss, ax
-
-section .text
 	[bits 32]
 	global _start
 
 	_start:
 		cli
-		mov esp, stack_top
+		mov esp, stack_top - KNL_HIGH_VMA
 
-		mov eax, gdt64
-		sub eax, _KNL_HIGH_VMA
-		mov dword [gdt_ptr.addr], eax
+		mov eax, gdt - KNL_HIGH_VMA
+		mov dword [gdt_ptr.addr - KNL_HIGH_VMA], eax
 
-		lgdt [gdt_ptr] - KNL_HIGH_VMA
+		lgdt [gdt_ptr - KNL_HIGH_VMA]
 
 		mov edi, eax
 		mov esi, ebx
@@ -130,13 +106,9 @@ section .text
 
 		mov eax, cr0
 		or eax, (1 << 31)
-		mov cr0, eax		
+		mov cr0, eax
 
-		;jmp 0x08:_mode64 - KNL_HIGH_VMA
-		mov eax, _mode64
-		push eax
-		push 0x08
-		retf
+		jmp 0x08:_mode64 - KNL_HIGH_VMA
 
 	[bits 64]
 	_mode64:
@@ -144,6 +116,6 @@ section .text
 		jmp rax
 
 	_higher_half:
-		mov qword [gdt_ptr.addr], rax
+		mov qword [gdt_ptr.addr], gdt
 		lgdt [gdt_ptr]
 		jmp _startup64
