@@ -13,7 +13,7 @@ O_LEVEL = 2
 
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
 
-myos.iso: kernel.elf
+flame.iso: kernel.elf
 	mkdir -p isodir/boot/grub
 	cp kernel.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg

@@ -1,6 +1,6 @@
 [extern _startup64]
+[extern KNL_HIGH_VMA]
 
-KNL_HIGH_VMA equ 0xFFFFFFFFC0000000
 CODE_USER equ 0x40C3FA000000D090 
 DATA_USER equ 0x40C3F2000000D090 
 CODE_KERNEL equ 0x00CF9A000000FFFF 
@@ -47,7 +47,7 @@ section .data
 	%endrep
 %endmacro
 
-section .rodata
+section data
     align 4096
     boot_pml4:
 	    dq boot_pml3_1 + 3
@@ -108,10 +108,10 @@ section .text
 		mov esp, stack_top
 
 		mov eax, gdt64
-		sub eax, KNL_HIGH_VMA
+		sub eax, _KNL_HIGH_VMA
 		mov dword [gdt_ptr.addr], eax
 
-		lgdt [gdt_ptr - KNL_HIGH_VMA]
+		lgdt [gdt_ptr] - KNL_HIGH_VMA
 
 		mov edi, eax
 		mov esi, ebx
