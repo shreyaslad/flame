@@ -44,35 +44,6 @@ section .data
 		dw $ - gdt - 1
 		.addr: dq 0
 
-    align 4096
-    boot_pml4:
-	    dq boot_pml3_1 + 3
-		times 255 dq 0
-		dq boot_pml3_phys + 3
-		times 254 dq 0
-		dq boot_pml3_2 + 3
-	boot_pml3_1:
-		dq boot_pml2 + 3
-		times 511 dq 0
-	boot_pml3_2:
-		times 510 dq 0
-		dq boot_pml2 + 3
-		dq 0
-	boot_pml3_phys:
-		dq boot_pml2_phys + 3
-		times 511 dq 0
-	boot_pml2:
-		gen_pd_2mb 0, 64, 0
-		times 448 dq 0
-	boot_pml2_phys:
-		gen_pd_2mb 0, 512, 0
-
-section .bss
-	align 16
-	stack_bottom:
-		resb 65536
-	stack_top:
-
 section .text
 	[bits 32]
 	global _start
@@ -93,7 +64,7 @@ section .text
 		or eax, 0x000000A0
 		mov cr4, eax
 
-		mov eax, boot_pml4 - KNL_HIGH_VMA
+		mov eax, PML4 - KNL_HIGH_VMA
 		mov cr3, eax
 
 		mov ecx, 0xC0000080
@@ -105,18 +76,34 @@ section .text
 		or eax, (1 << 31)
 
 		; identity map the tables
+
+		_pt_init:
+			mov eax, PDP - KNL_HIGH_VMA
+			or ax, 0b11
+			mov [PML4 - KNL_HIGH_VMA], eax
+
+			mov eax, PD - KNL_HIGH_VMA
+			or ax, 0xb11
+			mov [PDP - KNL_HIGH_VMA], eax
+
+			mov eax, PT - KNL_HIGH_VMA
+			or ax, 0b11
+			mov [PD - KNL_HIGH_VMA], eax
+
+			mov eax, 0x03
+			mov edi, PT - KNL_HIGH_VMA
+
+			mov cx, 512
+
+			_pt_build:
+				mov [edi], eax
+				add eax, 0x1000
+				add edi, 8
+				
+				loop _pt_build
+
 		mov eax, 0x03 ; all entires have to be 0x03 for present+writeable
 		mov edi, KNL_HIGH_VMA
-
-		; loop counter
-    	; every entry covers 4kb, 4x512 = 2048 = 2MB
-		mov cx, 512 ; only map first 2 MB
-
-		_buildpt:
-			mov [edi], eax ; write eax to the current entry
-			add eax, 0x1000 ; increase eax by 4kb so the next entry is also identity mapped
-			add edi, 8 ; increase current entry pointer
-			loop _buildpt ; decrease ecx, compare to 0, then loop if ne
 
 		mov cr0, eax
 
@@ -131,3 +118,18 @@ section .text
 		mov qword [gdt_ptr.addr], gdt
 		lgdt [gdt_ptr]
 		jmp _startup64
+
+
+section .bss
+	align 16
+	
+	stack_bottom:
+		resb 65536
+	stack_top:
+
+	align 4096
+
+	PML4: resb 4096
+	PDP: resb 4096
+	PD: resb 4096
+	PT: resb 4096
