@@ -103,6 +103,21 @@ section .text
 
 		mov eax, cr0
 		or eax, (1 << 31)
+
+		; identity map the tables
+		mov eax, 0x03 ; all entires have to be 0x03 for present+writeable
+		mov edi, KNL_HIGH_VMA
+
+		; loop counter
+    	; every entry covers 4kb, 4x512 = 2048 = 2MB
+		mov cx, 512 ; only map first 2 MB
+
+		_buildpt:
+			mov [edi], eax ; write eax to the current entry
+			add eax, 0x1000 ; increase eax by 4kb so the next entry is also identity mapped
+			add edi, 8 ; increase current entry pointer
+			loop _buildpt ; decrease ecx, compare to 0, then loop if ne
+
 		mov cr0, eax
 
 		jmp 0x08:_mode64 - KNL_HIGH_VMA

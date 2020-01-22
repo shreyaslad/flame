@@ -27,7 +27,7 @@ kernel.elf: ${OBJ}
 	${CC} -T linker.ld -o $@ ${LDFLAGS} $^ -lgcc
 
 run: flame.iso # -serial stdio
-	qemu-system-${ARCH} -d guest_errors -monitor stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img &
+	qemu-system-${ARCH} -d guest_errors -monitor stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
 
 debug: flame.iso kernel.elf
 	qemu-system-${ARCH} -s -S -d guest_errors,int -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img &
