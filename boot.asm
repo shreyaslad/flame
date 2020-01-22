@@ -72,11 +72,6 @@ section .text
 		or eax, 0x00000901
 		wrmsr
 
-		mov eax, cr0
-		or eax, (1 << 31)
-
-		; identity map the tables
-
 		_pt_init:
 			mov eax, PDP - KNL_HIGH_VMA
 			or ax, 0b11
@@ -102,7 +97,12 @@ section .text
 				
 				loop _pt_build
 
-		mov eax, 0x03 ; all entires have to be 0x03 for present+writeable
+		mov eax, cr0
+		or eax, (1 << 31)
+
+		; identity map the tables
+
+		;mov eax, 0x03 ; all entires have to be 0x03 for present+writeable
 		mov edi, KNL_HIGH_VMA
 
 		mov cr0, eax
@@ -122,7 +122,7 @@ section .text
 
 section .bss
 	align 16
-	
+
 	stack_bottom:
 		resb 65536
 	stack_top:
