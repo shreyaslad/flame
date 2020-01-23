@@ -1,10 +1,6 @@
 [extern _startup64]
 
-%define KNL_HIGH_VMA 0xffffffff80000000
-CODE_USER equ 0x40C3FA000000D090 
-DATA_USER equ 0x40C3F2000000D090 
-CODE_KERNEL equ 0x00CF9A000000FFFF 
-DATA_KERNEL equ 0x00CF92000000FFFF 
+%define KNL_HIGH_VMA 0xFFFFFFFFC0000000
 
 %define ALIGN (1<<0) ; align loaded modules on page boundaries 
 %define MEMINFO (1<<1) ; provide memory map
@@ -32,17 +28,38 @@ section .multiboot
 section .data
 	align 16
 	gdt:
-	    dq 0
-		dq CODE_KERNEL
-		dq DATA_KERNEL
-		dq CODE_USER
-		dq DATA_USER
+		dw .gdt_end - .gdt_start - 1
+		dq .gdt_start
+
+	  .gdt_start:
+
+	  .null:
+		dq 0
+
+	  .code64:
+		dw 0x0000 ; Limit
+		dw 0x0000 ; Base (low 16)
+		db 0x00 ; Base (mid 8)
+		db 10011010b ; Access
+		db 00100000b ; Granularity
+		db 0x00 ; Base (high 8)
+
+	  .data64:
+		dw 0x0000 ; Limit
+		dw 0x0000 ; Base (low 16)
+		db 0x00 ; Base (mid 8)
+		db 10010010b ; Access
+		db 00000000b ; Granularity
+		db 0x00 ; Base (high 8)
+
+	  .gdt_end:
+
 		
 	align 16
 	global gdt_ptr
 	gdt_ptr:
 		dw $ - gdt - 1
-		.addr: dq 0
+	  .addr: dq 0
 
 section .text
 	[bits 32]
@@ -72,37 +89,33 @@ section .text
 		or eax, 0x00000901
 		wrmsr
 
-		_pt_init:
-			mov eax, PDP - KNL_HIGH_VMA
-			or ax, 0b11
-			mov [PML4 - KNL_HIGH_VMA], eax
+	  .pt_init:
+		mov eax, PDP - KNL_HIGH_VMA
+		or ax, 0b11
+		mov [PML4 - KNL_HIGH_VMA], eax
 
-			mov eax, PD - KNL_HIGH_VMA
-			or ax, 0xb11
-			mov [PDP - KNL_HIGH_VMA], eax
+		mov eax, PD - KNL_HIGH_VMA
+		or ax, 0xb11
+		mov [PDP - KNL_HIGH_VMA], eax
 
-			mov eax, PT - KNL_HIGH_VMA
-			or ax, 0b11
-			mov [PD - KNL_HIGH_VMA], eax
+		mov eax, PT - KNL_HIGH_VMA
+		or ax, 0b11
+		mov [PD - KNL_HIGH_VMA], eax
 
-			mov eax, 0x03
-			mov edi, PT - KNL_HIGH_VMA
+		mov eax, 0x03
+		mov edi, PT - KNL_HIGH_VMA
 
-			mov cx, 512
+		mov cx, 512
 
-			_pt_build:
-				mov [edi], eax
-				add eax, 0x1000
-				add edi, 8
-				
-				loop _pt_build
+	  .pt_build:
+		mov [edi], eax
+		add eax, 0x1000
+		add edi, 8
+		
+		loop _pt_build
 
 		mov eax, cr0
 		or eax, (1 << 31)
-
-		; identity map the tables
-
-		;mov eax, 0x03 ; all entires have to be 0x03 for present+writeable
 		mov edi, KNL_HIGH_VMA
 
 		mov cr0, eax
