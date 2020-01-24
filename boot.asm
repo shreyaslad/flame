@@ -28,15 +28,10 @@ section .multiboot
 section .data
 	align 16
 	gdt:
-		dw .gdt_end - .gdt_start - 1
-		dq .gdt_start
-
-	  .gdt_start:
-
-	  .null:
+	  .null: equ $ - gdt
 		dq 0
 
-	  .code64:
+	  .code64: equ $ - gdt
 		dw 0x0000 ; Limit
 		dw 0x0000 ; Base (low 16)
 		db 0x00 ; Base (mid 8)
@@ -44,7 +39,7 @@ section .data
 		db 00100000b ; Granularity
 		db 0x00 ; Base (high 8)
 
-	  .data64:
+	  .data64: equ $ - gdt
 		dw 0x0000 ; Limit
 		dw 0x0000 ; Base (low 16)
 		db 0x00 ; Base (mid 8)
@@ -52,14 +47,12 @@ section .data
 		db 00000000b ; Granularity
 		db 0x00 ; Base (high 8)
 
-	  .gdt_end:
-
-		
-	align 16
-	global gdt_ptr
-	gdt_ptr:
-		dw $ - gdt - 1
-	  .addr: dq 0
+	  .gdt_ptr: ; GDT pointer
+	  	dw $ - gdt - 1 ; Limit
+		dq gdt ; Base
+	  .gdt_ptr32: ; GDT pointer adjusted with higher half offset
+	  	dw $ - gdt - 1 ; Limit
+		dd gdt - KNL_HIGH_VMA ; Base
 
 section .text
 	[bits 32]
@@ -69,10 +62,7 @@ section .text
 		cli
 		mov esp, stack_top - KNL_HIGH_VMA
 
-		mov eax, gdt - KNL_HIGH_VMA
-		mov dword [gdt_ptr.addr - KNL_HIGH_VMA], eax
-
-		lgdt [gdt_ptr - KNL_HIGH_VMA]
+		lgdt [gdt.gdt_ptr32 - KNL_HIGH_VMA]
 
 		mov edi, eax
 		mov esi, ebx
@@ -112,7 +102,7 @@ section .text
 		add eax, 0x1000
 		add edi, 8
 		
-		loop _pt_build
+		loop .pt_build
 
 		mov eax, cr0
 		or eax, (1 << 31)
@@ -120,18 +110,24 @@ section .text
 
 		mov cr0, eax
 
-		jmp 0x08:_mode64 - KNL_HIGH_VMA
+		; Far jump to long mode
+		jmp gdt.code64:_mode64 - KNL_HIGH_VMA
 
 	[bits 64]
 	_mode64:
-		mov rax, _higher_half
+		lgdt [gdt.gdt_ptr] ; load the GDT in the higher half
+
+		mov ax, gdt.data64
+		mov ds, ax
+		mov es, ax
+		mov fs, ax
+		mov gs, ax
+		mov ss, ax
+		mov rsp, stack_top ; Setup the stack
+
+		; absolute jump to _startup64
+		mov rax, _startup64
 		jmp rax
-
-	_higher_half:
-		mov qword [gdt_ptr.addr], gdt
-		lgdt [gdt_ptr]
-		jmp _startup64
-
 
 section .bss
 	align 16
