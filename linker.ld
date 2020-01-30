@@ -2,30 +2,29 @@ ENTRY(_start)
 
 SECTIONS
 {
-    KNL_HIGH_VMA = 0xFFFFFFFFC0000000;
-    . = KNL_HIGH_VMA + 1M;
+    KNL_CORE_START = .;
 
-    .text ALIGN(4K) : AT(ADDR(.text) - KNL_HIGH_VMA)
+    .text ALIGN(4K) : AT(ADDR(.text))
     {
         KEEP(*(.multiboot))
         KEEP(*(.text*))
     }
 
-    .rodata ALIGN(4K) : AT(ADDR(.rodata) - KNL_HIGH_VMA)
+    .rodata ALIGN(4K) : AT(ADDR(.rodata))
     {
         KEEP(*(.rodata*))
     }
 
-    .data ALIGN(4K) : AT(ADDR(.data) - KNL_HIGH_VMA)
+    .data ALIGN(4K) : AT(ADDR(.data))
     {
         KEEP(*(.data*))
     }
 
-    .bss ALIGN(4K) : AT(ADDR(.bss) - KNL_HIGH_VMA)
+    .bss ALIGN(4K) : AT(ADDR(.bss))
     {
         KEEP(*(COMMON))
         KEEP(*(.bss))
     }
 
-    KNL_CORE_END = 0x0;
+    KNL_CORE_END = .;
 }
