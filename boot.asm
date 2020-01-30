@@ -64,6 +64,10 @@ section .text
 
 		lgdt [gdt]
 
+		; Multiboot
+		mov edi, multiboot_header_pointer
+		mov dword [edi], ebx
+
 		; Build the page tables
 		xor ax, ax
 		mov di, pagemap
@@ -120,6 +124,9 @@ section .text
 		jmp $
 
 section .bss
+	multiboot_header_pointer:
+		resb 4
+
 	align 16
 
 	stack_bottom:

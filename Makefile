@@ -35,9 +35,11 @@ cpu/interrupt.o: cpu/interrupt.asm
 %.o: %.c ${HEADERS}
 	${CC} -Iinclude ${CFLAGS} -c $< -o $@
 
-boot.elf: boot.asm
-	nasm -f elf64 $< -o boot.o
+boot.elf: boot.o
 	${CC} -T linker.ld -o boot.elf ${LDFLAGS} boot.o -lgcc
+
+boot.o: boot.asm
+	nasm -f elf64 boot.asm -o boot.o
 
 run: flame.iso # -serial stdio
 	qemu-system-${ARCH} -no-reboot -no-shutdown -d int -monitor stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
