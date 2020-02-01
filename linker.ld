@@ -1,30 +1,26 @@
 ENTRY(_start)
 
+OUTPUT_FORMAT(elf64-x86-64)
+
+KRNL_VMA_START = 0xFFFFFFFF80000000;
+
 SECTIONS
 {
-    KNL_CORE_START = .;
+    . = KRNL_VMA_START + 0x100000;
 
-    .text ALIGN(4K) : AT(ADDR(.text))
-    {
-        KEEP(*(.multiboot))
-        KEEP(*(.text*))
-    }
+    __kernel_start = .;
 
-    .rodata ALIGN(4K) : AT(ADDR(.rodata))
-    {
-        KEEP(*(.rodata*))
-    }
+    .multiboot ALIGN(4K):  AT(ADDR(.multiboot) - KRNL_VMA_START)
+       {*(.multiboot)}
 
-    .data ALIGN(4K) : AT(ADDR(.data))
-    {
-        KEEP(*(.data*))
-    }
+    .text ALIGN(4K): AT(ADDR(.text) - KRNL_VMA_START)
+    {*(.text*)}
+    .rodata ALIGN(4K): AT(ADDR(.rodata) - KRNL_VMA_START)
+    {*(.rodata*)}
+    .data ALIGN(4K): AT(ADDR(.data) - KRNL_VMA_START)
+    {*(.data*)}
+    .bss ALIGN(4K): AT(ADDR(.bss) - KRNL_VMA_START)
+    {*(.bss*) *(COMMON)}
 
-    .bss ALIGN(4K) : AT(ADDR(.bss))
-    {
-        KEEP(*(COMMON))
-        KEEP(*(.bss))
-    }
-
-    KNL_CORE_END = .;
+    __kernel_end = .;
 }

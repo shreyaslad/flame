@@ -13,21 +13,21 @@ O_LEVEL = 2
 
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
 
-flame.iso: flame.bin
+flame.iso: kernel32.elf
 	mkdir -p isodir/boot/grub
-	cp flame.bin isodir/boot/flame.bin
+	cp kernel32.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o flame.iso isodir
 	make clean
 
-flame.bin: flame.elf
+kernel.bin: kernel32.elf
 	objcopy -O binary $^ $@
 
-flame.elf: boot.elf kernel.elf
-	cat $^ > flame.elf
+kernel32.elf: kernel.elf
+	objcopy -O elf32-i386 kernel.elf kernel32.elf
 
-kernel.elf: ${OBJ}
-	${CC} -T linker.ld -o $@ ${LDFLAGS} $^ -lgcc
+kernel.elf: long_load.o boot.o ${OBJ}
+	${CC} -Wl,-z,max-page-size=0x1000 -nostdlib -o $@ -T linker.ld $^
 
 cpu/interrupt.o: cpu/interrupt.asm
 	nasm -f elf64 $< -o $@
@@ -35,11 +35,11 @@ cpu/interrupt.o: cpu/interrupt.asm
 %.o: %.c ${HEADERS}
 	${CC} -Iinclude ${CFLAGS} -c $< -o $@
 
-boot.elf: boot.o
-	${CC} -T linker.ld -o boot.elf ${LDFLAGS} boot.o -lgcc
-
 boot.o: boot.asm
 	nasm -f elf64 boot.asm -o boot.o
+
+long_load.o: long_load.asm
+	nasm -f elf64 long_load.asm -o long_load.o
 
 run: flame.iso # -serial stdio
 	qemu-system-${ARCH} -no-reboot -no-shutdown -d int -monitor stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
