@@ -5,7 +5,7 @@
 [extern _startup64]
 [extern paging_setup]
 
-%define KERNEL_VMA 0xFFFFFFFF80000000
+%define KNL_HIGH_VMA 0xFFFFFFFF80000000
 
 ALIGN_MULTIBOOT equ 1<<0
 MEMINFO equ 1<<1
@@ -61,7 +61,7 @@ section .data
         dq gdt                     ; Base.
       .pointer32:                    ; The GDT-pointer for 32 bit mode.
         dw $ - gdt - 1             ; Limit.
-        dd gdt - KERNEL_VMA        ; Base.
+        dd gdt - KNL_HIGH_VMA        ; Base.
 
 section .bss
     align 16
@@ -89,33 +89,33 @@ section .data
         gen_pd_2mb 0x40000000, 512, 0
 
     pml4t:
-        dq (pdpt - KERNEL_VMA + 0x3)
+        dq (pdpt - KNL_HIGH_VMA + 0x3)
         times 255 dq 0
-        dq (pdpt2 - KERNEL_VMA + 0x3)
+        dq (pdpt2 - KNL_HIGH_VMA + 0x3)
         times 254 dq 0
-        dq (pdpt3 - KERNEL_VMA + 0x3)
+        dq (pdpt3 - KNL_HIGH_VMA + 0x3)
 
     pdpt:
-        dq (paging_directory1 - KERNEL_VMA + 0x3)
+        dq (paging_directory1 - KNL_HIGH_VMA + 0x3)
         times 511 dq 0
 
     pdpt2:
-        dq (paging_directory2 - KERNEL_VMA + 0x3)
+        dq (paging_directory2 - KNL_HIGH_VMA + 0x3)
         times 511 dq 0
 
     pdpt3:
         times 510 dq 0
-        dq (paging_directory3 - KERNEL_VMA + 0x3)
-        dq (paging_directory4 - KERNEL_VMA + 0x3)
+        dq (paging_directory3 - KNL_HIGH_VMA + 0x3)
+        dq (paging_directory4 - KNL_HIGH_VMA + 0x3)
 
 section .text
     [bits 32]
 
     global _start
     _start:
-        mov edi, multiboot_header_pointer - KERNEL_VMA
+        mov edi, multiboot_header_pointer - KNL_HIGH_VMA
         mov DWORD [edi], ebx
-        mov eax, pml4t - KERNEL_VMA
+        mov eax, pml4t - KNL_HIGH_VMA
         mov cr3, eax
         ; Paging
 
@@ -139,8 +139,8 @@ section .text
         ;hlt
 
         ; Set up GDT
-        lgdt [gdt.pointer32 - KERNEL_VMA]
-        jmp gdt.code:loaded - KERNEL_VMA
+        lgdt [gdt.pointer32 - KNL_HIGH_VMA]
+        jmp gdt.code:loaded - KNL_HIGH_VMA
 
     [bits 64]
 

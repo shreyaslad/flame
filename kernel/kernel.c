@@ -5,8 +5,10 @@ uint32_t largestUseableMem = 0;
 
 extern uint64_t __kernel_end;
 
-void kmain() {	
+void kmain(multiboot_info_t* mbd) {	
 	//disableCursor();
+
+	initMem(mbd);
 
 	isr_install();
 	asm volatile("sti");

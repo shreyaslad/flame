@@ -1,104 +1,71 @@
 #include <mem.h>
 
-#include "freeList.h"
+uint64_t* bitmap = (uint64_t*)&__kernel_end;
+uint64_t totalmem = 0;
 
-// kernel starts at 0x01000
-uint32_t free_mem_addr = 0x10000;
-
+/*********************
+ * Public Memory API *
+ *********************/
 void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes) {
 	for (uint32_t i = 0; i < nbytes; i++) {
 		*(dest + i) = *(source + i);
 	}
 }
 
-void memset(uint8_t * dest, uint8_t val, uint32_t len) {
-	uint8_t* temp = (uint8_t*)dest;
+void memset(uint64_t* dest, uint64_t val, uint64_t len) {
+	uint64_t* temp = (uint64_t*)dest;
 	for (; len != 0; len--) * temp++ = val;
 }
 
-void initialize() {
-	freeList->size = 20000 - sizeof(struct block);
-	freeList->free = 1;
-	freeList->next = 0;
+/**********************
+ * Private Memory API *
+ **********************/
+
+void initMem(multiboot_info_t* mbd) {
+	totalmem = (uint64_t)mbd->mem_upper;
+
+	memset(bitmap, 0, (totalmem * 1000) / 4096 / 8);
 }
 
-void split(struct block* fitting_slot, size_t size) {
-	struct block* new = (void*)(fitting_slot + size + sizeof(struct block));
-	new->size = (fitting_slot->size) - size - sizeof(struct block);
-	new->free = 1;
-	new->next = fitting_slot->next;
-	fitting_slot->size = size;
-	fitting_slot->free = 0;
-	fitting_slot->next = new;
-}
+/* Virtual Memory Allocation */
 
-void* malloc(size_t bytes) {
+/* Physical Memory Allocation */
+size_t* palloc(size_t bytes) {
+	uint64_t bitmapEntries = (totalmem * 1000) / 4096;
 
-	struct block* curr, * prev;
-	void* result;
+	// if there aren't enough bits left in a bitmap to designate for pages, just go to the next entry
+	// im too lazy to write logic, it's literally a couple bits of space
+	if (bytes > 4096) {
+		uint64_t pagesToAllocate = (bytes / 4096) - 1;
 
-	if (!(freeList->size)) {
-		initialize();
+		// allocate multiple bits
+		// if not enough space, move to next bitmap entry
+	} else {
+		for (uint64_t i = 0; i < bitmapEntries; i++) {
+			for (uint64_t j = 0; j < 64; j++) {
+				uint64_t entry = bitmap[i];
+
+				if (entry & ~0) {
+					continue;
+				} 
+				
+				if (rbit(entry, j) == 0) {
+					sbit(bitmap, j);
+
+					return (uint64_t *)(MEMBASE + (PAGESIZE * ((j / 8) * 8 + j)));
+					break;
+				}
+			}
+		}
 	}
 
-	curr = freeList;
-	while ((((curr->size) < bytes) || ((curr->free) == 0)) && (curr->next != 0)) {
-		prev = curr;
-		curr = curr->next;
-	}
-
-	if ((curr->size) == bytes) {
-		curr->free = 0;
-		result = (void*)(++curr);
-
-		return result;
-	}
-	else if ((curr->size) > (bytes + sizeof(struct block))) {
-		split(curr, bytes);
-		result = (void*)(++curr);
-		return result;
-	}
-	else {
-		result = 0;
-		kprint("Not enough memory left.\nPlease free some up before attempting to allocate more.\n");
-		return result;
-	}
-
-	UNUSED(*prev);
-}
-
-void* realloc(void* pointer, size_t size) {
-
-	UNUSED(pointer);
-	UNUSED(size);
 	return NULL;
 }
 
-void merge() {
-	struct block* curr, * prev;
-	curr = freeList;
-	while ((curr->next) != 0) {
-		if ((curr->free) && (curr->next->free)) {
-			curr->size += (curr->next->size) + sizeof(struct block);
-			curr->next = curr->next->next;
-		}
-		prev = curr;
-		curr = curr->next;
-	}
+void pfree(void* ptr) {
+	uint64_t pagesToClear = ((uint64_t)ptr / 4096) - 1;
 
-	UNUSED(*prev);
-}
-
-void free(void* ptr) {
-	if (((void*)memory <= ptr) && (ptr <= (void*)(memory + 20000))) {
-		struct block* curr = ptr;
-		--curr;
-
-		curr->free = 1;
-
-		merge();
-	}
-	else {
-		kprint("Provide a valid pointer allocated by malloc!\n");
+	for (uint64_t i = 0; i < pagesToClear; i++) {
+		cbit(bitmap, i);
 	}
 }
