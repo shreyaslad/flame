@@ -6,14 +6,16 @@ uint32_t largestUseableMem = 0;
 extern uint64_t __kernel_end;
 
 void kmain() {	
-	disableCursor();
+	//disableCursor();
 
 	isr_install();
-	irq_install();
+	asm volatile("sti");
+	//init_keyboard();
+	/*irq_install();
 
 	clear();
 	drawLogo();
-	wait_s(2);
+	wait_s(2);*/
 	clear();
 
 	formatTime();

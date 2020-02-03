@@ -26,7 +26,7 @@ kernel.bin: kernel32.elf
 kernel32.elf: kernel.elf
 	objcopy -O elf32-i386 kernel.elf kernel32.elf
 
-kernel.elf: long_load.o boot.o ${OBJ}
+kernel.elf: startup64.o boot.o ${OBJ}
 	${CC} -Wl,-z,max-page-size=0x1000 -nostdlib -o $@ -T linker.ld $^
 
 cpu/interrupt.o: cpu/interrupt.asm
@@ -38,8 +38,8 @@ cpu/interrupt.o: cpu/interrupt.asm
 boot.o: boot.asm
 	nasm -f elf64 boot.asm -o boot.o
 
-long_load.o: long_load.asm
-	nasm -f elf64 long_load.asm -o long_load.o
+startup64.o: startup64.asm
+	nasm -f elf64 startup64.asm -o startup64.o
 
 run: flame.iso # -serial stdio
 	qemu-system-${ARCH} -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
@@ -51,3 +51,4 @@ debug: flame.iso kernel.elf
 clean:
 	rm -rf kernel.bin *.dis *.o
 	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o
+	rm -rf flame.bin flame.elf kernel32.elf
