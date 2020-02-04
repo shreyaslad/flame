@@ -11,9 +11,8 @@
 #define cbit(map, index) (map[index / 8] &= ~(1 << (index % 8)))
 #define rbit(row, index) ((row >> index) & 1)
 
-#define BLOCK 4096
 #define MEMBASE 0x100000
-#define PAGESIZE 4096
+#define PAGESIZE 2000000 // 2mb pages
 
 extern uint64_t __kernel_end;
 extern uint64_t totalmem;
