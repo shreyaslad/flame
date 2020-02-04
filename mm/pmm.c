@@ -1,6 +1,12 @@
-#include <mem.h>
+/*
+    pmm.c
+    Copyright Shreyas Lad (PenetratingShot) 2020
 
-uint64_t* bitmap = (uint64_t*)&__kernel_end;
+    Physical Memory Manager
+*/
+
+#include <mm/pmm.h>
+
 uint64_t totalmem = 0;
 uint64_t bitmapEntries = 0;
 
@@ -18,18 +24,9 @@ void memset(uint64_t* dest, uint64_t val, uint64_t len) {
 	for (; len != 0; len--) * temp++ = val;
 }
 
-/**********************
- * Private Memory API *
- **********************/
-
-void initMem(multiboot_info_t* mbd) {
-	totalmem = (uint64_t)mbd->mem_upper;
-	bitmapEntries = (uint64_t)((totalmem / PAGESIZE) / 64); // calculate the maximum amount of entries possible in the bitmap to not overflow
-
-	memset(bitmap, 0, (totalmem * 1000) / PAGESIZE / 8);
-}
-
-/* Virtual Memory Allocation */
+/*******************
+ * Private PMM API *
+ *******************/
 
 /* Physical Memory Allocation */
 void* palloc(uint64_t bytes) {
@@ -41,13 +38,6 @@ void* palloc(uint64_t bytes) {
   */
 
   uint64_t pagesToAllocate = bytes / PAGESIZE; // value should be floored
-
-  /* Find available bits in the bitmap */
-  for (uint64_t i = 0; i < bitmapEntries; i++) {
-    for (uint64_t j = 0; j < 64; j++) {
-      if (pagesToAllocate > 1)
-    }
-  }
   
 }
 

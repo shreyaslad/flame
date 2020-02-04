@@ -1,6 +1,6 @@
 # flame
 
-![flameOS](flame.png "flameOS")
+![flameOS](flame.png)
 
 This project was originally based off the [os-tutorial](https://github.com/cfenollosa/os-tutorial) written by cfenollosa.
 
