@@ -12,32 +12,44 @@ uint64_t bitmapEntries = 0;
 
 void initMem(multiboot_info_t* mbd) {
 	totalmem = (uint64_t)mbd->mem_upper;
-	bitmapEntries = (uint64_t)((totalmem / PAGESIZE) / 64); // calculate the maximum amount of entries possible in the bitmap to not overflow
+	bitmapEntries = (uint64_t)(((totalmem * 1000) / PAGESIZE) / 8); // calculate the maximum amount of entries possible in the bitmap to not overflow
 
 	memset(bitmap, 0, (totalmem * 1000) / PAGESIZE / 8);
 }
 
-struct index_t* getFreeIndicies(uint64_t indicies) {
-    /*
-    1. 
-    */
+// loop through each entry
+// check if bit location + amount of pages requested are all 0
+// if yes, return address of initial bit location
+// if no, keep trying until end of bitmap is reached
+// 
+index_t* getFreeIndicies(uint64_t pages) {
+    index_t* index;
+    index->row = 0;
+    index->bit = 0;
 
-    struct index_t* bitmapIndex;
-    bitmapIndex->index = 0;
-    bitmapIndex->travel = 0;
-
-    uint64_t readBits = 0;
-    uint64_t freeIndicies = 0;
+    uint64_t freebits = 0; // free bits per entry
 
     for (int i = 0; i < bitmapEntries; i++) {
-        readBits = 0;
-        for (int j = 0; j < 64; j++) {
-            uint64_t entry = bitmap[i];
-            readBits++;
-            
-            if (rbit(entry, j) == 1 && readBits == 63) break; // if nothing is available
+        uint64_t entry = bitmap[i];
 
-            // do things
+        for (int j = 0; j < 64; j++) {
+            if ((0xFFFFFFFF >> pages) & entry == 0) {
+                index->row = entry;
+                index->bit = j;
+
+                goto done;
+            }
+
+            if (rbit(entry, j) == ~0) {
+                break;
+            } else {
+                // allocate the last bits of this page and determine if the next page has any free bits at the beginning
+            }
         }
     }
+
+    return NULL;
+
+    done:
+        return index;
 }
