@@ -33,17 +33,17 @@ index_t* getFreeIndicies(uint64_t pages) {
         uint64_t entry = bitmap[i];
 
         for (int j = 0; j < 64; j++) {
-            if ((0xFFFFFFFF >> pages) & entry == 0) {
-                index->row = entry;
-                index->bit = j;
-
-                goto done;
-            }
-
-            if (rbit(entry, j) == ~0) {
-                break;
+            // check for overflow here
+            // if x bits left < bits being read, move ont othe next entry
+            if (j > pages) {
+                break; // break for now. allocate the last bits of this page and determine if the next page has any free bits at the beginning
             } else {
-                // allocate the last bits of this page and determine if the next page has any free bits at the beginning
+                if ((0xFFFFFFFF >> pages) & entry == 0) {
+                    index->row = entry;
+                    index->bit = j;
+
+                    goto done;
+                }
             }
         }
     }
