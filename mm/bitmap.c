@@ -17,33 +17,41 @@ void initMem(multiboot_info_t* mbd) {
 	memset(bitmap, 0, (totalmem * 1000) / PAGESIZE / 8);
 }
 
-// loop through each entry
-// check if bit location + amount of pages requested are all 0
-// if yes, return address of initial bit location
-// if no, keep trying until end of bitmap is reached
-// 
 index_t* getFreeIndicies(uint64_t pages) {
     index_t* index;
+    index->entries = bitmapEntries; // bruh
     index->row = 0;
     index->bit = 0;
 
-    uint64_t freebits = 0; // free bits per entry
+    uint64_t freebits = 0;
+    uint64_t firstaddr = 0;
 
     for (int i = 0; i < bitmapEntries; i++) {
         uint64_t entry = bitmap[i];
 
-        for (int j = 0; j < 64; j++) {
-            // check for overflow here
-            // if x bits left < bits being read, move ont othe next entry
-            if (j > pages) {
-                break; // break for now. allocate the last bits of this page and determine if the next page has any free bits at the beginning
-            } else {
-                if ((0xFFFFFFFF >> pages) & entry == 0) {
+        for (int j = 0; j < 63; j++) {
+            if (rbit(entry, j) == 0) {
+                if (freebits == 0) {
+                    firstaddr = j;
+                }
+
+                freebits++;
+
+                if (freebits == pages) {
                     index->row = entry;
-                    index->bit = j;
+                    index->bit = firstaddr;
 
                     goto done;
                 }
+
+                if (j == 63 && rbit(entry + 1, 0) == 1) {
+                    return NULL; // block is not contiguous
+                } else {
+                    break; // move to the next entry
+                }
+            } else {
+                freebits = 0;
+                firstaddr = 0;
             }
         }
     }

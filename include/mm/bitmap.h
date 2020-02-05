@@ -20,6 +20,7 @@
 #define rbit(row, index) ((row >> index) & 1)
 
 typedef struct {
+    uint64_t entries;
     uint64_t row;
     uint64_t bit;
 } index_t;
