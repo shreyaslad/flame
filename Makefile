@@ -51,4 +51,4 @@ debug: flame.iso kernel.elf
 clean:
 	rm -rf kernel.bin *.dis *.o
 	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o mm/*.o
-	rm -rf flame.bin flame.elf kernel32.elf
+	rm -rf flame.bin flame.elf kernel32.elf isodir/
