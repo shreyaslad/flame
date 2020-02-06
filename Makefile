@@ -1,4 +1,6 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c kernel/commands/*.c fs/*.c mm/*.c )
+.PHONY: run clean
+
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c lib/*.c kernel/commands/*.c fs/*.c mm/*.c )
 HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h kernel/commands/*h fs/*h mm/*.h )
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o	} 
 
@@ -50,5 +52,5 @@ debug: flame.iso kernel.elf
 
 clean:
 	rm -rf kernel.bin *.dis *.o
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o fs/*.o mm/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o lib/*.o fs/*.o mm/*.o
 	rm -rf flame.bin flame.elf kernel32.elf isodir/ .vscode/

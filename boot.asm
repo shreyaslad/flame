@@ -133,11 +133,6 @@ section .text
         or eax, 1 << 31              ; Set the PG-bit, which is the 32nd bit (bit 31).
         mov cr0, eax                 ; Set control register 0 to the A-register.
 
-        mov eax, 1234
-
-        ;cli
-        ;hlt
-
         ; Set up GDT
         lgdt [gdt.pointer32 - KNL_HIGH_VMA]
         jmp gdt.code:loaded - KNL_HIGH_VMA

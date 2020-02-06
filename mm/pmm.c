@@ -36,22 +36,25 @@ void* pmalloc(uint64_t bytes) {
   if (index == NULL) return NULL; // no contiguous bits found
 
   uint64_t pagesMarked = 0;
+  uint64_t address = 0;
+  uint64_t pagesToAllocate = 0; // allocate in next entry
 
   for (uint64_t i = 0; i < index->entries; i++) {
     uint64_t entry = bitmap[i];
-    uint64_t address = 0;
-
-    uint64_t pagesToAllocate = 0; // allocate in next entry
 
     if (pagesMarked > 0) {
+
       for (uint64_t s = 0; s < pagesToAllocate; s++) {
         sbit(bitmap, i * s);
       }
+
     } else {
+
       if (index->row != i) {
-      continue;
+        continue;
       } else {
         for (uint64_t j = 0; j < 63; j++) {
+
           if (j == index->bit) {
             // set bits j + pages with a for loop
             // calculate the address of index->bit
@@ -59,10 +62,13 @@ void* pmalloc(uint64_t bytes) {
             if (j + pages > 63) {
               uint64_t bitsLeftInEntry = 64 - j;
               pagesToAllocate = pages - bitsLeftInEntry;
+
               for (uint64_t k = 0; k < bitsLeftInEntry; k++) {
                 sbit(bitmap, i * j); // you have to submit the current bit in the bitmap
               }
+
               break; // move to next entry
+
             } else {
               sbit(bitmap, i * j);
               pagesMarked++;
@@ -85,10 +91,7 @@ void* pmalloc(uint64_t bytes) {
     return (void*)address;
 }
 
-void pmfree(void* ptr) {
-	uint64_t pagesToClear = ((uint64_t)ptr / PAGESIZE) - 1;
-
-	for (uint64_t i = 0; i < pagesToClear; i++) {
-		cbit(bitmap, i);
-	}
+void pmfree(void* ptr, uint64_t bytes) {
+  uint64_t requiredbits = bytes / PAGESIZE;
+  uint64_t totalbits = ((uint64_t)ptr - MEMBASE) * 8; // bits required to jump in order to get to bit that controls this page
 }

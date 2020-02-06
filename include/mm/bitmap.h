@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <function.h>
-#include "../../multiboot.h"
+#include <boot/multiboot.h>
 
 #define MEMBASE 0x100000
 #define PAGESIZE 2000000 // 2mb pages

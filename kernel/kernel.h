@@ -16,6 +16,6 @@
 #include "../cpu/timer.h"
 #include "../cpu/ports.h"
 #include "../cpu/isr.h"
-#include "../multiboot.h"
+#include <boot/multiboot.h>
 
 void user_input(char* input);
