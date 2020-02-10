@@ -29,7 +29,7 @@ void memset(uint64_t* dest, uint64_t val, uint64_t len) {
  *******************/
 
 /* Physical Memory Allocation */
-void* pmalloc(uint64_t bytes) {
+uint64_t* pmalloc(uint64_t bytes) {
   uint64_t pages = bytes / PAGESIZE;
   index_t* index = getFreeIndicies(pages);
 
@@ -88,7 +88,7 @@ void* pmalloc(uint64_t bytes) {
   return NULL;
 
   done:
-    return (void*)address;
+    return (uint64_t*)address;
 }
 
 void pmfree(void* ptr, uint64_t bytes) {
