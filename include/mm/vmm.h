@@ -11,7 +11,12 @@
 #include <stddef.h>
 #include <mm/pmm.h>
 
-#define ENTRYSIZE 0x1000
+#define TABLESIZE 0x1000
+
+#define RMFLAGS 0x000FFFFFFFFFF000;
+#define PRESENT (1 << 0)
+#define WRITE (1 << 1)
+#define HUGE (1 << 7)
 
 typedef struct {
     uint8_t pml1off;
@@ -24,9 +29,5 @@ void setPML4(uint64_t* PML4);
 void invlpg(uint64_t vaddr);
 void tlbflush();
 
-void bootstrap();
-
 offset_t vtoof(uint64_t* vaddr); // virtual address to offset
-uint64_t* oftov(offset_t offset); // offset to virtual address
-
-void map(uint64_t* vaddr, uint64_t* paddr);
+void vmap(uint64_t* vaddr, uint64_t* paddr);

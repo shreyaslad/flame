@@ -7,6 +7,8 @@
 
 #include <mm/vmm.h>
 
+extern uint8_t maxphysaddr;
+
 uint64_t* getPML4() {
     uint64_t* addr;
     asm volatile("movq, %%cr3, %0;" : "=r"(addr));
@@ -39,21 +41,39 @@ offset_t vtoof(uint64_t* vaddr) {
     return offset;
 }
 
-// offset to virtual address
-uint64_t* oftov(offset_t offset) {
-    uint64_t addr = 0;
-
-    addr |= offset.pml4off << 39;
-    addr |= offset.pml3off << 30;
-    addr |= offset.pml2off << 21;
-    addr |= offset.pml1off << 12;
-
-    return (uint64_t*)addr;
-}
-
 // maps a virtual address to a physical address
-void map(uint64_t* vaddr, uint64_t* paddr) {
+void vmap(uint64_t* vaddr, uint64_t* paddr) {
     offset_t offset = vtoof(vaddr);
 
-    uint64_t pmladdr = getPML4(); // the pml4 is already created in the bootloader
-} 
+    uint64_t* pml4ptr = getPML4(); // the pml4 is already created in the bootloader
+
+    uint64_t* pml3ptr = NULL;
+    uint64_t* pml2ptr = NULL;
+
+    if (pml4ptr[offset.pml4off] & PRESENT == 1) {
+        pml3ptr = pml4ptr[offset.pml4off] & RMFLAGS;
+
+        if (pml3ptr[offset.pml3off] & PRESENT == 1) {
+            pml2ptr = pml3ptr[offset.pml3off] & RMFLAGS;
+
+            if (pml2ptr[offset.pml2off] & PRESENT == 1) {
+                pml2ptr[offset.pml2off] = (uint64_t)paddr | PRESENT | WRITE | HUGE;
+                invlpg(vaddr);
+            } else {
+                pml2ptr[offset.pml2off] = (uint64_t)paddr | PRESENT | WRITE | HUGE;
+                invlpg(vaddr);
+            }
+        } else {
+            pml2ptr = pmalloc(TABLESIZE);
+            pml3ptr[offset.pml3off] = (uint64_t)pml2ptr | PRESENT | WRITE;
+        }
+    } else { 
+        pml3ptr = pmalloc(TABLESIZE);
+        pml4ptr[offset.pml4off] = (uint64_t)pml3ptr | PRESENT | WRITE;
+
+        pml2ptr = pmalloc(TABLESIZE);
+        pml3ptr[offset.pml2off] = (uint64_t)pml2ptr | PRESENT | WRITE;
+
+        pml2ptr[offset.pml2off] = (uint64_t)paddr | PRESENT | WRITE | HUGE;
+    }
+}
