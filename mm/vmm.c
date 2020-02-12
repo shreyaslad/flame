@@ -66,6 +66,9 @@ void vmap(uint64_t* vaddr, uint64_t* paddr) {
         } else {
             pml2ptr = pmalloc(TABLESIZE);
             pml3ptr[offset.pml3off] = (uint64_t)pml2ptr | PRESENT | WRITE;
+
+            pml2ptr[offset.pml2off] = (uint64_t)paddr | PRESENT | WRITE | HUGE;
+            invlpg(vaddr);
         }
     } else { 
         pml3ptr = pmalloc(TABLESIZE);
@@ -75,5 +78,20 @@ void vmap(uint64_t* vaddr, uint64_t* paddr) {
         pml3ptr[offset.pml2off] = (uint64_t)pml2ptr | PRESENT | WRITE;
 
         pml2ptr[offset.pml2off] = (uint64_t)paddr | PRESENT | WRITE | HUGE;
+        invlpg(vaddr);
+    }
+}
+
+void vfree(uint64_t* vaddr, size_t bytes) {
+    offset_t offset = vtoof(vaddr);
+    uint64_t* pml4ptr = getPML4();
+
+    uint64_t pages = bytes/PAGESIZE;
+
+    uint64_t* pml3ptr = pml4ptr[offset.pml4off] & RMFLAGS;
+    uint64_t* pml2ptr = pml3ptr[offset.pml3off] & RMFLAGS;
+
+    for (uint64_t i = offset.pml2off; i < pages; i++) {
+        pml2ptr[i] = 0; // TODO: free page table if necessary
     }
 }

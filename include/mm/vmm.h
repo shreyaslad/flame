@@ -12,6 +12,7 @@
 #include <mm/pmm.h>
 
 #define TABLESIZE 0x1000
+#define PAGESIZE 2000000
 
 #define RMFLAGS 0x000FFFFFFFFFF000;
 #define PRESENT (1 << 0)
@@ -31,3 +32,4 @@ void tlbflush();
 
 offset_t vtoof(uint64_t* vaddr); // virtual address to offset
 void vmap(uint64_t* vaddr, uint64_t* paddr);
+void vfree(uint64_t* vaddr, size_t bytes);
