@@ -2,9 +2,7 @@
 
 ![alt text](flame.PNG "FlameOS")
 
-This project was originally based off the [os-tutorial](https://github.com/cfenollosa/os-tutorial) written by cfenollosa.
-
-Resources from the [OSDev Wiki](https://wiki.osdev.org) have also been used.
+flame was originally based off this [os tutorial](https://github.com/cfenollosa/os-tutorial).
 
 ## Building
 
@@ -15,26 +13,44 @@ Dependencies:
 - `binutils` @ Stable
 - `xorriso` >= 1.2.9
 - `nasm` @ Stable
-`- qemu` @ Stable (>= 4.2.0 for MacOS 15)
+- `qemu` @ Stable (>= 4.2.0 for MacOS 15+)
+
+```
+make
+```
 
 ## Running
 
 ```
-qemu-system-x86_64 -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
+make run
 ```
 
-## Filesystem Structure
+## Debugging
 
-`cpu`: code that interacts with the cpu (ISRs, IRQs, Port I/O)
-
-`drivers`: drivers
-
-`fs`: HDD I/O and Filesystem
-
-`kernel`: kernel code
-
-`libc`: useful functions
+```
+make debug
+```
 
 ## License
 
-This project is licensed under the MIT License. You should have recieved a copy of it along with this software.
+MIT License
+
+Copyright (c) 2019-2020 Shreyas Lad
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
