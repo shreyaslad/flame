@@ -1,11 +1,13 @@
 #include "kernel.h"
 
-multiboot_memory_map_t *mmap;
+multiboot_memory_map_t* mmap;
 uint32_t largestUseableMem = 0;
 
 extern uint64_t __kernel_end;
+extern void paging_setup();
 
 void kmain(multiboot_info_t* mbd) {	
+	paging_setup();
 	//disableCursor();
 
 	initMem(mbd);
