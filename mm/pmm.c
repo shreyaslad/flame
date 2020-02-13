@@ -29,7 +29,7 @@ void memset(uint64_t* dest, uint64_t val, uint64_t len) {
  *******************/
 
 /* Physical Memory Allocation */
-uint64_t* pmalloc(uint64_t bytes) {
+uint64_t* pmalloc(size_t bytes) {
   uint64_t pages = bytes / PAGESIZE;
   index_t* index = getFreeIndicies(pages);
 
@@ -91,7 +91,8 @@ uint64_t* pmalloc(uint64_t bytes) {
     return (uint64_t*)address;
 }
 
-void pmfree(void* ptr, uint64_t bytes) {
-  uint64_t requiredbits = bytes / PAGESIZE;
-  uint64_t totalbits = ((uint64_t)ptr - MEMBASE) * 8; // bits required to jump in order to get to bit that controls this page
+void pmfree(void* ptr, size_t bytes) {
+  uint64_t pages = bytes / PAGESIZE;
+
+  UNUSED(ptr);
 }

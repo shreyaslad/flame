@@ -14,3 +14,7 @@ void* malloc(size_t bytes) {
 
     return (void*)ret;
 }
+
+void free(uint64_t* vaddr) {
+    UNUSED(vaddr);
+}

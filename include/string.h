@@ -9,7 +9,7 @@
 #pragma once
 
 #include "../cpu/type.h"
-#include <mem.h>
+#include <mm/mm.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>

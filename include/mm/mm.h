@@ -9,7 +9,9 @@
 
 #include <mm/pmm.h>
 #include <mm/vmm.h>
+#include <function.h>
 
-extern KNL_HIGH_VMA;
+extern uint64_t KNL_HIGH_VMA;
 
 void* malloc(size_t bytes);
+void free(uint64_t* vaddr);

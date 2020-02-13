@@ -11,12 +11,12 @@
 #include <stddef.h>
 #include <function.h>
 #include <mm/bitmap.h>
-
+#include <mm/bit.h>
 #include <boot/multiboot.h>
 
 void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes);
 void memset(uint64_t* str, uint64_t c, uint64_t n);
 
 /* Physical Memory Allocation */
-uint64_t* pmalloc(uint64_t bytes);
-void pmfree(void* ptr, uint64_t bytes);
+uint64_t* pmalloc(size_t bytes);
+void pmfree(void* ptr, size_t bytes);
