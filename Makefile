@@ -16,7 +16,6 @@ O_LEVEL = 2
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
 
 flame.iso: kernel32.elf
-	make clean
 	mkdir -p isodir/boot/grub
 	cp kernel32.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
@@ -45,7 +44,7 @@ startup64.o: startup64.asm
 	nasm -f elf64 startup64.asm -o startup64.o
 
 run: flame.iso # -serial stdio
-	qemu-system-${ARCH} -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
+	qemu-system-${ARCH} -monitor stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
 
 debug: flame.iso kernel.elf
 	qemu-system-${ARCH} -s -S -d guest_errors,int -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img &

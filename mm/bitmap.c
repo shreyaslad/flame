@@ -10,6 +10,8 @@
 uint64_t totalmem = 0;
 uint64_t bitmapEntries = 0;
 
+uint64_t* bitmap = (uint64_t *)&__kernel_end;
+
 void initMem(multiboot_info_t* mbd) {
 	totalmem = (uint64_t)mbd->mem_upper;
 	bitmapEntries = (uint64_t)(((totalmem * 1000) / PAGESIZE) / 8); // calculate the maximum amount of entries possible in the bitmap to not overflow

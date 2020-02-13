@@ -4,19 +4,17 @@ multiboot_memory_map_t* mmap;
 uint32_t largestUseableMem = 0;
 
 extern uint64_t __kernel_end;
-extern void paging_setup();
 
 void kmain(multiboot_info_t* mbd) {	
-	paging_setup();
 	//disableCursor();
 
 	initMem(mbd);
 
 	isr_install();
-	asm volatile("sti");
+	//asm volatile("sti");
 	//init_keyboard();
-	/*irq_install();
-
+	irq_install();
+	/*
 	clear();
 	drawLogo();
 	wait_s(2);*/

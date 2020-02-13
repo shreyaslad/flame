@@ -7,9 +7,6 @@
 
 #include <mm/pmm.h>
 
-uint64_t totalmem = 0;
-uint64_t bitmapEntries = 0;
-
 /*********************
  * Public Memory API *
  *********************/

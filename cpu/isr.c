@@ -112,14 +112,13 @@ char *exception_messages[] = {
 
 void isr_handler(registers_t* r) {
     clear();
-    kprint("Exception");
+    kprint("Exception: ");
+    kprint_int(r->int_no);
 
     asm volatile("cli");
     asm volatile("hlt");
     while (1)
         ;
-
-    UNUSED(r);
 }
 
 void register_interrupt_handler(uint8_t n, isr_t handler) {
@@ -139,6 +138,21 @@ void irq_handler(registers_t* r) {
 }
 
 void irq_install() {
+    port_byte_out(0x20, 0x11);
+    port_byte_out(0xA0, 0x11);
+
+    port_byte_out(0x21, 0x20);
+    port_byte_out(0xA1, 40);
+
+    port_byte_out(0x21, 0x04);
+    port_byte_out(0xA1, 0x02);
+
+    port_byte_out(0x21, 0x01);
+    port_byte_out(0xA1, 0x01);
+
+    port_byte_out(0x21, 0x0);
+    port_byte_out(0xA1, 0x0);
+
     /* Enable interruptions */
     asm volatile("sti");
     /* IRQ0: timer */

@@ -26,9 +26,10 @@ typedef struct {
 } index_t;
 
 extern uint64_t __kernel_end;
-extern uint64_t totalmem;
 
-uint64_t* bitmap = (uint64_t*)&__kernel_end;
+uint64_t totalmem;
+uint64_t bitmapEntries;
+uint64_t* bitmap;
 
 void initMem(multiboot_info_t* mbd);
 index_t* getFreeIndicies(uint64_t pages);
