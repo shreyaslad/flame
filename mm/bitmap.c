@@ -18,7 +18,7 @@ void initMem(multiboot_info_t* mbd) {
 }
 
 index_t* getFreeIndicies(uint64_t pages) {
-    index_t* index;
+    index_t* index = NULL;
     index->entries = bitmapEntries; // bruh
     index->row = 0;
     index->bit = 0;
