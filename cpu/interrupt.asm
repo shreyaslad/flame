@@ -4,10 +4,9 @@
 
 %macro pushaq 0
     push rax
+    push rbx
     push rcx
     push rdx
-    push rbx
-    push rsp
     push rbp
     push rsi
     push rdi
@@ -33,10 +32,9 @@
     pop rdi
     pop rsi
     pop rbp
-    pop rsp
-    pop rbx
     pop rdx
     pop rcx
+    pop rbx
     pop rax
 %endmacro
 

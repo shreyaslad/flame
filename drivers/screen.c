@@ -92,8 +92,8 @@ void kprint_backspace() {
     print_char(0x08, col, row, WHITE_ON_BLACK);
 }
 
-void kprint_int(int num) {
-    char buf[33];
+void kprint_int(uint64_t num) {
+    char buf[65];
     itoa(num, buf);
     kprint(buf);
 }

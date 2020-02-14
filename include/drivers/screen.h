@@ -44,7 +44,7 @@ void kprint_at(char *message, int col, int row);
 void kprint(char *message);
 void printf(char* message, ...);
 void kprint_backspace();
-void kprint_int(int num);
+void kprint_int(uint64_t num);
 void kprint_uint8(uint8_t num);
 
 void kprint_at_color(char *message, int col, int row, char color);
