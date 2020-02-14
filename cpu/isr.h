@@ -82,10 +82,9 @@ extern void irq15();
 
 /* Struct which aggregates many registers */
 typedef struct {
-   uint64_t ds; /* Data segment selector */
-   uint64_t rdi, rsi, rbp, useless, rbx, rdx, rcx, rax; /* Pushed by pusha. */
-   uint64_t int_no, err_code; /* Interrupt number and error code (if applicable) */
-   uint64_t rip, cs, eflags, rsp, ss; /* Pushed by the processor automatically */
+   uint64_t r15, r14, r13, r12, r11, r10, r9, rsi, rdi, rbp, rdx, rcx, rbx, rax;
+   uint64_t int_no, err_code;
+   uint64_t rip, cs, rflags, rsp, ss;
 } registers_t;
 
 void isr_install();

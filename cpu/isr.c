@@ -114,6 +114,8 @@ void isr_handler(registers_t* r) {
     clear();
     kprint("Exception: ");
     kprint_int(r->int_no);
+    kprint(" ");
+    kprint_int(r->err_code);
 
     asm volatile("cli");
     asm volatile("hlt");

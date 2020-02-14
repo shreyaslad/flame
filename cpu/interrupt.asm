@@ -3,22 +3,22 @@
 [extern irq_handler]
 
 %macro pusha 0
-   push rax
-   push rcx
-   push rdx
-   push rbx
-   push rsp
-   push rbp
-   push rsi
-   push rdi
-   push r8
-   push r9
-   push r10
-   push r11
-   push r12
-   push r13
-   push r14
-   push r15
+    push rax
+    push rcx
+    push rdx
+    push rbx
+    push rsp
+    push rbp
+    push rsi
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
+    push r12
+    push r13
+    push r14
+    push r15
 %endmacro
 
 %macro popa 0
