@@ -15,7 +15,7 @@
 #include <boot/multiboot.h>
 
 void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes);
-void memset(uint64_t* str, uint64_t c, uint64_t n);
+void memset(void* dest, int val, size_t len);
 
 /* Physical Memory Allocation */
 uint64_t* pmalloc(size_t bytes);

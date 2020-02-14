@@ -16,9 +16,9 @@ void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes) {
 	}
 }
 
-void memset(uint64_t* dest, uint64_t val, uint64_t len) {
-	uint64_t* temp = (uint64_t*)dest;
-	for (; len != 0; len--) * temp++ = val;
+void memset(void* dest, int val, size_t len) {
+    for (uint8_t *temp = dest; len--;)
+        *temp++ = val;
 }
 
 /*******************

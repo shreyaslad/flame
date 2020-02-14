@@ -11,9 +11,9 @@ void kmain(multiboot_info_t* mbd) {
 	initMem(mbd);
 
 	isr_install();
-	asm volatile("sti");
+	//asm volatile("sti");
 	//init_keyboard();
-	//irq_install();
+	irq_install();
 	/*
 	clear();
 	drawLogo();

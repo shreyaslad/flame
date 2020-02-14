@@ -111,16 +111,15 @@ char *exception_messages[] = {
 };
 
 void isr_handler(registers_t* r) {
+    asm volatile("cli");
+
     clear();
     kprint("Exception: ");
     kprint_int(r->int_no);
     kprint(" ");
     kprint_int(r->err_code);
 
-    asm volatile("cli");
     asm volatile("hlt");
-    while (1)
-        ;
 }
 
 void register_interrupt_handler(uint8_t n, isr_t handler) {
