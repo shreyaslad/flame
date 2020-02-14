@@ -22,22 +22,22 @@
 %endmacro
 
 %macro popa 0
-   pop r15
-   pop r14
-   pop r13
-   pop r12
-   pop r11
-   pop r10
-   pop r8
-   pop r9
-   pop rdi
-   pop rsi
-   pop rbp
-   pop rsp
-   pop rbx
-   pop rdx
-   pop rcx
-   pop rax
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop r11
+    pop r10
+    pop r9
+    pop r8
+    pop rdi
+    pop rsi
+    pop rbp
+    pop rsp
+    pop rbx
+    pop rdx
+    pop rcx
+    pop rax
 %endmacro
 
 %macro int_handle 1
@@ -73,15 +73,7 @@ isr_common_stub:
 ; and the 'pop ebx'
 irq_common_stub:
     int_handle irq_handler
-	
-; We don't get information about which interrupt was caller
-; when the handler is run, so we will need to have a different handler
-; for every interrupt.
-; Furthermore, some interrupts push an error code onto the stack but others
-; don't, so we will push a dummy error code for those which don't, so that
-; we have a consistent stack for all of them.
 
-; First make the ISRs global
 global isr0
 global isr1
 global isr2
