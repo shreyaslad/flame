@@ -25,7 +25,7 @@ void kmain(multiboot_info_t* mbd) {
 	kprint("flameOS\n");
 
 	kprint("It is ");
-	kprint(format);
+	//kprint(format);
 	kprint(".");
 	kprint("\nuser@flameOS # ");
 
