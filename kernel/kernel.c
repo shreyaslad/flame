@@ -8,7 +8,7 @@ extern uint64_t __kernel_end;
 void kmain(multiboot_info_t* mbd) {	
 	//disableCursor();
 
-	initMem(mbd);
+	//initMem(mbd);
 
 	isr_install();
 	//asm volatile("sti");
@@ -20,12 +20,14 @@ void kmain(multiboot_info_t* mbd) {
 	wait_s(2);*/
 	clear();
 
-	formatTime();
+	//formatTime();
+	read_rtc();
 
 	kprint("flameOS\n");
 
 	kprint("It is ");
 	//kprint(format);
+	kprint_int(second);
 	kprint(".");
 	kprint("\nuser@flameOS # ");
 
@@ -52,6 +54,15 @@ void user_input(char* input) {
 		kprint("It is ");
 		kprint(format);
 		kprint(".");
+	}
+	else if (strcmp(input, "testMem") == 0) {
+		uint64_t* addr = pmalloc(5);
+		kprint_int((uint64_t)addr);
+
+		kprint(" ");
+
+		uint64_t* addr2 = pmalloc(5);
+		kprint_int((uint64_t)addr2);
 	}
 	else if (strcmp(input, "res") == 0) {
 		getResolution();
