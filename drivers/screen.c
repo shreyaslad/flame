@@ -239,15 +239,16 @@ void drawRect(uint8_t color) {
     }
 }
 
-void neofetch(uint32_t mem) {
+void neofetch(uint64_t mem) {
     drive_scan();
     clear();
-    formatTime();
+    read_rtc();
+    //formatTime();
 
 	kprint("flameOS\n");
 
 	kprint("It is ");
-	kprint(format);
+	kprint(second);
 	kprint(".");
     kprint("\nuser@flameOS # neofetch");
 
@@ -281,7 +282,7 @@ void neofetch(uint32_t mem) {
     offset = get_offset(currentCol + 35, currentRow - 12);
     set_cursor_offset(offset);
     kprint_color("OS: ", vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
-    kprint("flameOS (i386)");
+    kprint("flameOS (x86_64)");
 
     offset = get_offset(currentCol + 35, currentRow - 11);
     set_cursor_offset(offset);
