@@ -26,14 +26,14 @@ void kmain(multiboot_info_t* mbd) {
 
 	clear();
 
-	//formatTime();
-	read_rtc();
+	formatTime();
+	//read_rtc();
 
 	kprint("flameOS\n");
 
 	kprint("It is ");
 	//kprint(format);
-	kprint_int(second);
+	kprint_int(format);
 	kprint(".");
 	kprint("\nuser@flameOS # ");
 
