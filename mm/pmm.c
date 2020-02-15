@@ -7,6 +7,11 @@
 
 #include <mm/pmm.h>
 
+uint64_t* bitmap = (uint64_t *)&__kernel_end;
+
+uint64_t totalmem;
+uint64_t bitmapEntries;
+
 /*********************
  * Public Memory API *
  *********************/
@@ -25,71 +30,42 @@ void memset(void* dest, int val, size_t len) {
  * Private PMM API *
  *******************/
 
-/* Physical Memory Allocation */
-uint64_t* pmalloc(size_t bytes) {
+void* pmalloc(size_t bytes) {
   uint64_t pages = bytes / PAGESIZE;
-  index_t* index = getFreeIndicies(pages);
 
-  if (index == NULL) return NULL; // no contiguous bits found
+  uint64_t firstBit = 0;
+  uint64_t concurrentBits = 0;
+  uint64_t bitsToAlloc = pages + 1;
 
-  uint64_t pagesMarked = 0;
-  uint64_t address = 0;
-  uint64_t pagesToAllocate = 0; // allocate in next entry
+  uint64_t totalBitsInBitmap = pages * 64;
 
-  for (uint64_t i = 0; i < index->entries; i++) {
-    uint64_t entry = bitmap[i];
-
-    if (pagesMarked > 0) {
-
-      for (uint64_t s = 0; s < pagesToAllocate; s++) {
-        sbit(bitmap, i * s);
+  for (uint64_t i = 0; i < totalBitsInBitmap; i++) {
+    if (getAbsoluteBitState(bitmap, i) == 0) {
+      if (concurrentBits == 0) {
+        firstBit = i;
       }
 
+      concurrentBits++;
+
+      if (bitsToAlloc == concurrentBits) {
+        goto alloc;
+      }
     } else {
+      firstBit = 0;
+      concurrentBits = 0;
 
-      if (index->row != i) {
-        continue;
-      } else {
-        for (uint64_t j = 0; j < 63; j++) {
-
-          if (j == index->bit) {
-            // set bits j + pages with a for loop
-            // calculate the address of index->bit
-            // address = ((((i - 1) * 64) * PAGESIZE) + (j * PAGESIZE)) + MEMBASE
-            if (j + pages > 63) {
-              uint64_t bitsLeftInEntry = 64 - j;
-              pagesToAllocate = pages - bitsLeftInEntry;
-
-              for (uint64_t k = 0; k < bitsLeftInEntry; k++) {
-                sbit(bitmap, i * j); // you have to submit the current bit in the bitmap
-              }
-
-              break; // move to next entry
-
-            } else {
-              sbit(bitmap, i * j);
-              pagesMarked++;
-
-              if (pagesMarked == pages) {
-                // calculate the address
-                address = ((((i - 1) * 64) * PAGESIZE) + (j * PAGESIZE)) + MEMBASE;
-                goto done;
-              }
-            }
-          } 
-        }
-      }
+      continue;
     }
   }
 
   return NULL;
 
-  done:
-    return (uint64_t*)address;
-}
+  alloc:
+    // iterate over bits now that a block has been found
+    for (uint64_t i = firstBit; i < bitsToAlloc; i++) {
+      setAbsoluteBitState(bitmap, i);
+    }
 
-void pmfree(void* ptr, size_t bytes) {
-  uint64_t pages = bytes / PAGESIZE;
-
-  UNUSED(ptr);
+    return (void*)(firstBit * PAGESIZE);
+  
 }

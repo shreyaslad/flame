@@ -18,3 +18,16 @@ void setBit(uint8_t* num, uint8_t bit, uint8_t state) {
         *num = (*num | (1 << bit));
     }
 }
+
+uint8_t getAbsoluteBitState(uint64_t* bitmap, uint64_t bit) {
+    size_t off = bit / 64;
+    size_t mask = (1 << (bit % 64));
+    return (bitmap[off] & mask) == mask;
+}
+
+void setAbsoluteBitState(uint64_t* bitmap, uint64_t bit) {
+    size_t off = bit / 64;
+    size_t mask = (1 << (bit % 64));
+
+    bitmap[off] |= mask;
+}

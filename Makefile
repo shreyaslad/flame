@@ -44,7 +44,7 @@ startup64.o: startup64.asm
 	nasm -f elf64 startup64.asm -o startup64.o
 
 run: flame.iso # -serial stdio
-	qemu-system-${ARCH} -monitor stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
+	qemu-system-${ARCH} -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
 
 debug: flame.iso kernel.elf
 	qemu-system-${ARCH} -s -S -d guest_errors,int -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img &

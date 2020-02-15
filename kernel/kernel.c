@@ -6,18 +6,24 @@ uint32_t largestUseableMem = 0;
 extern uint64_t __kernel_end;
 
 void kmain(multiboot_info_t* mbd) {	
-	//disableCursor();
-
-	//initMem(mbd);
+	disableCursor();
 
 	isr_install();
-	//asm volatile("sti");
-	//init_keyboard();
 	irq_install();
-	/*
+	
+	initMem(mbd);
+
+	sprint("\nBitmap Addr: ");
+	sprint_int((uint64_t)bitmap);
+	sprint("\nMBD Total Mem: ");
+	sprint_uint((uint64_t)mbd->mem_upper);
+	sprint("\n");
+
+
 	clear();
 	drawLogo();
-	wait_s(2);*/
+	wait_s(2);
+
 	clear();
 
 	//formatTime();
@@ -56,13 +62,10 @@ void user_input(char* input) {
 		kprint(".");
 	}
 	else if (strcmp(input, "testMem") == 0) {
-		uint64_t* addr = pmalloc(5);
-		kprint_int((uint64_t)addr);
-
-		kprint(" ");
-
-		uint64_t* addr2 = pmalloc(5);
-		kprint_int((uint64_t)addr2);
+		uint64_t* addr = (uint64_t*)malloc(35);
+		sprint("Addr: ");
+		sprint_uint((uint64_t)addr);
+		sprint("\n");
 	}
 	else if (strcmp(input, "res") == 0) {
 		getResolution();

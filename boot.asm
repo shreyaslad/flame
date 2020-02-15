@@ -34,34 +34,34 @@ section .multiboot
 section .data
 
     gdt:                           ; Global Descriptor Table (64-bit).
-      .null: equ $ - gdt         ; The null descriptor.
-        dw 0xFFFF                    ; Limit (low).
-        dw 0                         ; Base (low).
-        db 0                         ; Base (middle)
-        db 0                         ; Access.
-        db 0                         ; Granularity.
-        db 0                         ; Base (high).
-      .code: equ $ - gdt         ; The code descriptor.
-        dw 0                         ; Limit (low).
-        dw 0                         ; Base (low).
-        db 0                         ; Base (middle)
-        db 10011010b                 ; Access (exec/read).
-        db 10101111b                 ; Granularity, 64 bits flag, limit19:16.
-        db 0                         ; Base (high).
-      .data: equ $ - gdt         ; The data descriptor.
-        dw 0                         ; Limit (low).
-        dw 0                         ; Base (low).
-        db 0                         ; Base (middle)
-        db 10010010b                 ; Access (read/write).
-        db 00000000b                 ; Granularity.
-        db 0                         ; Base (high).
+      .null: equ $ - gdt                ; The null descriptor.
+        dw 0xFFFF                       ; Limit (low).
+        dw 0                            ; Base (low).
+        db 0                            ; Base (middle)
+        db 0                            ; Access.
+        db 0                            ; Granularity.
+        db 0                            ; Base (high).
+      .code: equ $ - gdt                ; The code descriptor.
+        dw 0                            ; Limit (low).
+        dw 0                            ; Base (low).
+        db 0                            ; Base (middle)
+        db 10011010b                    ; Access (exec/read).
+        db 10101111b                    ; Granularity, 64 bits flag, limit19:16.
+        db 0                            ; Base (high).
+      .data: equ $ - gdt                ; The data descriptor.
+        dw 0                            ; Limit (low).
+        dw 0                            ; Base (low).
+        db 0                            ; Base (middle)
+        db 10010010b                    ; Access (read/write).
+        db 00000000b                    ; Granularity.
+        db 0                            ; Base (high).
 
-      .pointer:                    ; The GDT-pointer.
-        dw $ - gdt - 1             ; Limit.
-        dq gdt                     ; Base.
-      .pointer32:                    ; The GDT-pointer for 32 bit mode.
-        dw $ - gdt - 1             ; Limit.
-        dd gdt - KNL_HIGH_VMA        ; Base.
+      .pointer:                         ; The GDT-pointer.
+        dw $ - gdt - 1                  ; Limit.
+        dq gdt                          ; Base.
+      .pointer32:                       ; The GDT-pointer for 32 bit mode.
+        dw $ - gdt - 1                  ; Limit.
+        dd gdt - KNL_HIGH_VMA           ; Base.
 
 section .bss
     align 16
@@ -121,7 +121,7 @@ section .text
 
         mov eax, cr4                 ; Set the A-register to control register 4.
         or eax, 1 << 5               ; Set the PAE-bit, which is the 6th bit (bit 5).
-        ;or eax, 1 << 4               ; Set the PSE-bit, which is the 5th bit (bit 4).
+        ;or eax, 1 << 4              ; Set the PSE-bit, which is the 5th bit (bit 4).
         mov cr4, eax                 ; Set control register 4 to the A-register.
 
         ; Switch to long mode
@@ -140,8 +140,8 @@ section .text
     [bits 64]
 
     loaded:
-        lgdt [gdt.pointer]        ; Load the 64-bit global descriptor table.
-        mov ax, gdt.data          ; Set the A-register to the data descriptor.
+        lgdt [gdt.pointer]          ; Load the 64-bit global descriptor table.
+        mov ax, gdt.data            ; Set the A-register to the data descriptor.
         mov ds, ax                  ; Set the data segment to the A-register.
         mov es, ax                  ; Set the extra segment to the A-register.
         mov fs, ax                  ; Set the F-segment to the A-register.

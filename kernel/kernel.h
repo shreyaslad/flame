@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include <string.h>
 #include <mm/mm.h>
-#include <mm/pmm.h>
 #include <math.h>
 #include <drivers/screen.h>
 #include <drivers/sound.h>
