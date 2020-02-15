@@ -39,6 +39,17 @@ offset_t vtoof(uint64_t* vaddr) {
     return offset;
 }
 
+// grabs the physical address from an existing virtual address in the page tables
+uint64_t* getpaddr(void* vaddr) {
+    offset_t offset = vtoof((uint64_t*)vaddr);
+    
+    uint64_t* pml4ptr = getPML4();
+    uint64_t* pml3ptr = pml4ptr[offset.pml4off] & RMFLAGS;
+    uint64_t* pml2ptr = pml3ptr[offset.pml3off] & RMFLAGS;
+    
+    return pml2ptr[offset.pml2off] & RMFLAGS;
+}
+
 // maps a virtual address to a physical address
 void vmap(uint64_t* vaddr, uint64_t* paddr) {
     offset_t offset = vtoof(vaddr);
@@ -91,4 +102,6 @@ void vfree(uint64_t* vaddr, size_t bytes) {
     for (uint64_t i = offset.pml2off; i < pages; i++) {
         pml2ptr[i] = 0; // TODO: free page table if necessary
     }
+
+    tlbflush(vaddr);
 }

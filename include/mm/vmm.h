@@ -30,6 +30,8 @@ void setPML4(uint64_t* PML4);
 void invlpg(uint64_t* vaddr);
 void tlbflush();
 
+uint64_t* getpaddr(void* vaddr);
 offset_t vtoof(uint64_t* vaddr); // virtual address to offset
+
 void vmap(uint64_t* vaddr, uint64_t* paddr);
 void vfree(uint64_t* vaddr, size_t bytes);

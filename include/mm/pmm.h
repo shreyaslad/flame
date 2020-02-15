@@ -1,4 +1,4 @@
-/*
+/*  
     pmm.h
     Copyright Shreyas Lad (PenetratingShot) 2020
 
@@ -31,5 +31,5 @@ void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes);
 void memset(void* dest, int val, size_t len);
 
 /* Physical Memory Allocation */
-void* pmalloc(size_t bytes);
-void pmfree(void* ptr, size_t bytes);
+void* pmalloc(size_t pages);
+void pmfree(void* ptr, size_t pages);

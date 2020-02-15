@@ -30,9 +30,7 @@ void memset(void* dest, int val, size_t len) {
  * Private PMM API *
  *******************/
 
-void* pmalloc(size_t bytes) {
-  uint64_t pages = bytes / PAGESIZE;
-
+void* pmalloc(size_t pages) {
   uint64_t firstBit = 0;
   uint64_t concurrentBits = 0;
   uint64_t bitsToAlloc = pages + 1;
@@ -68,4 +66,11 @@ void* pmalloc(size_t bytes) {
 
     return (void*)(firstBit * PAGESIZE);
   
+}
+
+void pmfree(void* ptr, size_t pages) {
+  uint64_t absoluteStartBit = (uint64_t)ptr / PAGESIZE;
+  for (uint64_t i = absoluteStartBit; i < pages; i++) {
+    setAbsoluteBitState(bitmap, i);
+  }
 }

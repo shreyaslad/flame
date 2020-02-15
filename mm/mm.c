@@ -17,7 +17,9 @@ void initMem(multiboot_info_t* mbd) {
 
 /* Allocation / Deallocation */
 void* malloc(size_t bytes) {
-    uint64_t* ret = (uint64_t*)pmalloc(bytes);
+    size_t pages = bytes / PAGESIZE;
+
+    uint64_t* ret = (uint64_t*)pmalloc(pages);
     vmap(ret + KNL_HIGH_VMA, ret);
     ret += KNL_HIGH_VMA;
 
@@ -25,5 +27,6 @@ void* malloc(size_t bytes) {
 }
 
 void free(void* vaddr) {
-    UNUSED(vaddr);
+    vfree((uint64_t*)vaddr, PAGESIZE); // only frees 1 page leave me alone I'm lazy
+    pmfree(getpaddr(vaddr), 1);
 }
