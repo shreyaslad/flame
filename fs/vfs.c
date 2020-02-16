@@ -1,6 +1,11 @@
 /*
-                vfs.c
-                Copyright Shreyas Lad (PenetratingShot) 2020
+    vfs.c
+    Copyright Shreyas Lad (PenetratingShot) 2020
 
-                Virtual File System
+    Virtual File System
 */
+
+#include <fs/vfs.h>
+
+node_t root = {"/", NULL, NULL};
+

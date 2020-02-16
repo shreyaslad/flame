@@ -133,21 +133,19 @@ void read(uint32_t sector, uint32_t sector_high) {
 void readToBuffer(uint32_t sector) {
   uint8_t* ptr = readBuffer;
   read(sector, 0);
-  // sprint("F: ");
+
   for (uint32_t i = 0; i < 256; i++) {
     uint16_t in = readOut[i];
     uint8_t s = (uint8_t)(in >> 8);   // Default is f
     uint8_t f = (uint8_t)(in & 0xff); // Default is s
-    // sprint_uint(first);
-    // sprint(" S: ");
-    // sprint_uint(second);
-    // sprint(" F: ");
+
     *ptr = s;
     ptr++;
+    
     *ptr = f;
     ptr++;
   }
-  // sprint("\n");
+
 }
 
 void read_disk(uint32_t sector) {
