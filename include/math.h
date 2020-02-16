@@ -1,9 +1,9 @@
 /*
-	int.h
-	Copyright Shreyas Lad (PenetratingShot) 2019
-	Licensed under the MIT License
+                                int.h
+                                Copyright Shreyas Lad (PenetratingShot) 2019
+                                Licensed under the MIT License
 
-	Contains functions for handy integer conversions
+                                Contains functions for handy integer conversions
 */
 
 #pragma once

@@ -1,9 +1,9 @@
 /*
-	int.c
-	Copyright Shreyas Lad (PenetratingShot) 2019
-	Licensed under the MIT License
+                                int.c
+                                Copyright Shreyas Lad (PenetratingShot) 2019
+                                Licensed under the MIT License
 
-	Contains functions for handy integer conversions
+                                Contains functions for handy integer conversions
 */
 
 #include <math.h>
@@ -11,45 +11,45 @@
 #include <stdint.h> // idk why it makes me do this
 
 int octalToDecimal(int octal) {
-	int decimal, i = 0;
-	
-	while (octal != 0) {
-		decimal += (octal % 10) * power(8, i);
-		++i;
-		octal /= 10;
-	}
+  int decimal, i = 0;
 
-	i = 1;
-	
-	return decimal;
+  while (octal != 0) {
+    decimal += (octal % 10) * power(8, i);
+    ++i;
+    octal /= 10;
+  }
+
+  i = 1;
+
+  return decimal;
 }
 
 int decimalToOctal(int decimal) {
-	int octal = 0;
-	int i = 1;
+  int octal = 0;
+  int i = 1;
 
-	while (decimal != 0) {
-		octal += (decimal % 8) * i;
-		decimal /= 8;
-		i *= 10;
-	}
+  while (decimal != 0) {
+    octal += (decimal % 8) * i;
+    decimal /= 8;
+    i *= 10;
+  }
 
-	return octal;
+  return octal;
 }
 
 int power(int base, int power) {
-	int result = 1;
+  int result = 1;
 
-	for (int i = 0; i < power; i++) {
-		result *= base;
-	}
+  for (int i = 0; i < power; i++) {
+    result *= base;
+  }
 
-	return result;
+  return result;
 }
 
 uint32_t abs(int num) {
-	if (num < 0)
-		return -num;
+  if (num < 0)
+    return -num;
 
-	return num;
+  return num;
 }

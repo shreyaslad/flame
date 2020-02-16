@@ -1,13 +1,13 @@
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
-#include <function.h>
-#include <drivers/time.h>
-#include "type.h"
 #include "isr.h"
 #include "ports.h"
+#include "type.h"
+#include <drivers/time.h>
+#include <function.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
 
 extern uint32_t tick;
 

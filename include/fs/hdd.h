@@ -1,3 +1,11 @@
+/*
+    hdd.h
+    Copyright Menotdan 2019
+    Copyright Shreyas Lad (PenetratingShot) 2020
+
+    ATA Driver
+*/
+
 #pragma once
 
 #include <stdint.h>
@@ -6,6 +14,46 @@
 #include <fs/hddw.h>
 #include "../../cpu/isr.h"
 #include "../../cpu/ports.h"
+
+#define IDE_MASTER 0
+#define IDE_SLAVE  1
+
+#define IDE_DEFAULT_PRIMARY 0x1F0
+#define IDE_DEFAULT_SECONDARY 0x170
+
+#define ATA_PORT_DATA 0x000
+#define ATA_PORT_ERROR 0x001
+#define ATA_PORT_FEATURES 0x001
+#define ATA_PORT_SCT_COUNT 0x002
+#define ATA_PORT_SCT_NUMBER 0x003
+#define ATA_PORT_CYL_LOW 0x004
+#define ATA_PORT_CYL_HIGH 0x005
+#define ATA_PORT_DRV 0x006
+#define ATA_PORT_STATUS 0x007
+#define ATA_PORT_COMMAND 0x007
+#define ATA_PORT_ALT_STATUS 0x206
+#define ATA_PORT_PRIMARY_DETECT 0x1F3
+#define ATA_PORT_PRIMARY_DRIVE_DETECT 0x1F6
+#define ATA_PORT_PRIMARY_STATUS 0x1F7
+#define ATA_PORT_SECONDARY_DETECT 0x173
+#define ATA_PORT_SECONDARY_DRIVE_DETECT 0x176
+#define ATA_PORT_SECONDARY_STATUS 0x177
+
+#define MAGIC_DETECT 0x88 // Detect controllers
+#define MASTER_DRIVE_DETECT 0xA0 // Master drive detection
+#define SLAVE_DRIVE_DETECT 0xB0 // Slave drive detection
+
+#define ATA_SR_BSY     0x80    // Busy
+#define ATA_SR_DRQ     0x08    // Data request ready
+#define ATA_SR_ERR     0x01    // Error
+
+#define ATA_READ 1
+#define ATA_WRITE 2
+
+#define ATA_PIO28 0
+#define ATA_PIO48 1
+
+#define CMD_GET_SECTORS 0xF8
 
 uint16_t ata_buffer[256];
 uint16_t ata_drive;
@@ -43,20 +91,24 @@ enum PIO {
 };
 
 typedef struct {
+    uint64_t mp;
+    uint64_t sp;
+    uint64_t ms;
+    uint64_t ss;
+    uint64_t mp48;
+    uint64_t sp48;
+    uint64_t ss48;
+    uint64_t ms48;
+    uint64_t nodrives;
+} hdd_t;
+
+typedef struct {
     uint32_t MAX_LBA;
     uint16_t MAX_LBA_HIGH;
     uint8_t HIGH_USED;
 } hdd_size_t;
 
-extern int mp;
-extern int sp;
-extern int ms;
-extern int ss;
-extern int mp48;
-extern int sp48;
-extern int ss48;
-extern int ms48;
-extern int nodrives;
+extern hdd_t hdd;
 
 void clear_ata_buffer();
 int ata_pio28(uint16_t base, uint8_t type, uint16_t drive, uint32_t addr);

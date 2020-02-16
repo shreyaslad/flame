@@ -1,3 +1,11 @@
+/*
+    hddw.c
+    Copyright Menotdan 2019
+    Copyright Shreyas Lad (PenetratingShot) 2020
+
+    ATA Drive I/O
+*/
+
 #pragma once
 
 #include <stdint.h>

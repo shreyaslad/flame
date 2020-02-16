@@ -16,6 +16,7 @@ O_LEVEL = 2
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
 
 flame.iso: kernel32.elf
+	clang-format-9 -style=file -i **/*.[hc]
 	mkdir -p isodir/boot/grub
 	cp kernel32.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
