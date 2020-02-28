@@ -48,4 +48,4 @@ debug: flame.iso kernel.elf
 
 clean:
 	find . -type f -name '*.o' -delete
-	rm -rf kernel32.elf isodir/
+	rm -rf kernel32.elf isodir/ .vscode/
