@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "vga.h": "c",
+        "timer.h": "c"
+    }
+}

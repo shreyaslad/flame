@@ -10,6 +10,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define middle_16(address) (((uint32_t)address) >> 16)
+#define high_32(address) (((uint64_t)address) >> 32)
+
 uint8_t getBit(uint8_t num, uint8_t bit);
 void setBit(uint8_t* num, uint8_t bit, uint8_t state);
 

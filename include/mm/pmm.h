@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <function.h>
+#include <stdlib.h>
 #include <mm/bit.h>
 #include <boot/multiboot.h>
 

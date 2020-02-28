@@ -141,11 +141,10 @@ void readToBuffer(uint32_t sector) {
 
     *ptr = s;
     ptr++;
-    
+
     *ptr = f;
     ptr++;
   }
-
 }
 
 void read_disk(uint32_t sector) {
@@ -162,7 +161,7 @@ void read_disk(uint32_t sector) {
     temp++;
     good += (uint16_t)(*temp << 8);
     temp++;
-    hex_to_ascii(good, str2);
+    htoa(good, str2);
     kprint(str2);
     kprint(" ");
     for (int i = 0; i < 32; i++) {

@@ -9,40 +9,29 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <string.h>
 
 // include the fs later
 
-typedef char* (*read_t)();
-typedef void (*write_t)(char*);
-typedef void (*open_t)(char*);
-typedef void (*close_t)(char*);
+typedef char* (*read_t)(char*);
+typedef void (*write_t)();
 
-typedef struct file {
+typedef struct node_t {
   char* name;
+  char* path;
   uint64_t perms;
   uint64_t size;
+  uint64_t creationtime;
 
-  read_t read;
-  write_t write;
-  open_t open;
-  close_t close;
-} file_t;
-
-typedef struct dir {
-  char* name;
-  uint64_t perms;
+  read_t rfunc;
+  write_t wfunc;
   
-  struct dir* childDirs;
-  struct file* childFiles;
-} dir_t;
-
-typedef struct node {
-  char* name;
-
-  struct dir* childDirs;
-  struct file* childFiles;
+  uint64_t type; // 0: Directory | 1. File
+  uint64_t nchild;
+  struct node_t* parent;
+  struct node_t** children;
 } node_t;
 
-extern char* currentDirPath;
+extern char* currentPath;
 
-void createFile(char* filename);
+void initDirPath();

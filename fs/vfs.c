@@ -7,5 +7,7 @@
 
 #include <fs/vfs.h>
 
-node_t root = {"/", NULL, NULL};
+node_t root = {"/", "/", 777, 0, 0, 0, 0, NULL, NULL, NULL, NULL};
+char* currentPath = NULL;
 
+void initDirPath() { currentPath = root.name; }

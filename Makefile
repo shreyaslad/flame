@@ -1,8 +1,9 @@
-.PHONY: run clean
+.PHONY: run clean debug
 
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c lib/*.c kernel/commands/*.c fs/*.c mm/*.c )
-HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h kernel/commands/*h fs/*h mm/*.h )
-OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o	} 
+C_SOURCES = $(shell find ./ -type f -name '*.c')
+HEADERS = $(shell find ./ -type f -name '*.h')
+ASM_SOURCES = $(shell find ./ -type f -name '*.asm')
+OBJ = ${C_SOURCES:.c=.o} ${ASM_SOURCES:.asm=.o} 
 
 ARCH=x86_64
 CROSS=/opt/cross/bin
@@ -10,7 +11,7 @@ CROSS=/opt/cross/bin
 CC = ${CROSS}/${ARCH}-elf-gcc
 GDB = gdb
 CFLAGS = -ggdb -nostdlib -fno-stack-protector -nostartfiles -nodefaultlibs \
-		 -Wall -Wextra -Wno-unused-function -Wno-unused-variable -Wpedantic -ffreestanding -ggdb -std=gnu11 -mcmodel=kernel
+		 -Wall -Wextra -Wno-unused-function -Wno-unused-variable -Wpedantic -ffreestanding -std=gnu11 -mcmodel=kernel
 O_LEVEL = 2
 
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
@@ -29,20 +30,14 @@ kernel.bin: kernel32.elf
 kernel32.elf: kernel.elf
 	objcopy -O elf32-i386 kernel.elf kernel32.elf
 
-kernel.elf: startup64.o boot.o ${OBJ}
+kernel.elf: ${OBJ}
 	${CC} -Wl,-z,max-page-size=0x1000 -nostdlib -o $@ -T linker.ld $^
 
-cpu/interrupt.o: cpu/interrupt.asm
-	nasm -f elf64 $< -o $@
-
 %.o: %.c ${HEADERS}
-	${CC} -Iinclude ${CFLAGS} -c $< -o $@
+	${CC} -Iinclude -Iinclude/libc ${CFLAGS} -c $< -o $@
 
-boot.o: boot.asm
-	nasm -f elf64 boot.asm -o boot.o
-
-startup64.o: startup64.asm
-	nasm -f elf64 startup64.asm -o startup64.o
+%.o: %.asm
+	nasm -f elf64 $< -o $@
 
 run: flame.iso # -serial stdio
 	qemu-system-${ARCH} -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
@@ -52,6 +47,5 @@ debug: flame.iso kernel.elf
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 clean:
-	rm -rf kernel.bin *.dis *.o
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o lib/*.o fs/*.o mm/*.o
-	rm -rf flame.bin flame.elf kernel32.elf isodir/ .vscode/
+	find . -type f -name '*.o' -delete
+	rm -rf kernel32.elf

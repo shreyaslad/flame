@@ -10,11 +10,12 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <mm/mm.h>
+#include <stdlib.h>
 #include <math.h>
-#include <drivers/time.h>
-#include <drivers/serial.h>
-#include <drivers/screen.h>
+#include <string.h>
+#include <devices/time.h>
+#include <devices/screen/serial.h>
+#include <devices/screen/screen.h>
 #include <fs/hdd.h>
 
 uint16_t readOut[256];

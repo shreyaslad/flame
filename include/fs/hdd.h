@@ -10,10 +10,10 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <drivers/time.h>
+#include <devices/time.h>
 #include <fs/hddw.h>
-#include "../../cpu/isr.h"
-#include "../../cpu/ports.h"
+#include <sys/int/isr.h>
+#include <sys/ports.h>
 
 #define IDE_MASTER 0
 #define IDE_SLAVE  1
