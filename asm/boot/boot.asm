@@ -6,6 +6,7 @@
 [extern paging_setup]
 
 %define KNL_HIGH_VMA 0xFFFFFFFF80000000
+%define HIGH_VMA 0xFFFF800000000000
 
 ALIGN_MULTIBOOT equ 1<<0
 MEMINFO equ 1<<1
@@ -76,37 +77,19 @@ section .bss
 
 section .data
     align 4096
-    paging_directory1:
-        gen_pd_2mb 0, 12, 500
-
-    paging_directory2:
-        gen_pd_2mb 0, 512, 0
-
-    paging_directory3:
-        gen_pd_2mb 0x0, 512, 0
-
-    paging_directory4:
-        gen_pd_2mb 0x40000000, 512, 0
-
     pml4t:
-        dq (pdpt - KNL_HIGH_VMA + 0x3)
+        dq (pml3 - KNL_HIGH_VMA) + 0x3
         times 255 dq 0
-        dq (pdpt2 - KNL_HIGH_VMA + 0x3)
+        dq (pml3 - KNL_HIGH_VMA) + 0x3
         times 254 dq 0
-        dq (pdpt3 - KNL_HIGH_VMA + 0x3)
-
-    pdpt:
-        dq (paging_directory1 - KNL_HIGH_VMA + 0x3)
-        times 511 dq 0
-
-    pdpt2:
-        dq (paging_directory2 - KNL_HIGH_VMA + 0x3)
-        times 511 dq 0
-
-    pdpt3:
-        times 510 dq 0
-        dq (paging_directory3 - KNL_HIGH_VMA + 0x3)
-        dq (paging_directory4 - KNL_HIGH_VMA + 0x3)
+        dq (pml3 - KNL_HIGH_VMA) + 0x3
+    pml3:
+        dq (pml2 - KNL_HIGH_VMA) + 0x3
+        times 509 dq 0
+        dq (pml2 - KNL_HIGH_VMA) + 0x3
+        dq 0
+    pml2:
+        gen_pd_2mb 0, 512, 0
 
 section .text
     [bits 32]
@@ -121,7 +104,6 @@ section .text
 
         mov eax, cr4                 ; Set the A-register to control register 4.
         or eax, 1 << 5               ; Set the PAE-bit, which is the 6th bit (bit 5).
-        ;or eax, 1 << 4              ; Set the PSE-bit, which is the 5th bit (bit 4).
         mov cr4, eax                 ; Set control register 4 to the A-register.
 
         ; Switch to long mode

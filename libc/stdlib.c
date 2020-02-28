@@ -1,8 +1,8 @@
 /*
-    stdlib.c
-    Copyright Shreyas Lad (PenetratingShot) 2020
+  stdlib.c
+  Copyright Shreyas Lad (PenetratingShot) 2020
 
-    Standard Library
+  Standard Library
 */
 
 #include <libc/stdlib.h>
@@ -30,13 +30,19 @@ void memset(void* dest, int val, size_t len) {
 
 /* Allocation / Deallocation */
 void* malloc(size_t bytes) {
-  size_t pages = bytes / PAGESIZE;
+  uint64_t pages = bytes / PAGESIZE;
+
+  // stupid hack
+  if (bytes > 0 && pages == 0) {
+    pages++;
+  }
 
   uint64_t* ret = (uint64_t*)pmalloc(pages);
-  vmap(ret + KNL_HIGH_VMA, ret);
-  ret += KNL_HIGH_VMA;
 
-  return (void*)ret;
+  vmap(ret + 0xFFFF800000000000, ret, pages);
+  ret = (uint64_t)ret + 0xFFFF800000000000;
+
+  return ret;
 }
 
 void free(void* vaddr) {

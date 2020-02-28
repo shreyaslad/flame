@@ -22,7 +22,13 @@ void userInput(char* input) {
 
     formatTime();
 
-    printf("flameOS\nIt is %d.\n", second)
+    printf("flameOS\nIt is %d.\n", second);
+  } else if (strcmp(input, "testmem") == 0) {
+    uint64_t* address = malloc(64);
+    printf("Address 1: %x\n", address);
+
+    address = malloc(64);
+    printf("Address 2: %x\n", address);
   } else if (strcmp(input, "neofetch") == 0) {
     neofetch(largestUseableMem);
   } else if (strcmp(input, "uptime") == 0) {

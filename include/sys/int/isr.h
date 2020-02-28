@@ -1,11 +1,11 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdio.h>
 #include <sys/int/idt.h>
 #include <sys/ports.h>
 #include <sys/timer.h>
 #include <devices/keyboard.h>
-#include <devices/screen/screen.h>
 #include <fs/hdd.h>
 #include <fs/hddw.h>
 #include <mm/bit.h>
