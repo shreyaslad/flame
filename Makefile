@@ -1,8 +1,8 @@
 .PHONY: run clean debug
 
-C_SOURCES = $(shell find ./ -type f -name '*.c')
-HEADERS = $(shell find ./ -type f -name '*.h')
-ASM_SOURCES = $(shell find ./ -type f -name '*.asm')
+C_SOURCES = $(shell find . -type f -name '*.c')
+HEADERS = $(shell find . -type f -name '*.h')
+ASM_SOURCES = $(shell find . -type f -name '*.asm')
 OBJ = ${C_SOURCES:.c=.o} ${ASM_SOURCES:.asm=.o} 
 
 ARCH=x86_64

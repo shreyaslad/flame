@@ -22,18 +22,7 @@ void userInput(char* input) {
 
     formatTime();
 
-    kprint("flameOS\n");
-
-    kprint("It is ");
-    kprint(format);
-    kprint(".");
-  } else if (strcmp(input, "testMem") == 0) {
-    uint64_t* addr = (uint64_t*)malloc(35);
-    sprint("Addr: ");
-    sprint_uint((uint64_t)addr);
-    sprint("\n");
-  } else if (strcmp(input, "res") == 0) {
-    getResolution();
+    printf("flameOS\nIt is %d.\n", second)
   } else if (strcmp(input, "neofetch") == 0) {
     neofetch(largestUseableMem);
   } else if (strcmp(input, "uptime") == 0) {

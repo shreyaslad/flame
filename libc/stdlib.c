@@ -17,6 +17,17 @@ void initMem(multiboot_info_t* mbd) {
   memset(bitmap, 0, (totalmem * 1000) / PAGESIZE / 8);
 }
 
+void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes) {
+  for (uint32_t i = 0; i < nbytes; i++) {
+    *(dest + i) = *(source + i);
+  }
+}
+
+void memset(void* dest, int val, size_t len) {
+  for (uint8_t* temp = dest; len--;)
+    *temp++ = val;
+}
+
 /* Allocation / Deallocation */
 void* malloc(size_t bytes) {
   size_t pages = bytes / PAGESIZE;

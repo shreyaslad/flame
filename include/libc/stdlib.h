@@ -20,5 +20,8 @@ extern uint64_t KNL_HIGH_VMA;
 
 void initMem(multiboot_info_t* mbd);
 
+void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes);
+void memset(void* dest, int val, size_t len);
+
 void* malloc(size_t bytes);
 void free(void* vaddr);

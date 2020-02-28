@@ -12,7 +12,6 @@
 #include <mm/pmm.h>
 
 #define TABLESIZE 0x1000
-#define PAGESIZE 2000000
 
 #define RMFLAGS 0x000FFFFFFFFFF000
 #define TABLEPRESENT (1 << 0)

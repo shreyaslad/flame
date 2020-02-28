@@ -1,8 +1,8 @@
 /*
-                pmm.c
-                Copyright Shreyas Lad (PenetratingShot) 2020
+  pmm.c
+  Copyright Shreyas Lad (PenetratingShot) 2020
 
-                Physical Memory Manager
+  Physical Memory Manager
 */
 
 #include <mm/pmm.h>
@@ -12,20 +12,6 @@ uint64_t* bitmap = (uint64_t*)&__kernel_end;
 uint64_t totalmem;
 uint64_t bitmapEntries;
 
-/*********************
- * Public Memory API *
- *********************/
-void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes) {
-  for (uint32_t i = 0; i < nbytes; i++) {
-    *(dest + i) = *(source + i);
-  }
-}
-
-void memset(void* dest, int val, size_t len) {
-  for (uint8_t* temp = dest; len--;)
-    *temp++ = val;
-}
-
 /*******************
  * Private PMM API *
  *******************/
@@ -33,7 +19,6 @@ void memset(void* dest, int val, size_t len) {
 void* pmalloc(size_t pages) {
   uint64_t firstBit = 0;
   uint64_t concurrentBits = 0;
-  uint64_t bitsToAlloc = pages + 1;
 
   uint64_t totalBitsInBitmap = pages * 64;
 
@@ -45,7 +30,7 @@ void* pmalloc(size_t pages) {
 
       concurrentBits++;
 
-      if (bitsToAlloc == concurrentBits) {
+      if (pages == concurrentBits) {
         goto alloc;
       }
     } else {
@@ -60,7 +45,7 @@ void* pmalloc(size_t pages) {
 
 alloc:
   // iterate over bits now that a block has been found
-  for (uint64_t i = firstBit; i < bitsToAlloc; i++) {
+  for (uint64_t i = firstBit; i < firstBit + pages; i++) {
     setAbsoluteBitState(bitmap, i);
   }
 

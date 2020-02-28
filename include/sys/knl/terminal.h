@@ -14,5 +14,6 @@
 #include <devices/time.h>
 #include <fs/hdd.h>
 #include <fs/hddw.h>
+#include <mm/pmm.h>
 
 void userInput(char* input);
