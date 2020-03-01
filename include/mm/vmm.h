@@ -38,7 +38,7 @@ void tlbflush();
 uint64_t* getpaddr(void* vaddr);
 offset_t vtoof(uint64_t* vaddr); // virtual address to offset
 
-void vmap(uint64_t* vaddr, uint64_t paddr, size_t pages);
+void vmap(uint64_t* vaddr, uint64_t* paddr, size_t pages);
 void vfree(uint64_t* vaddr, size_t pages);
 
 void test();

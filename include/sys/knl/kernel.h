@@ -12,4 +12,5 @@
 #include <boot/multiboot.h>
 #include <mm/pmm.h>
 #include <devices/screen/screen.h>
-#include <devices/time.h>
+#include <time.h>
+#include <fs/vfs.h>

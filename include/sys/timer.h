@@ -5,9 +5,9 @@
 #include <string.h>
 #include <sys/int/isr.h>
 #include <sys/ports.h>
-#include <devices/time.h>
+#include <time.h>
 
-extern uint32_t tick;
+extern uint64_t tick;
 
 void init_timer(uint32_t freq);
 void wait(uint32_t ticks);

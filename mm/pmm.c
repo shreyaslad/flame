@@ -19,8 +19,7 @@ uint64_t bitmapEntries;
 void* pmalloc(size_t pages) {
   uint64_t firstBit = 0;
   uint64_t concurrentBits = 0;
-
-  uint64_t totalBitsInBitmap = pages * 64;
+  uint64_t totalBitsInBitmap = ((totalmem * 1000) / PAGESIZE) * 64;
 
   for (uint64_t i = 0; i < totalBitsInBitmap; i++) {
     if (getAbsoluteBitState(bitmap, i) == 0) {
@@ -53,8 +52,25 @@ alloc:
 }
 
 void pmfree(void* ptr, size_t pages) {
-  uint64_t absoluteStartBit = (uint64_t)ptr / PAGESIZE;
-  for (uint64_t i = absoluteStartBit; i < pages; i++) {
-    setAbsoluteBitState(bitmap, i);
+  uint64_t firstBit = (uint64_t)ptr / PAGESIZE;
+  uint64_t totalBitsInBitmap = ((totalmem * 1000) / PAGESIZE) * 64;
+
+  for (uint64_t i = 0; i < totalBitsInBitmap; i++) {
+    if (i == firstBit) {
+      for (uint64_t j = 0; j < pages; j++) {
+        setAbsoluteBitState(bitmap, j);
+      }
+      goto done;
+    }
   }
+
+done:
+  return;
+}
+
+void* pmrealloc(uint64_t* ptr, size_t oldSize, size_t newSize) {
+  uint64_t* newBuffer = (uint64_t*)pmalloc(newSize);
+  memcpy(newBuffer, ptr, oldSize);
+  pmfree(ptr, oldSize);
+  return newBuffer;
 }

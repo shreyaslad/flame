@@ -5,11 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <devices/screen/colors.h>
-#include <devices/time.h>
+#include <time.h>
 #include <devices/screen/serial.h>
 #include <devices/keyboard.h>
-#include <fs/hdd.h>
-#include <fs/hddw.h>
 #include <sys/ports.h>
 
 // VGA Output Buffer

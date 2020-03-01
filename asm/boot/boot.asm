@@ -34,7 +34,7 @@ section .multiboot
 
 section .data
 
-    gdt:                           ; Global Descriptor Table (64-bit).
+    gdt:                               ; Global Descriptor Table (64-bit).
       .null: equ $ - gdt                ; The null descriptor.
         dw 0xFFFF                       ; Limit (low).
         dw 0                            ; Base (low).
@@ -42,25 +42,38 @@ section .data
         db 0                            ; Access.
         db 0                            ; Granularity.
         db 0                            ; Base (high).
-      .code: equ $ - gdt                ; The code descriptor.
+      .code: equ $ - gdt               ; The code descriptor.
         dw 0                            ; Limit (low).
         dw 0                            ; Base (low).
         db 0                            ; Base (middle)
         db 10011010b                    ; Access (exec/read).
         db 10101111b                    ; Granularity, 64 bits flag, limit19:16.
         db 0                            ; Base (high).
-      .data: equ $ - gdt                ; The data descriptor.
+      .data: equ $ - gdt               ; The data descriptor.
         dw 0                            ; Limit (low).
         dw 0                            ; Base (low).
         db 0                            ; Base (middle)
         db 10010010b                    ; Access (read/write).
         db 00000000b                    ; Granularity.
         db 0                            ; Base (high).
-
-      .pointer:                         ; The GDT-pointer.
+      .usercode: equ $ - gdt           ; The userspace code descriptor
+        dw 0                            ; Limit (low).
+        dw 0                            ; Base (low).
+        db 0                            ; Base (middle)
+        db 11111010b                    ; Access (exec/read).
+        db 10101111b                    ; Granularity, 64 bits flag, limit19:16.
+        db 0                            ; Base (high).
+      .userdata: equ $ - gdt           ; The userspace data descriptor
+        dw 0                            ; Limit (low).
+        dw 0                            ; Base (low).
+        db 0                            ; Base (middle)
+        db 10010010b                    ; Access (read/write).
+        db 00000000b                    ; Granularity.
+        db 0                            ; Base (high).
+      .pointer:                        ; The GDT-pointer.
         dw $ - gdt - 1                  ; Limit.
         dq gdt                          ; Base.
-      .pointer32:                       ; The GDT-pointer for 32 bit mode.
+      .pointer32:                      ; The GDT-pointer for 32 bit mode.
         dw $ - gdt - 1                  ; Limit.
         dd gdt - KNL_HIGH_VMA           ; Base.
 
@@ -71,9 +84,11 @@ section .bss
     multiboot_header_pointer:
         resb 16
 
-    stack_bottom:
-        resb 65536
-    stack_top:
+    global kernel_stack_top
+    global kernel_stack_bottom
+    kernel_stack_bottom:
+        resb 4096
+    kernel_stack_top:
 
 section .data
     align 4096
@@ -129,8 +144,8 @@ section .text
         mov fs, ax                  ; Set the F-segment to the A-register.
         mov gs, ax                  ; Set the G-segment to the A-register.
         mov ss, ax                  ; Set the stack segment to the A-register.
-        mov rsp, stack_top          ; Set the stack up
+        mov rsp, kernel_stack_top   ; Setup the kernel stack. We will switch to the user stack in kmain
 
-        ; long jump
+        ; far jump
         mov rax, _startup64
         jmp rax

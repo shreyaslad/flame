@@ -11,9 +11,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <devices/time.h>
-#include <fs/hdd.h>
-#include <fs/hddw.h>
+#include <time.h>
 #include <mm/pmm.h>
+#include <fs/vfs.h>
 
 void userInput(char* input);

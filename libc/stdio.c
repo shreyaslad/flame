@@ -86,3 +86,20 @@ void sprintf(char* message, ...) {
 
   sprint(buffer);
 }
+
+uint64_t open(char* filename, uint64_t action) {
+  // check if the action the user wants to perform is allowed by the node
+  ; // find the struct by parsing the filename
+  return 0;
+
+  UNSUED(filename);
+  UNUSED(action);
+}
+
+char* fread(uint64_t fd, uint64_t bytes) {
+  asm("syscall" ::"a"(1), "b"(fd), "c"(bytes));
+  return NULL;
+
+  UNUSED(fd);
+  UNUSED(bytes);
+}

@@ -49,8 +49,8 @@ uint64_t* getpaddr(void* vaddr) {
 }
 
 // maps a virtual address to a physical address
-void vmap(uint64_t* vaddr, uint64_t paddr, size_t pages) {
-  offset_t offset = vtoof(paddr);
+void vmap(uint64_t* vaddr, uint64_t* paddr, size_t pages) {
+  offset_t offset = vtoof(vaddr);
 
   uint64_t* pml4ptr = (uint64_t*)((size_t)((size_t)getPML4() + HIGH_VMA));
   uint64_t pml3phys = NULL;

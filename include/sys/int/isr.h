@@ -6,8 +6,6 @@
 #include <sys/ports.h>
 #include <sys/timer.h>
 #include <devices/keyboard.h>
-#include <fs/hdd.h>
-#include <fs/hddw.h>
 #include <mm/bit.h>
 
 #define SPEED 1193

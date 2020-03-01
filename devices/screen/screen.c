@@ -215,15 +215,13 @@ void drawRect(uint8_t color) {
 }
 
 void neofetch(uint64_t mem) {
-  drive_scan();
   clear();
-  read_rtc();
-  // formatTime();
+  formatTime();
 
   kprint("flameOS\n");
 
   kprint("It is ");
-  kprint(second);
+  kprint(format);
   kprint(".");
   kprint("\nuser@flameOS # neofetch");
 
@@ -276,7 +274,7 @@ void neofetch(uint64_t mem) {
   kprint_int(mem / 1000000);
   kprint("Mb");
 
-  offset = get_offset(currentCol + 35, currentRow - 9);
+  /*offset = get_offset(currentCol + 35, currentRow - 9);
   set_cursor_offset(offset);
   kprint_color("Drive Status: ",
                vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
@@ -302,7 +300,7 @@ void neofetch(uint64_t mem) {
     kprint_color(" 4 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_GREEN));
   } else {
     kprint_color(" 4 ", vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_LIGHT_RED));
-  }
+  }*/
 
   offset = get_offset(currentCol + 35, currentRow - 8);
   set_cursor_offset(offset);

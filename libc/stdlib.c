@@ -17,17 +17,20 @@ void initMem(multiboot_info_t* mbd) {
   memset(bitmap, 0, (totalmem * 1000) / PAGESIZE / 8);
 }
 
-void memcpy(uint8_t* source, uint8_t* dest, uint32_t nbytes) {
-  for (uint32_t i = 0; i < nbytes; i++) {
-    *(dest + i) = *(source + i);
+void memset(void* bufptr, int value, uint64_t size) {
+  unsigned char* buf = (unsigned char*)bufptr;
+  for (uint64_t i = 0; i < size; i++) {
+    buf[i] = value;
   }
 }
 
-void memset(void* dest, int val, size_t len) {
-  for (uint8_t* temp = dest; len--;)
-    *temp++ = val;
+void memcpy(void* restrict dest, void* restrict src, uint64_t size) {
+  const unsigned char* src2 = (const unsigned char*)src;
+  unsigned char* dst = (unsigned char*)dest;
+  for (uint64_t i = 0; i < size; i++) {
+    dst[i] = src2[i];
+  }
 }
-
 /* Allocation / Deallocation */
 void* malloc(size_t bytes) {
   uint64_t pages = bytes / PAGESIZE;
@@ -40,7 +43,7 @@ void* malloc(size_t bytes) {
   uint64_t* ret = (uint64_t*)pmalloc(pages);
 
   vmap(ret + 0xFFFF800000000000, ret, pages);
-  ret = (uint64_t)ret + 0xFFFF800000000000;
+  ret = (uint64_t*)((uint64_t)ret + 0xFFFF800000000000);
 
   return ret;
 }

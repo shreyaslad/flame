@@ -1,6 +1,6 @@
 #include <sys/timer.h>
 
-uint32_t tick = 0;
+uint64_t tick = 0;
 
 static void timer_callback(registers_t* regs) {
   tick++;
