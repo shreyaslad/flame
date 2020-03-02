@@ -68,7 +68,7 @@ done:
   return;
 }
 
-void* pmrealloc(uint64_t* ptr, size_t oldSize, size_t newSize) {
+void* pmrealloc(void* ptr, size_t oldSize, size_t newSize) {
   uint64_t* newBuffer = (uint64_t*)pmalloc(newSize);
   memcpy(newBuffer, ptr, oldSize);
   pmfree(ptr, oldSize);

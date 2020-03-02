@@ -47,8 +47,7 @@ typedef struct node_t {
 extern char* currentPath;
 extern node_t* root;
 
-node_t* createNode(char* name, uint64_t perms, type_t type);
-void addChild(node_t* parent, node_t* child);
+node_t* createNode(char* name, uint64_t perms, type_t type, node_t* parent);
 node_t* vfsresolve(char* filepath);
 void createNodeInPath(char* path, node_t* newNode);
 

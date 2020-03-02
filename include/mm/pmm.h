@@ -31,4 +31,4 @@ typedef struct {
 /* Physical Memory Allocation */
 void* pmalloc(size_t pages);
 void pmfree(void* ptr, size_t pages);
-void* pmrealloc(uint64_t* ptr, size_t oldSize, size_t newSize);
+void* pmrealloc(void* ptr, size_t oldSize, size_t newSize);

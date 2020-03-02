@@ -28,15 +28,17 @@ void initVFS() {
 
 node_t* createNode(char* name, uint64_t perms, type_t type, node_t* parent) {
   node_t* node = (node_t*)malloc(sizeof(node_t));
-  char* path = (char*)malloc(sizeof(char) * strlen(name) + 2);
+
+  node->path = (char*)malloc(sizeof(char) * strlen(name) + 2);
+  memset(node->path, 0, sizeof(char) * strlen(name) + 2);
+
   if (type == DIR) {
-    path = strcat(parent->path, strcat(name, "/"));
+    node->path = strcat(parent->path, strcat(name, "/"));
   } else {
-    path = strcat(parent->path, name);
+    node->path = strcat(parent->path, name);
   }
 
   node->name = name;
-  node->path = path;
   node->perms = perms;
   node->size = 0;
   node->creationtime = tick;
@@ -44,21 +46,20 @@ node_t* createNode(char* name, uint64_t perms, type_t type, node_t* parent) {
   node->wfunc = vfswrite;
   node->type = type;
   node->nchild = 0;
-  node->parent = NULL;
+  node->parent = parent;
   node->children = NULL;
-  return node;
-}
 
-void addChild(node_t* parent, node_t* child) {
   parent->children =
       (node_t**)pmrealloc(parent->children, parent->nchild, parent->nchild + 1);
   memset(parent->children[parent->nchild], 0, sizeof(node_t*));
-  parent->children[parent->nchild] = child;
+  parent->children[parent->nchild] = node;
   parent->nchild++;
+
+  return node;
 }
 
 node_t* vfsresolve(char* filepath) {
-  uint64_t items = strnchr(filepath, "/");
+  uint64_t items = strnchr(filepath, '/');
 
   const char* delim = "/";
   char* token = strtok(filepath, delim);
@@ -81,7 +82,7 @@ node_t* vfsresolve(char* filepath) {
 
 // the item to be created is not in the path
 void createNodeInPath(char* path, node_t* newNode) {
-  uint64_t items = strnchr(path, "/");
+  uint64_t items = strnchr(path, '/');
 
   const char* delim = "/";
   char* token = strtok(path, delim);
@@ -109,12 +110,12 @@ char* vfsread(node_t* node, uint64_t bytes) {
 
   // call fs implementation
   return "a";
-  UNNUSED(bytes);
+  UNUSED(bytes);
 }
 
 uint64_t vfswrite(node_t* node, char* text) {
   if (node->type == DIR) {
-    return NULL;
+    return 0;
   }
 
   node->size += strlen(text);
