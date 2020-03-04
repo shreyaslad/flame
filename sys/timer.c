@@ -4,13 +4,30 @@ uint64_t tick = 0;
 
 static void timer_callback(registers_t* regs) {
   tick++;
-  UNUSED(regs);
+
+  thread_t* currentThread = getCurrentThread();
+
+  // TODO: use the thread states somewhere in this algorithm
+
+  if (currentThread == NULL) {
+    // load an idle thread and iret
+  } else {
+    currentThread->regs = regs;
+
+    thread_t* newThread = getNextThread();
+    registers_t* newRegs =
+        createRegs(newThread->regs->rip, newThread->regs->rsp);
+
+    setCurrentThread(newThread);
+
+    proc_t* newProcess = newThread->process;
+    setCurrentProcess(newProcess);
+    setPML4(newProcess->pml4);
+
+    // setup the stack and iret here
+  }
 }
 
-/*****************************/
-/* asm volatile(sti);        */
-/* init_timer(50);           */
-/*****************************/
 void init_timer(uint32_t freq) {
   register_interrupt_handler(IRQ0, timer_callback);
 

@@ -306,7 +306,7 @@ void neofetch(uint64_t mem) {
   set_cursor_offset(offset);
   kprint_color("Clock Speed: ",
                vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
-  kprint_int(SPEED / 1193);
+  kprint_int(DIVISOR / 1193);
   kprint(" Mhz");
 
   offset = get_offset(currentCol + 35, currentRow - 6);

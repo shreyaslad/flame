@@ -13,13 +13,12 @@ char* currentPath = "/";
 void initVFS() {
   root = (node_t*)malloc(sizeof(node_t));
 
-  root->name = "root";
-  root->path = "/";
+  root->name = "/";
   root->perms = 777;
   root->size = 0;
   root->creationtime = tick;
-  root->rfunc = vfsread;
-  root->wfunc = vfswrite;
+  root->rfunc = vfsRead;
+  root->wfunc = vfsWrite;
   root->type = DIR;
   root->nchild = 0;
   root->parent = NULL;
@@ -29,21 +28,12 @@ void initVFS() {
 node_t* createNode(char* name, uint64_t perms, type_t type, node_t* parent) {
   node_t* node = (node_t*)malloc(sizeof(node_t));
 
-  node->path = (char*)malloc(sizeof(char) * strlen(name) + 2);
-  memset(node->path, 0, sizeof(char) * strlen(name) + 2);
-
-  if (type == DIR) {
-    node->path = strcat(parent->path, strcat(name, "/"));
-  } else {
-    node->path = strcat(parent->path, name);
-  }
-
   node->name = name;
   node->perms = perms;
   node->size = 0;
   node->creationtime = tick;
-  node->rfunc = vfsread;
-  node->wfunc = vfswrite;
+  node->rfunc = vfsRead;
+  node->wfunc = vfsWrite;
   node->type = type;
   node->nchild = 0;
   node->parent = parent;
@@ -58,7 +48,7 @@ node_t* createNode(char* name, uint64_t perms, type_t type, node_t* parent) {
   return node;
 }
 
-node_t* vfsresolve(char* filepath) {
+node_t* vfsResolve(char* filepath) {
   uint64_t items = strnchr(filepath, '/');
 
   const char* delim = "/";
@@ -103,7 +93,7 @@ void createNodeInPath(char* path, node_t* newNode) {
   }
 }
 
-char* vfsread(node_t* node, uint64_t bytes) {
+char* vfsRead(node_t* node, uint64_t bytes) {
   if (node->type == DIR) {
     return NULL;
   }
@@ -113,7 +103,7 @@ char* vfsread(node_t* node, uint64_t bytes) {
   UNUSED(bytes);
 }
 
-uint64_t vfswrite(node_t* node, char* text) {
+uint64_t vfsWrite(node_t* node, char* text) {
   if (node->type == DIR) {
     return 0;
   }

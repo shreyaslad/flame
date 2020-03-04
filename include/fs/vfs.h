@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/timer.h>
-#include <sys/syscall.h>
+#include <proc/syscall.h>
 #include <mm/pmm.h>
 
 // include the fs later
@@ -30,7 +30,6 @@ typedef uint64_t (*write_t)(node_t*, char*);
 
 typedef struct node_t {
   char* name;
-  char* path;
   uint64_t perms;
   uint64_t size;
   uint64_t creationtime;
@@ -47,9 +46,11 @@ typedef struct node_t {
 extern char* currentPath;
 extern node_t* root;
 
+void initVFS();
+
 node_t* createNode(char* name, uint64_t perms, type_t type, node_t* parent);
-node_t* vfsresolve(char* filepath);
+node_t* vfsResolve(char* filepath);
 void createNodeInPath(char* path, node_t* newNode);
 
-char* vfsread(node_t* node, uint64_t bytes);
-uint64_t vfswrite(node_t* node, char* text);
+char* vfsRead(node_t* node, uint64_t bytes);
+uint64_t vfsWrite(node_t* node, char* text);

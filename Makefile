@@ -10,8 +10,27 @@ CROSS=/opt/cross/bin
 
 CC = ${CROSS}/${ARCH}-elf-gcc
 GDB = gdb
-CFLAGS = -ggdb -nostdlib -fno-stack-protector -nostartfiles -nodefaultlibs \
-		 -Wall -Wextra -Wno-unused-function -Wno-unused-variable -Wpedantic -ffreestanding -std=gnu11 -mcmodel=kernel
+CFLAGS = -ggdb \
+		 -nostdlib \
+		 -fno-stack-protector \
+		 -nostartfiles \
+		 -nodefaultlibs \
+		 -Wall \
+		 -Wextra \
+		 -Wno-unused-function \
+		 -Wno-unused-variable \
+		 -Wpedantic \
+		 -ffreestanding \
+		 -std=gnu11 \
+		 -mcmodel=kernel
+		 
+QEMUFLAGS = -serial stdio \
+			-soundhw pcspk -m 1G \
+			-device isa-debug-exit,iobase=0xf4,iosize=0x04 \
+			-boot menu=on \
+			-cdrom flame.iso \
+			-hda flamedisk.img \
+			--enable-kvm
 O_LEVEL = 2
 
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
@@ -40,10 +59,10 @@ kernel.elf: ${OBJ}
 	nasm -f elf64 $< -o $@
 
 run: flame.iso # -serial stdio
-	qemu-system-${ARCH} -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img
+	qemu-system-${ARCH} ${QEMUFLAGS}
 
 debug: flame.iso kernel.elf
-	qemu-system-${ARCH} -s -S -d guest_errors,int -serial stdio -soundhw pcspk -m 1G -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot menu=on -cdrom flame.iso -hda flamedisk.img &
+	qemu-system-${ARCH} -s -S -d guest_errors,int ${QEMUFLAGS} &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 clean:

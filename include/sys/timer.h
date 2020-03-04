@@ -3,9 +3,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 #include <sys/int/isr.h>
 #include <sys/ports.h>
-#include <time.h>
+#include <proc/thread.h>
+#include <mm/vmm.h>
 
 extern uint64_t tick;
 
