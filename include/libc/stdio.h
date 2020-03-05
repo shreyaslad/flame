@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <proc/syscall.h>
 #include <devices/screen/screen.h>
 #include <devices/screen/serial.h>
 

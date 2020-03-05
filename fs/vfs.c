@@ -93,7 +93,7 @@ void createNodeInPath(char* path, node_t* newNode) {
   }
 }
 
-char* vfsRead(node_t* node, uint64_t bytes) {
+char* vfsRead(node_t* node, char** buffer, uint64_t bytes) {
   if (node->type == DIR) {
     return NULL;
   }

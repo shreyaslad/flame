@@ -14,3 +14,6 @@
 #include <devices/screen/screen.h>
 #include <time.h>
 #include <fs/vfs.h>
+#include <fs/fd.h>
+#include <proc/thread.h>
+#include <proc/syscall.h>

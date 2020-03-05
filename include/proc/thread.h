@@ -10,7 +10,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include <sys/regs.h>
 #include <mm/pmm.h>
 #include <mm/vmm.h>
 
@@ -33,10 +32,22 @@
 #define SUCCESS 0
 #define ERR -1
 
+/* Registers */
+
+typedef struct {
+  uint64_t r15, r14, r13, r12, r11, r10, r9, r8, rsi, rdi, rbp, rdx, rcx, rbx,
+      rax;
+  uint64_t rip, cs, rflags, rsp, ss;
+} threadregs_t;
+
+threadregs_t* createRegs(uint64_t rip, uint64_t rsp);
+
+/* Processes and Threads */
+
 typedef struct proc_t proc_t;
 
 typedef struct {
-    registers_t* regs;
+    threadregs_t* regs;
     uint8_t state;
     uint64_t index; // index into threads list
 

@@ -2,18 +2,18 @@
 
 ![alt text](flame.PNG "FlameOS")
 
-flame was originally based off this [os tutorial](https://github.com/cfenollosa/os-tutorial).
-
 ## Building
 
 Dependencies:
 - `git` @ Stable
 - `make` @ Stable
-- `x86_64-elf-gcc` >= 8.0.0
+- `x86_64-elf-gcc` >= 9.2.0
 - `binutils` @ Stable
 - `xorriso` >= 1.2.9
+- `grub2` >= 2.04
 - `nasm` @ Stable
 - `qemu` @ Stable (>= 4.2.0 for MacOS 15+)
+- `objcopy` @ Stable
 
 ```
 make

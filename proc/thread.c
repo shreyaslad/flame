@@ -18,6 +18,33 @@ thread_t* currentThread;
 thread_t** threads;
 proc_t** processes;
 
+threadregs_t* createRegs(uint64_t rip, uint64_t rsp) {
+  threadregs_t* regs = (threadregs_t*)malloc(sizeof(threadregs_t));
+
+  regs->r15 = 0;
+  regs->r14 = 0;
+  regs->r13 = 0;
+  regs->r12 = 0;
+  regs->r11 = 0;
+  regs->r10 = 0;
+  regs->r9 = 0;
+  regs->r8 = 0;
+  regs->rsi = 0;
+  regs->rdi = 0;
+  regs->rbp = 0;
+  regs->rdx = 0;
+  regs->rcx = 0;
+  regs->rbx = 0;
+  regs->rax = 0;
+  regs->rip = rip;
+  regs->cs = 0;
+  regs->rflags = 0;
+  regs->rsp = rsp;
+  regs->ss = 0;
+
+  return regs;
+}
+
 void initScheduler() {
   currentProcess = (proc_t*)malloc(sizeof(proc_t));
   currentThread = (thread_t*)malloc(sizeof(thread_t));
@@ -59,7 +86,7 @@ proc_t* spawn(uint64_t rip, uint64_t rsp) {
 // a process will always start with 1 thread
 // more threads will be added later on as execution continues
 void fork(proc_t* process, uint64_t rip, uint64_t rsp) {
-  registers_t* regs = createRegs(rip, rsp);
+  threadregs_t* regs = createRegs(rip, rsp);
 
   thread_t* thread = (thread_t*)malloc(sizeof(thread_t));
   thread->regs = regs;
@@ -89,15 +116,15 @@ void fork(proc_t* process, uint64_t rip, uint64_t rsp) {
 void setState(thread_t* thread, uint8_t state) { thread->state = state; }
 
 thread_t* getNextThread() {
-    if (currentThread == NULL) {
-        return threads[0];
-    } else {
-        if (currentThread->index == threadsLen) {
+  if (currentThread == NULL) {
     return threads[0];
-        }
+  } else {
+    if (currentThread->index == threadsLen) {
+      return threads[0];
     }
+  }
 
-    return threads[currentThread->index + 1];
+  return threads[currentThread->index + 1];
 }
 
 uint64_t killThread(thread_t* thread) {

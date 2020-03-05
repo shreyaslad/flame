@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/timer.h>
-#include <proc/syscall.h>
 #include <mm/pmm.h>
 
 // include the fs later
@@ -21,11 +20,10 @@
 #define DIR 0
 #define FILE 1
 
-struct node_t;
 typedef struct node_t node_t;
 typedef uint64_t type_t;
 
-typedef char* (*read_t)(node_t*, uint64_t);
+typedef char* (*read_t)(node_t*, char** buffer, uint64_t);
 typedef uint64_t (*write_t)(node_t*, char*);
 
 typedef struct node_t {
@@ -52,5 +50,5 @@ node_t* createNode(char* name, uint64_t perms, type_t type, node_t* parent);
 node_t* vfsResolve(char* filepath);
 void createNodeInPath(char* path, node_t* newNode);
 
-char* vfsRead(node_t* node, uint64_t bytes);
+char* vfsRead(node_t* node, char** buffer, uint64_t bytes);
 uint64_t vfsWrite(node_t* node, char* text);

@@ -30,7 +30,7 @@ QEMUFLAGS = -serial stdio \
 			-boot menu=on \
 			-cdrom flame.iso \
 			-hda flamedisk.img \
-			--enable-kvm
+			-enable-kvm
 O_LEVEL = 2
 
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
@@ -67,4 +67,4 @@ debug: flame.iso kernel.elf
 
 clean:
 	find . -type f -name '*.o' -delete
-	rm -rf kernel32.elf isodir/ .vscode/
+	rm -rf kernel.elf flame.iso kernel32.elf isodir/ .vscode/

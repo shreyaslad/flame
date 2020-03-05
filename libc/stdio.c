@@ -92,7 +92,7 @@ uint64_t open(char* filename, uint64_t action) {
   ; // find the struct by parsing the filename
   return 0;
 
-  UNSUED(filename);
+  UNUSED(filename);
   UNUSED(action);
 }
 

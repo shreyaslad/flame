@@ -4,12 +4,7 @@
 ; Syscall stub handler
 
 [bits 64]
-[extern vfsread]
-[extern vfswrite]
-[extern getNodeFromEntry]
-[extern kernel_stack_top]
 
-; this macro is repeated why
 %macro pushaq 0
     push rax
     push rbx
@@ -46,36 +41,33 @@
     pop rax
 %endmacro
 
-; I absolutely hate all of this code
-syscall_table:
-    dq _sysread
-    dq _syswrite
-
-global _init_syscall
 ; rax: holds the syscall action
-; rbx: holds the user stack
-; r8: holds the first argument
-; r9: holds the second argument
-; r10: holds the third argument
+; rdi: holds the first argument
+; rsi: holds the second argument
+; rdx: holds the third argument
+; rax: holds the return value
 
-_init_syscall:
-    ; load the address into rcx later on
-    mov rax, _syscall_stub
-    mov rdx, _syscall_stub
-    shr rdx, 32 ; change to shl if shit doesn't work
-    wrmsr
+[extern syscallHandler]
+[extern kernel_stack_top]
 
-_syscall_stub:
+global _entersys
+global _extsys
+global _chgrip
+
+_entersys:
+    mov rsp, [kernel_stack_top]
     pushaq
     mov rbx, rsp
-    mov rsp, kernel_stack_top ; assume the user stack has been setup
-    call [syscall_table + rax * 8]
+    call syscallHandler
 
+    jmp _extsys
+
+_extsys:
+    mov rsp, rbx
     popaq
-    mov rsp, rbx ; setup the userspace stack again
+    
     sysret
 
-_sysread:
-
-
-_syswrite:
+_chgrip:
+    mov rcx, rdi
+    sysretq

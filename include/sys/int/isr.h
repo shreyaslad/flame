@@ -2,12 +2,10 @@
 
 #include <stdint.h>
 #include <stdio.h>
-#include <sys/int/idt.h>
 #include <sys/ports.h>
 #include <sys/timer.h>
 #include <devices/keyboard.h>
 #include <mm/bit.h>
-#include <sys/regs.h>
 
 #define DIVISOR 10
 
@@ -78,6 +76,13 @@ extern void irq15();
 #define IRQ13 45
 #define IRQ14 46
 #define IRQ15 47
+
+typedef struct registers_t {
+  uint64_t r15, r14, r13, r12, r11, r10, r9, r8, rsi, rdi, rbp, rdx, rcx, rbx,
+      rax;
+  uint64_t int_no, err_code;
+  uint64_t rip, cs, rflags, rsp, ss;
+} registers_t;
 
 void isr_install();
 void isr_handler(registers_t* r);

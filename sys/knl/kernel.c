@@ -13,14 +13,16 @@ extern uint64_t __kernel_end;
 extern void _init_syscall();
 
 void kmain(multiboot_info_t* mbd) {
-  //_init_syscall(); need to finish vfs, ahci, and fs before syscall
   disableCursor();
 
   isr_install();
   irq_install();
 
   initMem(mbd);
+  initFD();
   initVFS();
+  initSyscall();
+  initScheduler();
 
   sprintf("Bitmap Addr: %d\n", (uint64_t)bitmap);
   sprintf("MBD Total Mem: %d\n", mbd->mem_upper);

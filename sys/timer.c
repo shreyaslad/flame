@@ -10,13 +10,14 @@ static void timer_callback(registers_t* regs) {
   // TODO: use the thread states somewhere in this algorithm
 
   if (currentThread == NULL) {
-    // load an idle thread and iret
+    ; // TODO: jump to /bin/init
   } else {
-    currentThread->regs = regs;
+    memcpy(currentThread->regs, regs, 15);
 
     thread_t* newThread = getNextThread();
-    registers_t* newRegs =
-        createRegs(newThread->regs->rip, newThread->regs->rsp);
+
+    regs->rip = newThread->regs->rip;
+    regs->rsp = newThread->regs->rsp;
 
     setCurrentThread(newThread);
 
@@ -24,7 +25,7 @@ static void timer_callback(registers_t* regs) {
     setCurrentProcess(newProcess);
     setPML4(newProcess->pml4);
 
-    // setup the stack and iret here
+    _chgrip(newThread->regs->rip);
   }
 }
 
