@@ -19,7 +19,7 @@ thread_t** threads;
 proc_t** processes;
 
 threadregs_t* createRegs(uint64_t rip, uint64_t rsp) {
-  threadregs_t* regs = (threadregs_t*)malloc(sizeof(threadregs_t));
+  threadregs_t* regs = malloc(sizeof(threadregs_t));
 
   regs->r15 = 0;
   regs->r14 = 0;
@@ -46,10 +46,14 @@ threadregs_t* createRegs(uint64_t rip, uint64_t rsp) {
 }
 
 void initScheduler() {
-  currentProcess = (proc_t*)malloc(sizeof(proc_t));
-  currentThread = (thread_t*)malloc(sizeof(thread_t));
-  threads = (thread_t**)malloc(sizeof(thread_t));
-  processes = (proc_t**)malloc(sizeof(proc_t));
+  currentProcess = malloc(sizeof(proc_t));
+  currentThread = malloc(sizeof(thread_t));
+  threads = malloc(sizeof(thread_t*));
+  processes = malloc(sizeof(proc_t));
+
+  sprintf("currentProcess addr: %x\ncurrentThread addr: %x\n", currentProcess,
+          currentThread);
+  sprintf("threads addr: %x\nprocesses addr: %x\n", threads, processes);
 }
 
 void setCurrentProcess(proc_t* process) { currentProcess = process; }
@@ -63,7 +67,7 @@ thread_t* getCurrentThread() { return currentThread; }
 proc_t* spawn(uint64_t rip, uint64_t rsp) {
   procsLen++;
 
-  proc_t* process = (proc_t*)malloc(sizeof(proc_t));
+  proc_t* process = malloc(sizeof(proc_t));
 
   // ideally we should keep an array of indexes but this should suffice
   if (lastFreedProcIndex = NULL) {
@@ -78,7 +82,7 @@ proc_t* spawn(uint64_t rip, uint64_t rsp) {
   }
 
   fork(process, rip, rsp + (process->nthreads * 0x4000));
-  process->pml4 = (uint64_t*)malloc(512);
+  process->pml4 = malloc(512);
 
   return process;
 }
@@ -88,21 +92,21 @@ proc_t* spawn(uint64_t rip, uint64_t rsp) {
 void fork(proc_t* process, uint64_t rip, uint64_t rsp) {
   threadregs_t* regs = createRegs(rip, rsp);
 
-  thread_t* thread = (thread_t*)malloc(sizeof(thread_t));
+  thread_t* thread = malloc(sizeof(thread_t));
   thread->regs = regs;
   thread->state = NOT_RUNNING;
   thread->process = process;
 
   process->nthreads++;
-  process->threads = (thread_t**)pmrealloc(
-      process->threads, process->nthreads - 1, process->nthreads);
+  process->threads =
+      pmrealloc(process->threads, process->nthreads - 1, process->nthreads);
   process->threads[process->nthreads] = thread;
 
   threadsLen++;
 
   // ideally we should keep an array of indexes but this should suffice
   if (lastFreedThreadIndex == NULL) {
-    threads = (thread_t**)pmrealloc(threads, threadsLen - 1, threadsLen);
+    threads = pmrealloc(threads, threadsLen - 1, threadsLen);
     threads[threadsLen] = thread;
     thread->index = threadsLen;
   } else {

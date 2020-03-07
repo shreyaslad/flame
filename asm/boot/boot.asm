@@ -122,7 +122,7 @@ section .text
         mov cr4, eax                 ; Set control register 4 to the A-register.
 
         ; Switch to long mode
-        mov ecx, 0xC0000080          ; Set the C-register to 0xC0000080, which is the EFER MSR.
+        mov ecx, 0xC0000080          ; Set the EFER MSR.
         rdmsr                        ; Read from the model-specific register.
         or eax, 1 << 8               ; Set the LM-bit which is the 9th bit (bit 8).
         wrmsr                        ; Write to the model-specific register.

@@ -42,7 +42,7 @@ char sc_ascii_uppercase[] = {
     'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', ' ', ' ', ' ', ' '};
 
 static void keyboard_callback(registers_t* regs) {
-  uint8_t scancode = port_byte_in(0x60);
+  uint8_t scancode = inb(0x60);
 
   if (scancode == LOCK) {
     state = 1;
