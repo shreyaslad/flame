@@ -49,11 +49,12 @@ void initScheduler() {
   currentProcess = malloc(sizeof(proc_t));
   currentThread = malloc(sizeof(thread_t));
   threads = malloc(sizeof(thread_t*));
-  processes = malloc(sizeof(proc_t));
+  processes = malloc(sizeof(proc_t*));
 
-  sprintf("currentProcess addr: %x\ncurrentThread addr: %x\n", currentProcess,
-          currentThread);
-  sprintf("threads addr: %x\nprocesses addr: %x\n", threads, processes);
+  currentProcess = NULL;
+  currentThread = NULL;
+  threads = NULL;
+  processes = NULL;
 }
 
 void setCurrentProcess(proc_t* process) { currentProcess = process; }

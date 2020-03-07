@@ -23,6 +23,7 @@ void kmain(multiboot_info_t* mbd) {
   initVFS();
   initSyscall();
   initScheduler();
+  
 
   sprintf("Bitmap Addr: %d\n", (uint64_t)bitmap);
   sprintf("MBD Total Mem: %d\n", mbd->mem_upper);
