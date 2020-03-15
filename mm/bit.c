@@ -1,8 +1,8 @@
 /*
-                bit.c
-                Copyright Shreyas Lad (PenetratingShot) 2020
+  bit.c
+  Copyright Shreyas Lad (PenetratingShot) 2020
 
-                Set and Clear Bit Operations
+  Set and Clear Bit Operations
 */
 
 #include <mm/bit.h>
@@ -17,15 +17,22 @@ void setBit(uint8_t* num, uint8_t bit, uint8_t state) {
   }
 }
 
-uint8_t getAbsoluteBitState(uint64_t* bitmap, uint64_t bit) {
+uint8_t getAbsoluteBit(uint64_t* bitmap, uint64_t bit) {
   size_t off = bit / 64;
   size_t mask = (1 << (bit % 64));
   return (bitmap[off] & mask) == mask;
 }
 
-void setAbsoluteBitState(uint64_t* bitmap, uint64_t bit) {
+void setAbsoluteBit(uint64_t* bitmap, uint64_t bit) {
   size_t off = bit / 64;
   size_t mask = (1 << (bit % 64));
 
-  bitmap[off] |= mask;
+  bitmap[off] = (bitmap[off] | (1 << bit));
+}
+
+void clearAbsoluteBit(uint64_t* bitmap, uint64_t bit) {
+  size_t off = bit / 64;
+  size_t mask = (1 << (bit % 64));
+
+  bitmap[off] &= ~(1 << bit);
 }

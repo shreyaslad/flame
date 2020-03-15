@@ -43,6 +43,7 @@ isr_common:
     cld
     xor rax, rax
     mov rdi, rsp
+    mov r10, cr2
     call isr_handler
     popaq
     ; Remove the error code and interrupt number

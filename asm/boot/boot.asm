@@ -43,32 +43,32 @@ section .data
         db 0                            ; Granularity.
         db 0                            ; Base (high).
       .code: equ $ - gdt               ; The code descriptor.
-        dw 0                            ; Limit (low).
+        dw 0xFFFF                       ; Limit (low).
         dw 0                            ; Base (low).
         db 0                            ; Base (middle)
         db 10011010b                    ; Access (exec/read).
         db 10101111b                    ; Granularity, 64 bits flag, limit19:16.
         db 0                            ; Base (high).
       .data: equ $ - gdt               ; The data descriptor.
-        dw 0                            ; Limit (low).
+        dw 0xFFFF                       ; Limit (low).
         dw 0                            ; Base (low).
         db 0                            ; Base (middle)
         db 10010010b                    ; Access (read/write).
         db 00000000b                    ; Granularity.
         db 0                            ; Base (high).
       .usercode: equ $ - gdt           ; The userspace code descriptor
-        dw 0                            ; Limit (low).
+        dw 0xFFFF                       ; Limit (low).
         dw 0                            ; Base (low).
         db 0                            ; Base (middle)
-        db 11111010b                    ; Access (exec/read).
+        db 11111101b                    ; Access (exec/read).
         db 10101111b                    ; Granularity, 64 bits flag, limit19:16.
         db 0                            ; Base (high).
       .userdata: equ $ - gdt           ; The userspace data descriptor
-        dw 0                            ; Limit (low).
+        dw 0xFFFF                       ; Limit (low).
         dw 0                            ; Base (low).
         db 0                            ; Base (middle)
-        db 10010010b                    ; Access (read/write).
-        db 00000000b                    ; Granularity.
+        db 11110011b                    ; Access (read/write).
+        db 11001111b                    ; Granularity.
         db 0                            ; Base (high).
       .pointer:                        ; The GDT-pointer.
         dw $ - gdt - 1                  ; Limit.
@@ -90,21 +90,47 @@ section .bss
         resb 4096
     kernel_stack_top:
 
+    global user_stack_top
+    global user_stack_bottom
+    user_stack_bottom:
+        resb 4096
+    user_stack_top:
+        
+
 section .data
-    align 4096
-    pml4t:
-        dq (pml3 - KNL_HIGH_VMA) + 0x3
-        times 255 dq 0
-        dq (pml3 - KNL_HIGH_VMA) + 0x3
-        times 254 dq 0
-        dq (pml3 - KNL_HIGH_VMA) + 0x3
-    pml3:
-        dq (pml2 - KNL_HIGH_VMA) + 0x3
-        times 509 dq 0
-        dq (pml2 - KNL_HIGH_VMA) + 0x3
-        dq 0
-    pml2:
-        gen_pd_2mb 0, 512, 0
+  align 4096
+  ; mappings are shit but they work leave me alone
+  paging_directory1:
+      gen_pd_2mb 0, 12, 500
+
+  paging_directory2:
+      gen_pd_2mb 0, 512, 0
+
+  paging_directory3:
+      gen_pd_2mb 0x0, 512, 0
+
+  paging_directory4:
+      gen_pd_2mb 0x40000000, 512, 0
+
+  pml4t:
+      dq (pdpt - KNL_HIGH_VMA + 0x3)
+      times 255 dq 0
+      dq (pdpt2 - KNL_HIGH_VMA + 0x3)
+      times 254 dq 0
+      dq (pdpt3 - KNL_HIGH_VMA + 0x3)
+
+  pdpt:
+      dq (paging_directory1 - KNL_HIGH_VMA + 0x3)
+      times 511 dq 0
+
+  pdpt2:
+      dq (paging_directory2 - KNL_HIGH_VMA + 0x3)
+      times 511 dq 0
+
+  pdpt3:
+      times 510 dq 0
+      dq (paging_directory3 - KNL_HIGH_VMA + 0x3)
+      dq (paging_directory4 - KNL_HIGH_VMA + 0x3)
 
 section .text
     [bits 32]

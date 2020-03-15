@@ -24,8 +24,7 @@ CFLAGS = -ggdb \
 		 -std=gnu11 \
 		 -mcmodel=kernel
 		 
-QEMUFLAGS = -serial stdio \
-			-soundhw pcspk -m 1G \
+QEMUFLAGS = -soundhw pcspk -m 1G \
 			-device isa-debug-exit,iobase=0xf4,iosize=0x04 \
 			-boot menu=on \
 			-cdrom flame.iso \
@@ -59,8 +58,7 @@ kernel.elf: ${OBJ}
 	nasm -f elf64 $< -o $@
 
 run: flame.iso # -serial stdio
-	qemu-system-${ARCH} ${QEMUFLAGS}
-
+	qemu-system-${ARCH} ${QEMUFLAGS} -serial stdio
 debug: flame.iso kernel.elf
 	qemu-system-${ARCH} -s -S -d guest_errors,int ${QEMUFLAGS} &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"

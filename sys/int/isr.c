@@ -113,7 +113,7 @@ void isr_handler(registers_t* r) {
 
   //clear();
   printf("Exception %d %d\n", r->int_no, r->err_code);
-  sprintf("RIP: %x", r->rip);
+  sprintf("RIP: %x\nCR2: %x\n", r->rip, r->r10);
 
   asm volatile("hlt");
 }

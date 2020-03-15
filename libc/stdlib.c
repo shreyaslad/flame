@@ -9,12 +9,72 @@
 
 /* Initialization */
 void initMem(multiboot_info_t* mbd) {
-  totalmem = (uint64_t)mbd->mem_upper;
-  bitmapEntries = (uint64_t)(((totalmem * 1000) / PAGESIZE) /
-                             8); // calculate the maximum amount of entries
-                                 // possible in the bitmap to not overflow
 
-  memset(bitmap, 0, (totalmem * 1000) / PAGESIZE / 8);
+  uint64_t currentAddr = mbd->mmap_addr;
+  uint64_t memoryTraversed = 0;
+
+  while (memoryTraversed < mbd->mmap_length) {
+    multiboot_memory_map_t* currentEntry = (multiboot_memory_map_t*)currentAddr;
+
+    memoryTraversed += (currentEntry->size + sizeof(uint32_t));
+    currentAddr += (currentEntry->size + sizeof(uint32_t));
+
+    if (memoryTraversed == mbd->mmap_length)
+      break;
+
+    totalmem += currentEntry->len;
+
+    sprintf("Addr: %x | Len: %d | Type: %d\n", currentEntry->addr,
+            currentEntry->len, currentEntry->type);
+  }
+
+  sprintf("Total Mem: %d\n", totalmem);
+
+  uint64_t entries = totalmem / PAGESIZE / 8;
+  sprintf("Entries: %d\n", entries);
+  memset(bitmap, 0, entries);
+
+  for (uint64_t i = 0; i < totalmem; i += PAGESIZE) {
+    vmap((uint64_t*)(i + HIGH_VMA), (uint64_t*)getPML4(), (uint64_t*)i,
+         SUPERVISOR);
+  }
+
+  currentAddr = mbd->mmap_addr;
+  memoryTraversed = 0;
+
+  while (memoryTraversed < mbd->mmap_length) {
+    multiboot_memory_map_t* currentEntry = (multiboot_memory_map_t*)currentAddr;
+
+    memoryTraversed += (currentEntry->size + sizeof(uint32_t));
+    currentAddr += (currentEntry->size + sizeof(uint32_t));
+
+    if (memoryTraversed == mbd->mmap_length)
+      break;
+
+    if (currentEntry->type != MULTIBOOT_MEMORY_AVAILABLE) {
+      // find the page the block belongs to from the address
+      // mark the page
+      // move onto the next entry
+
+      uint64_t page = currentEntry->addr / PAGESIZE;
+      if ((currentEntry->addr + currentEntry->len) > PAGESIZE) {
+
+      } else {
+        setAbsoluteBit(bitmap, page);
+      }
+    }
+
+    // repeat the loop
+  }
+
+  uint64_t* pml4ptr = pmalloc(1);
+  sprintf("New PML4: %x\n", (uint64_t)pml4ptr);
+  sprintf("PML4 Contents: %d\n", (uint64_t)pml4ptr[0]);
+  // setPML4(pml4ptr);
+  // mapping for this table: 0000000008000000-0000000008200000 0000000000200000
+  // vmap(pml4ptr, pml4ptr, (uint64_t*)getPML4(), SUPERVISOR);
+
+  // map all of memory
 }
 
 void memset(void* bufptr, int value, uint64_t size) {
@@ -42,7 +102,7 @@ void* malloc(size_t bytes) {
 
   uint64_t* ret = (uint64_t*)pmalloc(pages);
 
-  vmap(ret + 0xFFFF800000000000, ret, pages);
+  vmap(ret + 0xFFFF800000000000, ret, (uint64_t*)getPML4(), SUPERVISOR);
   ret = (uint64_t*)((uint64_t)ret + 0xFFFF800000000000);
 
   return ret;

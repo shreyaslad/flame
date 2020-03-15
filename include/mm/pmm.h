@@ -15,7 +15,7 @@
 #include <boot/multiboot.h>
 
 #define MEMBASE 0x100000
-#define PAGESIZE 0x2000000 // 2mb pages
+#define PAGESIZE 0x200000 // 2mb pages
 
 extern uint64_t __kernel_end;
 

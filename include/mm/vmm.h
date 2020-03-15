@@ -22,7 +22,11 @@ extern uint64_t KNL_HIGH_VMA;
 #define RMFLAGS 0x000FFFFFFFFFF000
 #define TABLEPRESENT (1 << 0)
 #define TABLEWRITE (1 << 1)
+#define TABLEUSER (1 << 2)
 #define TABLEHUGE (1 << 7)
+
+#define SUPERVISOR 0
+#define USER 1
 
 typedef struct {
     size_t pml1off;
@@ -38,7 +42,7 @@ void tlbflush();
 uint64_t* getpaddr(void* vaddr);
 offset_t vtoof(uint64_t* vaddr); // virtual address to offset
 
-void vmap(uint64_t* vaddr, uint64_t* paddr, size_t pages);
+void vmap(uint64_t* vaddr, uint64_t* paddr, uint64_t* pml4ptr, uint64_t permission);
 void vfree(uint64_t* vaddr, size_t pages);
 
 void test();

@@ -1,7 +1,7 @@
 ; syscall.asm
 ; Copyright Shreyas Lad (PenetratingShot) 2020
 ;
-; Syscall stub handler
+; Userspace and Syscall stubs
 
 [bits 64]
 
@@ -40,6 +40,31 @@
     pop rbx
     pop rax
 %endmacro
+
+; USERSPACE
+
+[extern user_stack_top]
+[extern userspacePrint]
+[extern vmap]
+
+global _initUserspace
+
+_initUserspace:
+    mov rax, userspacePrint
+
+    push rax
+    push rax
+    push 1
+    call vmap
+
+    mov rsp, user_stack_top
+    push 0x202
+    push 0x1B
+    push rax
+
+    iretq
+
+; SYSCALL
 
 ; rax: holds the syscall action
 ; rdi: holds the first argument

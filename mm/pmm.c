@@ -19,10 +19,11 @@ uint64_t bitmapEntries;
 void* pmalloc(size_t pages) {
   uint64_t firstBit = 0;
   uint64_t concurrentBits = 0;
-  uint64_t totalBitsInBitmap = ((totalmem * 1000) / PAGESIZE) * 64;
+  uint64_t totalBitsInBitmap = totalmem / PAGESIZE;
 
-  for (uint64_t i = 0; i < totalBitsInBitmap; i++) {
-    if (getAbsoluteBitState(bitmap, i) == 0) {
+  for (uint64_t i = 8; i < totalBitsInBitmap; i++) {
+
+    if (getAbsoluteBit(bitmap, i) == 0) {
       if (concurrentBits == 0) {
         firstBit = i;
       }
@@ -45,7 +46,7 @@ void* pmalloc(size_t pages) {
 alloc:
   // iterate over bits now that a block has been found
   for (uint64_t i = firstBit; i < firstBit + pages; i++) {
-    setAbsoluteBitState(bitmap, i);
+    setAbsoluteBit(bitmap, i);
   }
 
   return (void*)(firstBit * PAGESIZE);
@@ -53,12 +54,12 @@ alloc:
 
 void pmfree(void* ptr, size_t pages) {
   uint64_t firstBit = (uint64_t)ptr / PAGESIZE;
-  uint64_t totalBitsInBitmap = ((totalmem * 1000) / PAGESIZE) * 64;
+  uint64_t totalBitsInBitmap = totalmem / PAGESIZE;
 
   for (uint64_t i = 0; i < totalBitsInBitmap; i++) {
     if (i == firstBit) {
       for (uint64_t j = 0; j < pages; j++) {
-        setAbsoluteBitState(bitmap, j);
+        clearAbsoluteBit(bitmap, j);
       }
       goto done;
     }

@@ -17,3 +17,5 @@
 #include <fs/fd.h>
 #include <proc/thread.h>
 #include <proc/syscall.h>
+
+extern void _initUserspace();

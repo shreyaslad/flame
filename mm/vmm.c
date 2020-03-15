@@ -49,10 +49,10 @@ uint64_t* getpaddr(void* vaddr) {
 }
 
 // maps a virtual address to a physical address
-void vmap(uint64_t* vaddr, uint64_t* paddr, size_t pages) {
+void vmap(uint64_t* vaddr, uint64_t* paddr, uint64_t* pml4ptr,
+          uint64_t permission) {
   offset_t offset = vtoof(vaddr);
 
-  uint64_t* pml4ptr = (uint64_t*)((size_t)((size_t)getPML4() + HIGH_VMA));
   uint64_t pml3phys = NULL;
   uint64_t* pml3virt = NULL;
   uint64_t pml2phys = NULL;
@@ -60,29 +60,31 @@ void vmap(uint64_t* vaddr, uint64_t* paddr, size_t pages) {
 
   if ((pml4ptr[offset.pml4off] & TABLEPRESENT) == 1) {
     pml3phys = (uint64_t)(pml4ptr[offset.pml4off] & RMFLAGS);
-    pml3virt = (uint64_t)((size_t)(pml3phys + HIGH_VMA));
+    pml3virt = (uint64_t)(pml3phys + HIGH_VMA);
   } else {
     pml3phys = pmalloc(1);
-    pml3virt = (uint64_t)((size_t)(pml3phys + HIGH_VMA));
+    pml3virt = (uint64_t)(pml3phys + HIGH_VMA);
     pml4ptr = (uint64_t)pml3phys | TABLEPRESENT | TABLEWRITE;
   }
 
   if ((pml3virt[offset.pml3off] & TABLEPRESENT) == 1) {
     pml2phys = (uint64_t)(pml3virt[offset.pml3off] & RMFLAGS);
-    pml2virt = (uint64_t)((size_t)(pml2phys + HIGH_VMA));
+    pml2virt = (uint64_t)(pml2phys + HIGH_VMA);
   } else {
     pml2phys = pmalloc(1);
-    pml2virt = (uint64_t)((size_t)(pml2phys + HIGH_VMA));
+    pml2virt = (uint64_t)(pml2phys + HIGH_VMA);
     pml3virt = (uint64_t)pml2phys | TABLEPRESENT | TABLEWRITE;
   }
 
-  // state doesn't matter. overwrite it
-  pml2virt[offset.pml2off] =
-      (uint64_t)paddr | TABLEPRESENT | TABLEWRITE | TABLEHUGE;
+  if (permission == SUPERVISOR) {
+    pml2virt[offset.pml2off] =
+        (uint64_t)paddr | TABLEPRESENT | TABLEWRITE | TABLEHUGE;
+  } else {
+    pml2virt[offset.pml2off] =
+        (uint64_t)paddr | TABLEPRESENT | TABLEWRITE | TABLEHUGE | TABLEUSER;
+  }
 
   invlpg(vaddr);
-
-  UNUSED(pages);
 }
 
 void test() {
