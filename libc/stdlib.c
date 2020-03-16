@@ -34,11 +34,14 @@ void initMem(multiboot_info_t* mbd) {
   sprintf("Entries: %d\n", entries);
   memset(bitmap, 0, entries);
 
-  uint64_t* bootPML4 = getPML4();
+  uint64_t* bootPML4 = (uint64_t*)((uint64_t)getPML4() + HIGH_VMA);
   sprintf("PML4: %x\n", (uint64_t)bootPML4);
 
-  for (uint64_t i = 0; i < totalmem; i += PAGESIZE) {
-    vmap((uint64_t*)(i + HIGH_VMA), bootPML4, (uint64_t*)i, SUPERVISOR);
+  sprintf("Pages: %d\n", totalmem / PAGESIZE);
+
+  for (uint64_t i = 0; i < totalmem / PAGESIZE; i++) {
+    vmap(i * PAGESIZE + HIGH_VMA, i * PAGESIZE, bootPML4, SUPERVISOR);
+    sprintf("Pages Mapped: %d\n", i);
   }
 
   // this block works perfectly fine
@@ -69,10 +72,6 @@ void initMem(multiboot_info_t* mbd) {
 
     // repeat the loop
   }*/
-
-  /*uint64_t* pml4ptr = pmalloc(1);
-  sprintf("New PML4: %x\n", (uint64_t)pml4ptr);
-  sprintf("PML4 Contents: %d\n", (uint64_t)pml4ptr[0]);*/
 
   // setPML4(pml4ptr);
   // mapping for this table: 0000000008000000-0000000008200000 0000000000200000

@@ -101,15 +101,21 @@ section .data
   align 4096
   ; mappings are shit but they work leave me alone
   paging_directory1:
-      gen_pd_2mb 0, 12, 500
+      gen_pd_2mb 0, 512, 0
 
   paging_directory2:
       gen_pd_2mb 0, 512, 0
 
   paging_directory3:
-      gen_pd_2mb 0x0, 512, 0
+      gen_pd_2mb 0, 512, 0
 
   paging_directory4:
+      gen_pd_2mb 0, 512, 0
+      
+  paging_directory5:
+      gen_pd_2mb 0, 512, 0
+
+  paging_directory6:
       gen_pd_2mb 0x40000000, 512, 0
 
   pml4t:
@@ -121,16 +127,18 @@ section .data
 
   pdpt:
       dq (paging_directory1 - KNL_HIGH_VMA + 0x3)
-      times 511 dq 0
+      dq (paging_directory2 - KNL_HIGH_VMA + 0x3)
+      times 510 dq 0
 
   pdpt2:
-      dq (paging_directory2 - KNL_HIGH_VMA + 0x3)
-      times 511 dq 0
+      dq (paging_directory3 - KNL_HIGH_VMA + 0x3)
+      dq (paging_directory4 - KNL_HIGH_VMA + 0x3)
+      times 510 dq 0
 
   pdpt3:
       times 510 dq 0
-      dq (paging_directory3 - KNL_HIGH_VMA + 0x3)
-      dq (paging_directory4 - KNL_HIGH_VMA + 0x3)
+      dq (paging_directory5 - KNL_HIGH_VMA + 0x3)
+      dq (paging_directory6 - KNL_HIGH_VMA + 0x3)
 
 section .text
     [bits 32]

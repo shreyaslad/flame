@@ -108,12 +108,18 @@ char* exception_messages[] = {"Division By Zero",
                               "Reserved",
                               "Reserved"};
 
+static uint64_t getCR2() {
+  uint64_t cr2;
+  asm volatile("movq %%cr2, %0;" : "=r"(cr2));
+  return cr2;
+}
+
 void isr_handler(registers_t* r) {
   asm volatile("cli");
 
   //clear();
   printf("Exception %d %d\n", r->int_no, r->err_code);
-  sprintf("RIP: %x\nCR2: %x\n", r->rip, r->r10);
+  sprintf("RIP: %x\nCR2: %x\n", r->rip, getCR2());
 
   asm volatile("hlt");
 }

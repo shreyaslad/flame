@@ -14,14 +14,13 @@ extern void _init_syscall();
 
 void kmain(multiboot_info_t* mbd) {
 
-  isr_install();
-  irq_install();
-
   initMem(mbd);
   /*initFD();
   initVFS();
   initSyscall();
   initScheduler();*/
+  isr_install();
+  irq_install();
   
   //_initUserspace();
 }
