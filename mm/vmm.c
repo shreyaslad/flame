@@ -84,6 +84,9 @@ void vmap(uint64_t* vaddr, uint64_t* paddr, uint64_t* pml4ptr,
         (uint64_t)paddr | TABLEPRESENT | TABLEWRITE | TABLEHUGE | TABLEUSER;
   }
 
+  sprintf("PML3: %x | PML2: %x\n", (uint64_t)pml4ptr, (uint64_t)pml3virt,
+          (uint64_t)pml2virt);
+
   invlpg(vaddr);
 }
 

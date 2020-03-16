@@ -21,7 +21,7 @@ void* pmalloc(size_t pages) {
   uint64_t concurrentBits = 0;
   uint64_t totalBitsInBitmap = totalmem / PAGESIZE;
 
-  for (uint64_t i = 8; i < totalBitsInBitmap; i++) {
+  for (uint64_t i = 1; i < totalBitsInBitmap; i++) {
 
     if (getAbsoluteBit(bitmap, i) == 0) {
       if (concurrentBits == 0) {
