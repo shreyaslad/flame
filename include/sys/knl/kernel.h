@@ -9,8 +9,9 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <boot/multiboot.h>
-#include <mm/pmm.h>
+#include <mm/vmm.h>
 #include <devices/screen/screen.h>
 #include <time.h>
 #include <fs/vfs.h>

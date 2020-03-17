@@ -6,7 +6,6 @@
 [extern paging_setup]
 
 %define KNL_HIGH_VMA 0xFFFFFFFF80000000
-%define HIGH_VMA 0xFFFF800000000000
 
 ALIGN_MULTIBOOT equ 1<<0
 MEMINFO equ 1<<1

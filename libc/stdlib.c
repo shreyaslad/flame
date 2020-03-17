@@ -31,18 +31,36 @@ void initMem(multiboot_info_t* mbd) {
   sprintf("Total Mem: %d\n", totalmem);
 
   uint64_t entries = totalmem / PAGESIZE / 8;
-  sprintf("Entries: %d\n", entries);
   memset(bitmap, 0, entries);
 
   uint64_t* bootPML4 = (uint64_t*)((uint64_t)getPML4() + HIGH_VMA);
-  sprintf("PML4: %x\n", (uint64_t)bootPML4);
-
-  sprintf("Pages: %d\n", totalmem / PAGESIZE);
 
   for (uint64_t i = 0; i < totalmem / PAGESIZE; i++) {
     vmap(i * PAGESIZE + HIGH_VMA, i * PAGESIZE, bootPML4, SUPERVISOR);
     sprintf("Pages Mapped: %d\n", i);
   }
+
+  uint64_t* newPML4Phys = pmalloc(1);
+  uint64_t* newPML4 = (uint64_t*)((uint64_t)newPML4Phys + HIGH_VMA);
+  sprintf("New PML4: %x\n", (uint64_t)newPML4);
+  memset(newPML4, 0, 0x1000);
+
+  for (uint64_t i = 0; i < totalmem / PAGESIZE; i++) {
+    vmap(i * PAGESIZE + HIGH_VMA, i * PAGESIZE, newPML4, SUPERVISOR);
+    sprintf("Pages Mapped: %d\n", i);
+  }
+
+  uint64_t __kernel_start_virt = __kernel_start + KNL_HIGH_VMA;
+  uint64_t kernelPages = (__kernel_end - __kernel_start) / PAGESIZE + 1;
+
+  for (uint64_t i = 0; i < kernelPages; i++) {
+    vmap(KNL_HIGH_VMA + (i * PAGESIZE), __kernel_start_virt + (i * PAGESIZE),
+         newPML4, SUPERVISOR);
+  }
+
+  sprintf("Setting new pml4\n");
+  setPML4((uint64_t)newPML4Phys);
+  sprintf("Set new pml4\n");
 
   // this block works perfectly fine
   /*currentAddr = mbd->mmap_addr;
@@ -72,12 +90,6 @@ void initMem(multiboot_info_t* mbd) {
 
     // repeat the loop
   }*/
-
-  // setPML4(pml4ptr);
-  // mapping for this table: 0000000008000000-0000000008200000 0000000000200000
-  // vmap(pml4ptr, pml4ptr, (uint64_t*)getPML4(), SUPERVISOR);
-
-  // map all of memory
 }
 
 void memset(void* bufptr, int value, uint64_t size) {

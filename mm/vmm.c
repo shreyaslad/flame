@@ -12,7 +12,7 @@ uint64_t* getPML4() {
   return (uint64_t*)addr;
 }
 
-void setPML4(uint64_t* PML4) {
+void setPML4(uint64_t PML4) {
   asm volatile("movq %0, %%cr3;" ::"r"(PML4) : "memory");
 }
 
@@ -61,30 +61,37 @@ void vmap(uint64_t* vaddr, uint64_t* paddr, uint64_t* pml4ptr,
   if ((pml4ptr[offset.pml4off] & TABLEPRESENT) == 1) {
     pml3phys = (uint64_t)(pml4ptr[offset.pml4off] & RMFLAGS);
     pml3virt = (uint64_t)(pml3phys + HIGH_VMA);
+    sprintf("Used Existing PML3 at %x\n", (uint64_t)pml3virt);
   } else {
     pml3phys = pmalloc(1);
     pml3virt = (uint64_t)(pml3phys + HIGH_VMA);
-    pml4ptr = (uint64_t)pml3phys | TABLEPRESENT | TABLEWRITE;
+    sprintf("Created New PML3 at %x\n", (uint64_t)pml3virt);
+    pml4ptr[offset.pml4off] = (uint64_t)pml3phys | TABLEPRESENT | TABLEWRITE;
   }
 
   if ((pml3virt[offset.pml3off] & TABLEPRESENT) == 1) {
     pml2phys = (uint64_t)(pml3virt[offset.pml3off] & RMFLAGS);
     pml2virt = (uint64_t)(pml2phys + HIGH_VMA);
+    sprintf("Used Existing PML2 at %x\n", (uint64_t)pml2virt);
   } else {
     pml2phys = pmalloc(1);
     pml2virt = (uint64_t)(pml2phys + HIGH_VMA);
-    pml3virt = (uint64_t)pml2phys | TABLEPRESENT | TABLEWRITE;
+    pml3virt[offset.pml3off] = (uint64_t)pml2phys | TABLEPRESENT | TABLEWRITE;
   }
 
   if (permission == SUPERVISOR) {
     pml2virt[offset.pml2off] =
         (uint64_t)paddr | TABLEPRESENT | TABLEWRITE | TABLEHUGE;
+
   } else {
     pml2virt[offset.pml2off] =
         (uint64_t)paddr | TABLEPRESENT | TABLEWRITE | TABLEHUGE | TABLEUSER;
   }
 
-  sprintf("Mapped %x to %x\n", vaddr, paddr);
+  sprintf("Mapped %x to %x\n", (uint64_t)vaddr, (uint64_t)paddr);
+  sprintf("PML4 Entry: %x | PML3 Entry: %x | PML2 Entry: %x\n",
+          pml4ptr[offset.pml4off], pml3virt[offset.pml3off],
+          pml2virt[offset.pml2off]);
 
   invlpg(vaddr);
 }

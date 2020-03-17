@@ -17,6 +17,8 @@
 #define EXIT_FAILURE 0
 
 extern uint64_t KNL_HIGH_VMA;
+extern uint64_t __kernel_start;
+extern uint64_t __kernel_end;
 
 void initMem(multiboot_info_t* mbd);
 

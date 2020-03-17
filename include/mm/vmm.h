@@ -16,7 +16,7 @@
 extern uint64_t KNL_HIGH_VMA;
 
 #define TABLESIZE 0x1000
-#define PAGESIZE2 0x200000
+#define PAGESIZE 0x200000
 
 #define HIGH_VMA 0xFFFF800000000000
 #define RMFLAGS 0x000FFFFFFFFFF000
@@ -35,7 +35,7 @@ typedef struct {
     size_t pml4off;
 } offset_t;
 
-void setPML4(uint64_t* PML4);
+void setPML4(uint64_t PML4);
 void invlpg(uint64_t* vaddr);
 void tlbflush();
 
