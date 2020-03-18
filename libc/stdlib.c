@@ -109,14 +109,14 @@ void initMem(multiboot_info_t* mbd) {
   sprintd("Marked All Memory");
 }
 
-void memset(void* bufptr, int value, uint64_t size) {
+void memset(void* bufptr, int value, size_t size) {
   unsigned char* buf = (unsigned char*)bufptr;
   for (uint64_t i = 0; i < size; i++) {
     buf[i] = value;
   }
 }
 
-void memcpy(void* restrict dest, void* restrict src, uint64_t size) {
+void memcpy(void* dest, const void* src, size_t size) {
   const unsigned char* src2 = (const unsigned char*)src;
   unsigned char* dst = (unsigned char*)dest;
   for (uint64_t i = 0; i < size; i++) {

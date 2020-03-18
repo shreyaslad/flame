@@ -23,8 +23,8 @@ extern uint64_t _kernel_end;
 
 void initMem(multiboot_info_t* mbd);
 
-void memcpy(void* restrict dest, void* restrict src, uint64_t size);
-void memset(void* bufptr, int value, uint64_t size);
+void memcpy(void* dest, const void* src, size_t size);
+void memset(void* bufptr, int value, size_t size);
 int memcmp(const void* s1, const void* s2, size_t n);
 
 void* malloc(size_t bytes);
