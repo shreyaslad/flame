@@ -17,7 +17,7 @@
 #define MEMBASE 0x100000
 #define PAGESIZE 0x200000 // 2mb pages
 
-extern uint64_t __kernel_end;
+extern uint64_t _kernel_end;
 
 extern uint64_t* bitmap;
 extern uint64_t totalmem;

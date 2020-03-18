@@ -10,6 +10,12 @@
 uint32_t largestUseableMem = 0;
 
 void userInput(char* input) {
-  printf("Invalid Command\n");
-  printf("user@flameOS # ");
+  if (strcmp(input, "clear") == 0) {
+    clear();
+    formatTime();
+    printf("flame\nIt is %s\nuser@flame ~$ ", format);
+  } else {
+    printf("Invalid Command\n");
+    printf("user@flameOS # ");
+  }
 }

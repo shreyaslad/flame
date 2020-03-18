@@ -8,7 +8,7 @@ SECTIONS
 {
     . = KNL_HIGH_VMA + 0x100000;
 
-    __kernel_start = .;
+    _kernel_start = .;
 
     .multiboot ALIGN(4K):  AT(ADDR(.multiboot) - KNL_HIGH_VMA)
        {*(.multiboot)}
@@ -22,5 +22,5 @@ SECTIONS
     .bss ALIGN(4K): AT(ADDR(.bss) - KNL_HIGH_VMA)
     {*(.bss*) *(COMMON)}
 
-    __kernel_end = .;
+    _kernel_end = .;
 }

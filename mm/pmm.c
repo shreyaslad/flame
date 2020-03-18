@@ -7,7 +7,7 @@
 
 #include <mm/pmm.h>
 
-uint64_t* bitmap = (uint64_t*)&__kernel_end;
+uint64_t* bitmap = (uint64_t*)&_kernel_end;
 
 uint64_t totalmem;
 uint64_t bitmapEntries;
