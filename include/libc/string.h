@@ -30,6 +30,7 @@ int strcmp(char* s1, char* s);
 int strcmpl(char s1[], char s2[], unsigned char x);
 char* strtok(char* str, const char* delimiter);
 uint64_t strnchr(char* str, char s);
+int strncmp(const char *str1, const char *str2, size_t n);
 
 char removeNull(char* s);
 void remove(char* s, uint32_t pos);

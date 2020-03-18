@@ -1,4 +1,4 @@
-#include <devices/screen/vga.h>
+#include <drivers/screen/vga.h>
 
 uint8_t horzDisp = 0;
 

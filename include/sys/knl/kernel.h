@@ -12,8 +12,9 @@
 #include <stdlib.h>
 #include <boot/multiboot.h>
 #include <mm/vmm.h>
-#include <devices/screen/screen.h>
-#include <devices/screen/vga.h>
+#include <drivers/screen/screen.h>
+#include <drivers/screen/vga.h>
+#include <drivers/acpi/acpi.h>
 #include <time.h>
 #include <fs/vfs.h>
 #include <fs/fd.h>

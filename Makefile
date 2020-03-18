@@ -34,13 +34,19 @@ O_LEVEL = 2
 
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
 
-flame.iso: kernel32.elf
+LAI_DIR = drivers/acpi/lai
+LAI_URL = https://github.com/qword-os/lai.git
+
+flame.iso: ${LAI_DIR} kernel32.elf
 	clang-format-9 -style=file -i **/*.[hc]
 	mkdir -p isodir/boot/grub
 	cp kernel32.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o flame.iso isodir
 	make clean
+
+${LAI_DIR}:
+	git submodule add ${LAI_URL} ${LAI_DIR}
 
 kernel.bin: kernel32.elf
 	objcopy -O binary $^ $@
@@ -52,7 +58,7 @@ kernel.elf: ${OBJ}
 	${CC} -Wl,-z,max-page-size=0x1000 -nostdlib -o $@ -T linker.ld $^
 
 %.o: %.c ${HEADERS}
-	${CC} -Iinclude -Iinclude/libc ${CFLAGS} -c $< -o $@
+	${CC} -Iinclude -Iinclude/libc -Idrivers/acpi/lai/include ${CFLAGS} -c $< -o $@
 
 %.o: %.asm
 	nasm -f elf64 $< -o $@

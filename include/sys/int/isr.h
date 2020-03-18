@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <sys/ports.h>
 #include <sys/timer.h>
-#include <devices/keyboard.h>
+#include <drivers/keyboard.h>
 #include <mm/bit.h>
 
 #define DIVISOR 10

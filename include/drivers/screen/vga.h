@@ -11,7 +11,7 @@ Steps to get resolution
 
 #include <stdint.h>
 #include <sys/ports.h>
-#include <devices/screen/serial.h>
+#include <drivers/screen/serial.h>
 #include <mm/bit.h>
 
 extern uint8_t horzDisp;

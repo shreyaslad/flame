@@ -10,23 +10,11 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <mm/mem.h>
 #include <mm/pmm.h>
 #include <string.h>
 
 extern uint64_t KNL_HIGH_VMA;
-
-#define TABLESIZE 0x1000
-#define PAGESIZE 0x200000
-
-#define HIGH_VMA 0xFFFF800000000000
-#define RMFLAGS 0x000FFFFFFFFFF000
-#define TABLEPRESENT (1 << 0)
-#define TABLEWRITE (1 << 1)
-#define TABLEUSER (1 << 2)
-#define TABLEHUGE (1 << 7)
-
-#define SUPERVISOR 0
-#define USER 1
 
 typedef struct {
     size_t pml1off;

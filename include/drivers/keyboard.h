@@ -14,7 +14,7 @@
 #include <sys/knl/terminal.h>
 #include <sys/ports.h>
 #include <sys/int/idt.h>
-#include <devices/screen/screen.h>
+#include <drivers/screen/screen.h>
 
 #define BACKSPACE 0x0E
 #define ENTER 0x1C

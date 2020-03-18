@@ -12,10 +12,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <mm/bit.h>
+#include <mm/mem.h>
 #include <boot/multiboot.h>
-
-#define MEMBASE 0x100000
-#define PAGESIZE 0x200000 // 2mb pages
 
 extern uint64_t _kernel_end;
 

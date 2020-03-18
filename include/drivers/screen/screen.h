@@ -4,10 +4,10 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-#include <devices/screen/colors.h>
+#include <drivers/screen/colors.h>
 #include <time.h>
-#include <devices/screen/serial.h>
-#include <devices/keyboard.h>
+#include <drivers/screen/serial.h>
+#include <drivers/keyboard.h>
 #include <sys/ports.h>
 
 // VGA Output Buffer

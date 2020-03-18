@@ -6,7 +6,7 @@
 
 */
 
-#include <devices/sound.h>
+#include <drivers/sound.h>
 
 void play(uint32_t nFrequence) {
   uint32_t Div;

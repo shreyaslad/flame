@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <devices/screen/screen.h>
-#include <devices/screen/serial.h>
+#include <drivers/screen/screen.h>
+#include <drivers/screen/serial.h>
 
 #define READ 0
 #define WRITE 1
@@ -22,5 +22,6 @@
 
 void printf(char* message, ...);
 void sprintf(char* message, ...);
+void panic(char* message);
 
 char* fread(uint64_t fd, uint64_t bytes);

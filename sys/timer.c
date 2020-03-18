@@ -29,11 +29,11 @@ static void timer_callback(registers_t* regs) {
   }
 }
 
-void init_timer(uint32_t freq) {
+void init_timer(uint64_t freq) {
   register_interrupt_handler(IRQ0, timer_callback);
 
   /* Get the PIT value: hardware clock at 1193180 Hz */
-  uint32_t divisor = 1193180 / freq;
+  uint64_t divisor = 1193180 / freq;
   uint8_t low = (uint8_t)(divisor & 0xFF);
   uint8_t high = (uint8_t)((divisor >> 8) & 0xFF);
 
@@ -42,8 +42,8 @@ void init_timer(uint32_t freq) {
   outb(0x40, high);
 }
 
-void wait(uint32_t ticks) {
-  uint32_t prev = tick;
+void wait(uint64_t ticks) {
+  uint64_t prev = tick;
 
   while (tick < prev + ticks) {
     ;
@@ -54,11 +54,11 @@ void wait(uint32_t ticks) {
 
 // this is so dumb but im going to do it anyway
 // can't wait more than 60 seconds but fite me
-void wait_s(uint32_t seconds) {
+void wait_s(uint64_t seconds) {
   read_rtc();
 
-  uint16_t targetSeconds = 0;
-  uint16_t initialSeconds = second;
+  uint64_t targetSeconds = 0;
+  uint64_t initialSeconds = second;
 
   if (initialSeconds + seconds > 60) {
     targetSeconds = (initialSeconds + seconds) - 60;

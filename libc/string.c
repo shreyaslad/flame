@@ -1,10 +1,9 @@
 /*
-                                string.c
-                                Copyright Shreyas Lad (PenetratingShot) 2019
-                                Licensed under the MIT License
+  string.c
+  Copyright Shreyas Lad (PenetratingShot) 2019
+  Licensed under the MIT License
 
-                                Handy string manipulation and conversion
-   functions
+  Handy string manipulation and conversion functions
 */
 
 #include <string.h>
@@ -184,6 +183,16 @@ uint64_t strnchr(char* str, char s) {
   }
 
   return count;
+}
+
+int strncmp(const char* str1, const char* str2, size_t n) {
+  for (size_t i = 0; i < n; i++) {
+    if (str1[i] != str2[i]) {
+      return 1;
+    }
+  }
+
+  return 0;
 }
 
 char removeNull(char* s) {

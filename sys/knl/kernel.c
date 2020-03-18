@@ -16,12 +16,14 @@ extern void userspacePrint();
 void kmain(multiboot_info_t* mbd) {
   disableCursor();
   initMem(mbd);
+  initACPI();
+  
   /*initFD();
   initVFS();
   initSyscall();
   initScheduler();*/
   
-  isr_install();
+  /*isr_install();
   sprintd("Initialized ISRS");
 
   irq_install();
@@ -38,4 +40,6 @@ void kmain(multiboot_info_t* mbd) {
 
   //vmap((uint64_t)userspacePrint, (uint64_t)userspacePrint - KNL_HIGH_VMA, getPML4(), USER);
   //_initUserspace();
+
+  */
 }

@@ -5,7 +5,7 @@
   Keyboard Driver
 */
 
-#include <devices/keyboard.h>
+#include <drivers/keyboard.h>
 
 static char keyBuffer[256];
 char lastBuffer[256];

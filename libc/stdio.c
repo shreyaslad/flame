@@ -103,3 +103,13 @@ char* fread(uint64_t fd, uint64_t bytes) {
   UNUSED(fd);
   UNUSED(bytes);
 }
+
+void panic(char* message) {
+  asm volatile("cli");
+
+  clear();
+  kprint_color("Kernel Halted\n", VGA_COLOR_LIGHT_RED);
+  printf(message);
+
+  asm volatile("hlt");
+}

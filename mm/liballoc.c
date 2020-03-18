@@ -48,7 +48,7 @@
 #define LIBALLOC_DEAD 0xdeaddead
 
 #if defined DEBUG || defined INFO
-#include <devices/serial.h>
+#include <drivers/serial.h>
 #include <stdlib.h>
 
 #define FLUSH() fflush(stdout)

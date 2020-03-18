@@ -124,6 +124,18 @@ void memcpy(void* restrict dest, void* restrict src, uint64_t size) {
   }
 }
 
+int memcmp(const void* s1, const void* s2, size_t n) {
+  const uint8_t* p1 = s1;
+  const uint8_t* p2 = s2;
+
+  for (size_t i = 0; i < n; i++) {
+    if (p1[i] != p2[i])
+      return p1[i] < p2[i] ? -1 : 1;
+  }
+
+  return 0;
+}
+
 /* Allocation / Deallocation */
 void* malloc(size_t bytes) {
   return (uint64_t)((uint64_t)kmalloc(bytes) + HIGH_VMA);
@@ -132,3 +144,5 @@ void* malloc(size_t bytes) {
 void free(void* vaddr) {
   liballoc_free(vaddr, 1); // frees 1 byte until i get around to not being lazy
 }
+
+void* realloc(void* ptr, size_t size) { krealloc(ptr, size); }

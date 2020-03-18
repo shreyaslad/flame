@@ -13,6 +13,6 @@
 extern uint64_t tick;
 extern void _chgrip(uint64_t rip);
 
-void init_timer(uint32_t freq);
-void wait(uint32_t ticks);
-void wait_s(uint32_t seconds);
+void init_timer(uint64_t freq);
+void wait(uint64_t ticks);
+void wait_s(uint64_t seconds);
