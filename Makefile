@@ -1,4 +1,4 @@
-.PHONY: run clean debug
+.PHONY: run clean debug format
 
 C_SOURCES = $(shell find . -type f -name '*.c')
 HEADERS = $(shell find . -type f -name '*.h')
@@ -38,7 +38,6 @@ LAI_DIR = drivers/acpi/lai
 LAI_URL = https://github.com/qword-os/lai.git
 
 flame.iso: ${LAI_DIR} kernel32.elf
-	clang-format-9 -style=file -i **/*.[hc]
 	mkdir -p isodir/boot/grub
 	cp kernel32.elf isodir/boot/flame.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
@@ -72,3 +71,6 @@ debug: flame.iso kernel.elf
 clean:
 	find . -type f -name '*.o' -delete
 	rm -rf kernel32.elf isodir/ .vscode/
+
+format:
+	clang-format-9 -style=file -i **/*.[hc]
