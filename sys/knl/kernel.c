@@ -18,9 +18,10 @@ void kmain(multiboot_info_t* mbd) {
   initMem(mbd);
   initACPI();
 
-  lai_enable_tracing(LAI_TRACE_IO);
-  lai_create_namespace();
-  lai_enable_acpi(0);
+  void* fadt = laihost_scan("FACP", 0);
+  if (fadt == NULL) {
+    sprint("bruh\n");
+  }
 
   /*initFD();
   initVFS();

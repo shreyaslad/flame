@@ -62,8 +62,9 @@ kernel.elf: ${OBJ}
 %.o: %.asm
 	nasm -f elf64 $< -o $@
 
-run: flame.iso # -serial stdio
+run:
 	qemu-system-${ARCH} ${QEMUFLAGS} -serial stdio
+
 debug: flame.iso kernel.elf
 	qemu-system-${ARCH} -s -S -d guest_errors,int ${QEMUFLAGS} &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"

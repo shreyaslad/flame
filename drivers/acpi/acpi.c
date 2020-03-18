@@ -42,8 +42,8 @@ void initACPI() {
         return;
 }
 
-void find_sdt(char* signature, uint64_t index) {
-    sdt_t* ptr;
+void* find_sdt(const char* signature, uint64_t index) {
+    sdt_t* ptr = NULL;
     uint64_t count = 0;
     
     if (xsdt != NULL) {
@@ -63,14 +63,19 @@ void find_sdt(char* signature, uint64_t index) {
         // if the xdst was previously found, we can assume that the rsdt was
         // do the same thing but with the rsdt
 
-        for (uint64_t i = 0;i < (xsdt->sdt.length - sizeof(sdt_t)) / 8; i++) {
-            ptr = (xsdt_t*)((size_t)xsdt->sdtPtr[i] + HIGH_VMA);
+        for (uint64_t i = 0; i < (rsdt->sdt.length - sizeof(sdt_t)) / 8; i++) {
+            sprintf("max: %d\n", (rsdt->sdt.length - sizeof(sdt_t)) / 8);
+            sprintf("%x\n", (size_t)rsdt->sdtPtr);
+            /*ptr = (sdt_t*)((size_t)rsdt->sdtPtr[i] + HIGH_VMA);
             if (!strncmp(ptr->signature, signature, 4)) {
                 if (count++ == index) {
-                    printf("acpi: Found \"%s\" at %x\n", signature, (uint64_t)ptr);
+                    sprintf("acpi: Found \"%s\" at %x\n", signature, (uint64_t)ptr);
                     return ptr;
                 }
-            }
+            }*/
         }
     }
+
+    sprintf("acpi: \"%s\" not found\n", (char*)signature);
+    return NULL;
 }

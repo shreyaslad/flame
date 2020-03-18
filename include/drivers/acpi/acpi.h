@@ -60,3 +60,4 @@ rsdt_t* rsdt;
 xsdt_t* xsdt;
 
 void initACPI();
+void* find_sdt(const char* signature, uint64_t index);
