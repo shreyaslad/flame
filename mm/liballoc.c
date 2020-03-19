@@ -48,8 +48,7 @@
 #define LIBALLOC_DEAD 0xdeaddead
 
 #if defined DEBUG || defined INFO
-#include <drivers/serial.h>
-#include <stdlib.h>
+
 
 #define FLUSH() fflush(stdout)
 
@@ -89,7 +88,7 @@ static struct liballoc_major* l_bestBet =
     NULL; ///< The major with the most free memory.
 
 static unsigned int l_pageSize =
-    4096; ///< The size of an individual page. Set up in liballoc_init.
+    0x200000; ///< The size of an individual page. Set up in liballoc_init.
 static unsigned int l_pageCount =
     16; ///< The number of pages to request per chunk. Set up in liballoc_init.
 static unsigned long long l_allocated =
@@ -173,21 +172,11 @@ void liballoc_lock() { spinlock_lock(&memlock); }
 
 void liballoc_unlock() { spinlock_unlock(&memlock); }
 
-void* liballoc_alloc(size_t bytes) {
-  uint64_t pages = bytes / PAGESIZE;
-
-  if (bytes > 0 && pages == 0)
-    pages++;
-
+void* liballoc_alloc(size_t pages) {
   return pmalloc(pages);
 }
 
-void liballoc_free(void* ptr, size_t bytes) {
-  uint64_t pages = bytes / PAGESIZE;
-
-  if (bytes > 0 && pages == 0)
-    pages++;
-
+void liballoc_free(void* ptr, size_t pages) {
   pmfree(ptr, pages);
 }
 

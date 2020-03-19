@@ -5,15 +5,7 @@
     LAI Impls
 */
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/ports.h>
-#include <sys/timer.h>
-#include <mm/mem.h>
-#include <mm/vmm.h>
-#include <drivers/pci.h>
-#include <acpispec/tables.h>
+#include <lai/host.h>
 
 void laihost_log(int level, const char* str) {
     UNUSED(level);
@@ -27,17 +19,21 @@ void laihost_panic(const char* str) {
 }
 
 void* laihost_malloc(size_t size) {
-    sprintf("laihost_malloc\n");
-    return malloc(size);
+    uint64_t* ptr = malloc(size);
+    sprintf("laihost_malloc: %x\n", (uint64_t)ptr);
+    return ptr;
 }
 
-void laihost_realloc(void* ptr, size_t size) {
-    sprintf("laihost_realloc\n");
-    return realloc(ptr, size);
+void* laihost_realloc(void* ptr, size_t size) {
+    sprintf("laihost_realloc: %x to ", (uint64_t)ptr);
+    ptr = realloc(ptr, size);
+    sprintf("%x\n", (uint64_t)ptr);
+
+    return ptr;
 }
 
 void laihost_free(void* p) {
-    sprintf("laihost_free\n");
+    sprintf("laihost_free: %x\n", (uint64_t)p);
     free(p);
 }
 
@@ -103,7 +99,7 @@ void laihost_pci_writeb(uint16_t segment, uint8_t bus, uint8_t slot, uint8_t fun
     pciPIOConfigWriteB(bus, slot, function, offset, value);
 }
 
-uint8_t laihost_pci_readb(uint8_t segment, uint8_t bus, uint8_t slot, uint8_t function, uint16_t offset) {
+uint8_t laihost_pci_readb(uint16_t segment, uint8_t bus, uint8_t slot, uint8_t function, uint16_t offset) {
     sprintf("laihost_pci_readb\n");
     if (segment) panic("PCI segments not yet supported");
     
@@ -117,7 +113,7 @@ void laihost_pci_writew(uint16_t segment, uint8_t bus, uint8_t slot, uint8_t fun
     pciPIOConfigWriteW(bus, slot, function, offset, value);
 }
 
-uint16_t laihost_pci_readw(uint8_t segment, uint8_t bus, uint8_t slot, uint8_t function, uint16_t offset) {
+uint16_t laihost_pci_readw(uint16_t segment, uint8_t bus, uint8_t slot, uint8_t function, uint16_t offset) {
     sprintf("laihost_pci_readw\n");
     if (segment) panic("PCI segments not yet supported");
     
@@ -131,7 +127,7 @@ void laihost_pci_writed(uint16_t segment, uint8_t bus, uint8_t slot, uint8_t fun
     pciPIOConfigWriteD(bus, slot, function, offset, value);
 }
 
-uint32_t laihost_pci_readd(uint8_t segment, uint8_t bus, uint8_t slot, uint8_t function, uint16_t offset) {
+uint32_t laihost_pci_readd(uint16_t segment, uint8_t bus, uint8_t slot, uint8_t function, uint16_t offset) {
     sprintf("laihost_pci_readd\n");
     if (segment) panic("PCI segments not yet supported");
     

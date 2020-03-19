@@ -5,8 +5,10 @@
 #ifndef _LIBALLOC_H
 #define _LIBALLOC_H
 
+#include <stdlib.h>
 #include <sys/lock.h>
 #include <mm/pmm.h>
+#include <drivers/screen/serial.h>
 
 /** \defgroup ALLOCHOOKS liballoc hooks 
  *
