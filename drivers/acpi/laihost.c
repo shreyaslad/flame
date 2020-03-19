@@ -42,10 +42,8 @@ void laihost_free(void* p) {
 }
 
 void* laihost_scan(const char* signature, size_t index) {
-    sprintf("laihost_scan\n");
     // the DSDT must be found using a pointer in the FADT
     if (!strncmp(signature, "DSDT", 4)) {
-        sprintf("here1\n");
 
         if (index > 0) {
             panic("0 is the only valid DSDT index");
@@ -53,15 +51,12 @@ void* laihost_scan(const char* signature, size_t index) {
         }
 
         acpi_fadt_t* fadt = (acpi_fadt_t*)find_sdt("FACP", 0);
-        sprintf("here2\n");
         void* dsdt = (char*)(size_t)fadt->dsdt + HIGH_VMA;
-        sprintf("here3\n");
+
         printf("apci: DSDT Addr is %x\n", (uint64_t)dsdt);
-        sprintf("here4\n");
 
         return dsdt;
     } else {
-        sprintf("here5\n");
         return find_sdt(signature, index);
     }
 }

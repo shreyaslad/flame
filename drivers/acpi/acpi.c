@@ -88,13 +88,13 @@ void* find_sdt(const char* signature, uint64_t index) {
             }
 
             printf("RSDT SDT Checksum: %d\n", sum);
-            /*ptr = (sdt_t*)((size_t)rsdt->sdtPtr[i] + HIGH_VMA);
+            ptr = (sdt_t*)((size_t)rsdt->sdtPtr[i] + HIGH_VMA);
             if (!strncmp(ptr->signature, signature, 4)) {
                 if (count++ == index) {
                     sprintf("acpi: Found \"%s\" at %x\n", signature, (uint64_t)ptr);
                     return ptr;
                 }
-            }*/
+            }
         }
     }
 

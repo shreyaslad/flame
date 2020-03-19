@@ -15,6 +15,7 @@
 #include <drivers/screen/vga.h>
 #include <drivers/acpi/acpi.h>
 #include <lai/helpers/pm.h>
+#include <lai/helpers/sci.h>
 #include <time.h>
 
 extern void _initUserspace();
