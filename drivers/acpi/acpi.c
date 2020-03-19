@@ -28,6 +28,8 @@ void initACPI() {
     panic("Non ACPI Compliant System");
     return;
 
+    sprintf("RSDP Revision: %d\n", rsdp->revision);
+
     rsdp_found:
         if (rsdp->revision == 2 && rsdp->xsdtAddr) {
             printf("acpi: Found XSDT at %x\n", ((size_t)rsdp->xsdtAddr + HIGH_VMA));
@@ -37,6 +39,8 @@ void initACPI() {
             printf("acpi: Found RSDT at %x\n", ((size_t)rsdp->rsdtAddr + HIGH_VMA));
 
             rsdt = (rsdt_t*)((size_t)rsdp->rsdtAddr + HIGH_VMA);
+            sprintf("RSDT Addr: %x\nRSDP Virt Addr: %x\n", (size_t)rsdp->rsdtAddr, (size_t)rsdp->rsdtAddr + HIGH_VMA);
+            sprintf("RDST SDT: %x\n", (uint64_t)rsdt->sdtPtr);
         }
 
         return;
@@ -65,7 +69,7 @@ void* find_sdt(const char* signature, uint64_t index) {
 
         for (uint64_t i = 0; i < (rsdt->sdt.length - sizeof(sdt_t)) / 8; i++) {
             sprintf("max: %d\n", (rsdt->sdt.length - sizeof(sdt_t)) / 8);
-            sprintf("%x\n", (size_t)rsdt->sdtPtr);
+            sprintf("%x\n", (uint64_t)rsdt);
             /*ptr = (sdt_t*)((size_t)rsdt->sdtPtr[i] + HIGH_VMA);
             if (!strncmp(ptr->signature, signature, 4)) {
                 if (count++ == index) {

@@ -29,7 +29,6 @@ QEMUFLAGS = -soundhw pcspk -m 1G \
 			-boot menu=on \
 			-cdrom flame.iso \
 			-hda flamedisk.img \
-			-enable-kvm
 O_LEVEL = 2
 
 LDFLAGS = -ffreestanding -O${O_LEVEL} -nostdlib -z max-page-size=0x1000
@@ -63,10 +62,10 @@ kernel.elf: ${OBJ}
 	nasm -f elf64 $< -o $@
 
 run:
-	qemu-system-${ARCH} ${QEMUFLAGS} -serial stdio
+	qemu-system-${ARCH} ${QEMUFLAGS} -serial stdio -enable-kvm
 
-debug: flame.iso kernel.elf
-	qemu-system-${ARCH} -s -S -d guest_errors,int ${QEMUFLAGS} &
+debug: flame.iso
+	qemu-system-${ARCH} -s -S ${QEMUFLAGS} &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 clean:
