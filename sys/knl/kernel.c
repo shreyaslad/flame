@@ -20,7 +20,7 @@ void kmain(multiboot_info_t* mbd) {
 
   void* fadt = laihost_scan("FACP", 0);
   if (fadt == NULL) {
-    sprint("bruh\n");
+    printf("bruh\n");
   }
 
   /*initFD();

@@ -21,16 +21,26 @@ void initACPI() {
         if (!strncmp((char *)i, "RSD PTR ", 8)) {
             printf("acpi: Found RSDP at %x\n", i);
             rsdp = (rsdp_t*)i;
+
+            uint64_t sum = 0;
+
+            for (uint64_t j = 0; j < rsdp->length; j++) {
+                sum +=((char*)rsdp)[i];
+            }
+
+            printf("RSDP Checksum: %d\n", sum);
+            if ((uint8_t)sum > 0) goto noACPI;
+
             goto rsdp_found;
         }
     }
 
-    panic("Non ACPI Compliant System");
-    return;
-
-    sprintf("RSDP Revision: %d\n", rsdp->revision);
+    noACPI:
+        panic("Non ACPI Compliant System");
+        return;
 
     rsdp_found:
+        printf("RSDP Revision: %d\n", rsdp->revision);
         if (rsdp->revision == 2 && rsdp->xsdtAddr) {
             printf("acpi: Found XSDT at %x\n", ((size_t)rsdp->xsdtAddr + HIGH_VMA));
 
@@ -40,7 +50,7 @@ void initACPI() {
 
             rsdt = (rsdt_t*)((size_t)rsdp->rsdtAddr + HIGH_VMA);
             sprintf("RSDT Addr: %x\nRSDP Virt Addr: %x\n", (size_t)rsdp->rsdtAddr, (size_t)rsdp->rsdtAddr + HIGH_VMA);
-            sprintf("RDST SDT: %x\n", (uint64_t)rsdt->sdtPtr);
+            printf("RDST SDT: %x\n", (uint64_t)rsdt->sdtPtr);
         }
 
         return;
@@ -55,7 +65,7 @@ void* find_sdt(const char* signature, uint64_t index) {
         // this could be either the FADT or the DSDT
         // all SDTs have a character signature that exists in memory
         for (uint64_t i = 0;i < (xsdt->sdt.length - sizeof(sdt_t)) / 8; i++) {
-            ptr = (xsdt_t*)((size_t)xsdt->sdtPtr[i] + HIGH_VMA);
+            ptr = (sdt_t*)((size_t)xsdt->sdtPtr[i] + HIGH_VMA);
             if (!strncmp(ptr->signature, signature, 4)) {
                 if (count++ == index) {
                     printf("acpi: Found \"%s\" at %x\n", signature, (uint64_t)ptr);
@@ -68,8 +78,16 @@ void* find_sdt(const char* signature, uint64_t index) {
         // do the same thing but with the rsdt
 
         for (uint64_t i = 0; i < (rsdt->sdt.length - sizeof(sdt_t)) / 8; i++) {
-            sprintf("max: %d\n", (rsdt->sdt.length - sizeof(sdt_t)) / 8);
-            sprintf("%x\n", (uint64_t)rsdt);
+            printf("RSDT Addr: %x\n", (uint64_t)rsdt);
+            uint64_t length = rsdt->sdt.length;
+
+            uint64_t sum = 0;
+
+            for (uint64_t j = 0; j < rsdp->length; j++) {
+                sum +=((char*)rsdp)[i];
+            }
+
+            printf("RSDT SDT Checksum: %d\n", sum);
             /*ptr = (sdt_t*)((size_t)rsdt->sdtPtr[i] + HIGH_VMA);
             if (!strncmp(ptr->signature, signature, 4)) {
                 if (count++ == index) {
